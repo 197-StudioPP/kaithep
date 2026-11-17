@@ -450,7 +450,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.2.0-e';
+window.__BUILD='1.2.0-f';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -1416,6 +1416,7 @@ function openPatch(back){modal(`<div class="em">📜</div><h2>แพตช์ ${
  🧬 <b>เผ่าไก่ + แผนทัพ</b> ไก่เผ่าเดียวกัน 2–3 ตัวได้โบนัส • วางแถวถนัดได้เปรียบ • รูปแบบทัพมีโบนัสของตัวเอง<br>
  🤫 <b>คอมโบลับ 30 แบบ</b> ไม่บอกสูตร ต้องค้นเอง! เจอครั้งแรกได้ 🪙50 + ประกาศในหมู่บ้าน • ดูที่ 📖 คัมภีร์คอมโบ<br>
  🛡️ บ่อบอท/หอคอย/ผู้คุ้มกัน: <b>แพ้ไม่เสียไก่</b>แล้ว • ออนไลน์: ทีม vs ทีม เดิมพันไก่ 1 ตัว<br>
+ 📋 <b>ใบสั่งซื้อไม่มีหมด</b> ส่งแล้วลูกค้าใหม่มาใน 3 นาที • ทุก 3 ใบได้ไข่สุ่มฟรี<br>
  ⏩ <b>ข้ามเวลา</b> ที่ตัวสถานที่: แตะไร่ที่กำลังโต • แตะแท่นฟักตอนหมดแรงกด • ปุ่ม ⏩ ในครัว — จ่ายเหรียญให้เสร็จทันที (วันละ 8 ครั้ง)<br>
  🎨 <b>ปรับหน้าตา</b> ไอคอนเด้งเหนืออาคารเมื่อมีของให้เก็บ • 📦 แถบโกดัง • สีระดับไก่ตายตัว (เทา/เขียว/ฟ้า/ม่วง/ทอง) • ไข่สั่นและเปลี่ยนสีก่อนแตก • ✨ ฉากร่างประกาย • แผงเผ่า + ชื่อทัพเด้ง • ไทม์ไลน์คอมโบพร้อมกราฟ ⚡ • ฉากคอมโบลับใหม่ • ข่าววิ่งด้านบน<br>
  ⏰ เวลาเดินต่อตอนปิดจอ/ออกแอป (สูงสุด 24 ชม.) • แก้บั๊กเปิดเกมแล้วค้าง<br><hr style="border:0;border-top:2px dashed #e2cfa5"> 🌾 <b>สกิลฟาร์มของไก่</b> ทุกตัวมีสกิลฟาร์ม (ไข่ไว ปลูกไว ทำอาหารไว ขายแพง ฯลฯ) 🔁 ซ้อนได้ / 1️⃣ ไม่ซ้อน — ทำงานเมื่ออยู่ในเล้า<br>
@@ -2544,21 +2545,28 @@ function sellGood(k,all){const f=S.fm;let n=all?(f.st[k]|0):Math.min(1,f.st[k]|0
 function buyGood(k,n,price){if(S.coins<price){toast('เหรียญไม่พอ');return;}const got=addGood(k,n);if(!got){toast(k==='feed'?'ถังอาหารเต็ม':'📦 โกดังเต็ม');return;}S.coins-=price;snd(900,.08,'triangle',.05,1.2);toast(`🛒 ซื้อ ${GOODS[k].i}x${got}`);save();openMarket(true);}
 /* ----- daily orders ----- */
 function fdayKey(){return new Date().toDateString();}
-function genOrders(){const f=S.fm,d=fdayKey();if(f.ord.d===d)return;let h=7;for(const c of d+S.gid)h=(h*31+c.charCodeAt(0))|0;const rnd=()=>{h=(h*1103515245+12345)|0;return ((h>>>8)%10000)/10000;};
+const ORD_WAIT=3*60000;
+function genOrders(){const f=S.fm,d=fdayKey(),now=Date.now();
+ if(f.ord&&f.ord.d===d){f.ord.done.forEach((t,i)=>{if(t&&now>=(t>1?t:0)){f.ord.l[i]=genOne(Math.random);f.ord.done[i]=0;}});return;}
+ let h=7;for(const c of d+S.gid)h=(h*31+c.charCodeAt(0))|0;const rnd=()=>{h=(h*1103515245+12345)|0;return ((h>>>8)%10000)/10000;};
+ f.ord={d,l:[0,1,2].map(()=>genOne(rnd)),done:[0,0,0],bonus:0,n:0};}
+function genOne(rnd){const f=S.fm;
  const pool=['egg','corn','feather'].concat(RECIPES.filter(r=>r.lv<=f.lv&&r.id!=='feed').map(r=>Object.keys(r.out)[0]));const names=['ร้านป้าแดง','โรงเรียนวัด','ตลาดนัดเช้า','ร้านอาหารลุงชัย','งานบวช','โรงแรมริมทุ่ง'];
- f.ord={d,l:[0,1,2].map(i=>{const its={};const k1=pool[Math.floor(rnd()*pool.length)];let k2=pool[Math.floor(rnd()*pool.length)];if(k2===k1)k2=pool[(pool.indexOf(k1)+1)%pool.length];
+ {const its={};const k1=pool[Math.floor(rnd()*pool.length)];let k2=pool[Math.floor(rnd()*pool.length)];if(k2===k1)k2=pool[(pool.indexOf(k1)+1)%pool.length];
   [k1,k2].forEach(k=>{const raw=GOODS[k].p<15;its[k]=raw?Math.round((6+rnd()*10)*(1+.25*f.lv)):Math.max(1,Math.round((1+rnd()*2)*(1+.15*f.lv)));});
-  const val=Object.entries(its).reduce((a,[k,n])=>a+GOODS[k].p*n,0);return {who:names[Math.floor(rnd()*names.length)],its,coin:Math.round(val*2.2),xp:Math.round(val/3)};}),done:[0,0,0],bonus:0};}
+  const val=Object.entries(its).reduce((a,[k,n])=>a+GOODS[k].p*n,0);return {who:names[Math.floor(rnd()*names.length)],its,coin:Math.round(val*2.2),xp:Math.round(val/3)};}}
 function fillOrder(i){const f=S.fm,o=f.ord.l[i];if(!o||f.ord.done[i])return;for(const k in o.its)if(!has(k,o.its[k])){toast('ของยังไม่ครบ');return;}
- for(const k in o.its)f.st[k]-=o.its[k];f.ord.done[i]=1;const oc=Math.round(o.coin*(1+farmBuff().order));S.coins+=oc;addXP(o.xp);fanfare();toast(`📦 ส่งของให้ ${o.who} สำเร็จ! +🪙${fmt(oc)}`);
- if(f.ord.done.every(Boolean)&&!f.ord.bonus){f.ord.bonus=1;if(S.bag.length<eggCap(S.lvl)){S.bag.push(Math.min(4,1+Math.floor(R()*3)));toast('🎁 ส่งครบ 3 ใบ! ได้ไข่สุ่มฟรี 1 ฟอง');}else{S.coins+=200;toast('🎁 ส่งครบ 3 ใบ! +🪙200');}}
+ for(const k in o.its)f.st[k]-=o.its[k];f.ord.done[i]=Date.now()+ORD_WAIT;f.ord.n=(f.ord.n|0)+1;const oc=Math.round(o.coin*(1+farmBuff().order));S.coins+=oc;addXP(o.xp);fanfare();toast(`📦 ส่งของให้ ${o.who} สำเร็จ! +🪙${fmt(oc)}`);
+ if(f.ord.n%3===0){f.ord.bonus=1;if(S.bag.length<eggCap(S.lvl)){S.bag.push(Math.min(4,1+Math.floor(R()*3)));toast('🎁 ส่งครบ 3 ใบ! ได้ไข่สุ่มฟรี 1 ฟอง');}else{S.coins+=200;toast('🎁 ส่งครบ 3 ใบ! +🪙200');}}
  save();openOrders(true);}
 function openOrders(refresh){genOrders();const f=S.fm;
- const h=`<div class="em">📋</div><h2>ใบสั่งซื้อวันนี้</h2><div class="sub">ส่งครบ 3 ใบ รับไข่สุ่มฟรี! • รีเซ็ตทุกวัน</div><div class="ordl" id="ordl">${f.ord.l.map((o,i)=>{const ok=Object.entries(o.its).every(([k,n])=>has(k,n));
+ const h=`<div class="em">📋</div><h2>ใบสั่งซื้อ</h2><div class="sub">ส่งแล้วมีลูกค้าใหม่มาเรื่อยๆ ไม่มีหมด</div><div class="ordl" id="ordl"><div class="sub" style="margin-bottom:6px">🎁 ทุก 3 ใบรับไข่สุ่มฟรี! — อีก <b>${3-(f.ord.n|0)%3}</b> ใบ</div>${f.ord.l.map((o,i)=>{const ok=Object.entries(o.its).every(([k,n])=>has(k,n));
+  if(f.ord.done[i])return `<div class="ord done"><div class="nm">🚚 ลูกค้าคนใหม่กำลังมา</div><div class="sub" style="font-size:16px">อีก ${fmtDur((f.ord.done[i]-Date.now())/1000)}</div></div>`;
   return `<div class="ord ${f.ord.done[i]?'done':''}"><div class="nm">${esc(o.who)}</div><div class="its">${Object.entries(o.its).map(([k,n])=>`<span class="${has(k,n)?'ok':''}">${GOODS[k].i} ${Math.min(S.fm.st[k]|0,n)}/${n}</span>`).join('')}</div>
-  ${Object.entries(o.its).some(([k,n])=>!has(k,n))&&!f.ord.done[i]?`<div class="sub">📍 ${Object.entries(o.its).filter(([k,n])=>!has(k,n)).map(([k])=>GOODS[k].i+' จาก '+srcS(k)).join(' • ')}</div>`:''}<div class="rw">🪙${fmt(Math.round(o.coin*(1+farmBuff().order)))} • ⭐${o.xp} XP</div>${f.ord.done[i]?'<b>✅ ส่งแล้ว</b>':`<button class="btn ${ok?'g':''}" data-ord="${i}" ${ok?'':'disabled'}>📦 ส่งของ</button>`}</div>`;}).join('')}</div>`;
+  ${Object.entries(o.its).some(([k,n])=>!has(k,n))&&!f.ord.done[i]?`<div class="sub">📍 ${Object.entries(o.its).filter(([k,n])=>!has(k,n)).map(([k])=>GOODS[k].i+' จาก '+srcS(k)).join(' • ')}</div>`:''}<div class="rw">🪙${fmt(Math.round(o.coin*(1+farmBuff().order)))} • ⭐${o.xp} XP</div><button class="btn ${ok?'g':''}" data-ord="${i}" ${ok?'':'disabled'}>📦 ส่งของ</button></div>`;}).join('')}</div>`;
  if(refresh&&$('#ordl')){const t=document.createElement('div');t.innerHTML=h;$('#ordl').replaceWith(t.querySelector('#ordl'));}else modal(h,[{t:'ปิด',c:'g'}]);
  document.querySelectorAll('[data-ord]').forEach(b=>b.onclick=()=>fillOrder(+b.dataset.ord));}
+setInterval(()=>{if(!S||!S.fm||!S.fm.ord||!$('#ordl')||$('#modal').classList.contains('hide'))return;genOrders();const sg=S.fm.ord.done.map(t=>t?Math.ceil((t-Date.now())/1000):0).join();if(sg!==ordSig){ordSig=sg;openOrders(true);}},1000);let ordSig='';
 /* ----- market ----- */
 function openMarket(refresh){const f=S.fm,ks=Object.keys(GOODS).filter(k=>!GOODS[k].nos).sort((a,b)=>((f.st[b]|0)>0)-((f.st[a]|0)>0));
  const h=`<div class="em">🏪</div><h2>ตลาดกลาง</h2><div class="sub">📦 โกดัง ${stoUsed()}/${stoCap(f.sto)} • ขายรัวๆ ราคาตก (ฟื้นเองใน ~20 นาที)</div><div class="mkl" id="mkl">
@@ -3794,7 +3802,7 @@ function loop(now){
  gmBalls.forEach((b,i)=>{b.position.y=b.userData.y+(gmShake>0?Math.abs(Math.sin(T*28+i*1.7))*.22:Math.sin(T*1.5+i)*.015);});
  {const nShow=Math.max(0,S.bag.length-(SP&&SP.stage<2?1:0));eboxEggs.forEach((e,i)=>{const t=S.bag[i];e.visible=i<nShow;if(i<nShow){e.material=M(EGG_COL[t|0]);e.position.y=.47+(t>=3?Math.abs(Math.sin(T*3+i))*.08:0);e.rotation.z=t>=3?Math.sin(T*4+i)*.15:0;}});}
  {const [x,y,ok]=scr(gm.position,2.5);const show=ok&&view==='farm';gmLabel.style.display=show?'':'none';if(show){gmLabel.style.left=x+'px';gmLabel.style.top=y+'px';gmLabel.innerHTML=`🎰 ตู้สุ่มไข่ ${S.tut===2?'<b style="color:#c0392b">ฟรี!</b>':stockLeft()>0?'🪙'+EGG_PRICE(S.lvl):'<b style="color:#c0392b">หมด! พรุ่งนี้</b>'}`;}}
- {const [x,y,ok]=scr(sign.position,2.6);const show=ok&&view==='farm';signLabel.style.display=show?'':'none';if(show){signLabel.style.left=x+'px';signLabel.style.top=y+'px';{const f=S.fm;if(f&&!unl('sign')){signLabel.style.display='none';}else if(f){genOrders();const dn=f.ord.done.filter(Boolean).length,can=f.ord.l.some((o,i)=>!f.ord.done[i]&&Object.entries(o.its).every(([k,n])=>has(k,n)));const h=`📋 ใบสั่งซื้อ ${dn}/3${can?' <b style="color:#2f7d22">ส่งได้!</b>':''}`;if(signLabel._h!==h){signLabel._h=h;signLabel.innerHTML=h;}}}}}
+ {const [x,y,ok]=scr(sign.position,2.6);const show=ok&&view==='farm';signLabel.style.display=show?'':'none';if(show){signLabel.style.left=x+'px';signLabel.style.top=y+'px';{const f=S.fm;if(f&&!unl('sign')){signLabel.style.display='none';}else if(f){genOrders();const act=f.ord.done.filter(x=>!x).length,can=f.ord.l.some((o,i)=>!f.ord.done[i]&&Object.entries(o.its).every(([k,n])=>has(k,n)));const h=act?`📋 ใบสั่งซื้อ ×${act}${can?' <b style="color:#2f7d22">ส่งได้!</b>':''}`:`📋 🚚 ${tLeft(Math.min(...f.ord.done))}`;if(signLabel._h!==h){signLabel._h=h;signLabel.innerHTML=h;}}}}}
  {const [x,y,ok]=scr(ebox.position,1.1);const show=false;boxLabel.style.display='none';if(show){boxLabel.style.left=x+'px';boxLabel.style.top=y+'px';boxLabel.innerHTML=`🧺 กล่องไข่ ${S.bag.length}/${eggCap(S.lvl)}`;}}
  // incubator
  gear.rotation.x+=dt*(S.auto?2:0.4);lamp.material.color.setHSL(.08,1,.55+Math.sin(T*4)*.1);incEgg.rotation.z=Math.sin(T*5)*.15;
@@ -3883,7 +3891,7 @@ var QUESTS=[
  {chk:()=>S.fm.lv>=2,pg:()=>[S.fm.lv,2,'xp'],s:'เก็บไข่ ปลูก ทำอาหาร ขาย ส่งใบสั่ง = ได้ XP',t:'ฟาร์มเลเวล 2',d:'เก็บ/ปลูก/ทำอาหาร/ขาย/ส่งใบสั่ง ได้ XP ทั้งหมด — เลเวล 2 ปลดสูตร 🍳 ไข่เจียว',at:'field',r:{c:200}},
  {ev:'cook_omelet',n:2,t:'ทำไข่เจียว 2 จาน',d:'โรงครัว → 🍳 ไข่เจียว (🥚3 🌽1) ขายได้ 🪙34 ต่อจาน',at:'kitchen',r:{c:250}},
  {chk:()=>(S.towerBest|0)>=2,pg:()=>[Math.min(2,S.towerBest|0),2,'ชั้น'],hl:['[data-tb="tower"]','[data-vp="arena"]'],s:'🏘️ หมู่บ้าน → 🏟️ ลานประลอง → 🗼 หอคอย',t:'ผ่านหอคอยชั้น 2',d:'🏘️ หมู่บ้าน → 🏟️ ลานประลอง → 🗼 หอคอย แพ้ไม่ตาย ทุก 5 ชั้นมีบอส',at:'nav:vil',r:{c:250,e:2}},
- {chk:()=>!!S.fm.ord.bonus,pg:()=>[S.fm.ord.done.filter(Boolean).length,3,'ใบ'],s:'แตะ 📋 ป้ายใบสั่งซื้อ ส่งให้ครบ 3 ใบวันนี้',t:'ส่งใบสั่งซื้อครบ 3 ใบในวันเดียว',d:'ครบ 3 ใบได้ไข่สุ่มฟรีอีก 1 ฟอง • ใบสั่งรีเซ็ตทุกวัน',at:'sign',r:{c:300}},
+ {chk:()=>!!S.fm.ord.bonus,pg:()=>[Math.min(3,S.fm.ord.n|0),3,'ใบ'],s:'แตะ 📋 ป้ายใบสั่งซื้อ ส่งให้ครบ 3 ใบวันนี้',t:'ส่งใบสั่งซื้อครบ 3 ใบในวันเดียว',d:'ครบ 3 ใบได้ไข่สุ่มฟรีอีก 1 ฟอง • ส่งแล้วมีลูกค้าใหม่มาเรื่อยๆ',at:'sign',r:{c:300}},
  {stat:()=>S.lvl|0,hl:['[data-p="up"]'],s:'แท็บ 🏗️ ก่อสร้าง → ⬆️ อัพเกรดเล้าไก่ (ล่างสุด)',t:'อัพเกรดเล้าไก่ 1 ครั้ง',d:'🏗️ ก่อสร้าง → เลื่อนล่างสุด → ⬆️ อัพเกรดเล้าไก่ (เลี้ยงไก่ได้มากขึ้น = ไข่มากขึ้น)',at:'nav:prod',r:{c:300}},
  {ev:'pvp',t:'ท้าชิงไก่ หรือ ปล้นไข่เพื่อน',d:'🏘️ หมู่บ้าน → แตะบ้านเพื่อน → ⚔️ ท้าชิงไก่ / 🥚 แอบปล้นไข่',at:'nav:vil',r:{c:300},skip:1},
  {chk:()=>S.fm.sto>=1,hl:['[data-bld="sto"]'],s:'แท็บ 🏗️ ก่อสร้าง → 📦 ขยายโกดัง',t:'ขยายโกดัง',d:'🏗️ ก่อสร้าง → 📦 ขยายโกดัง',at:'nav:prod',r:{c:300}},
