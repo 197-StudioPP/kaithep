@@ -369,10 +369,11 @@ body.shake{animation:bsh .5s}
 (function(){const L=[];function show(m){L.push(m);if(L.length>6)L.shift();let d=document.getElementById('errbox');
  if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;background:#2b0d0d;color:#ffd6d6;border:3px solid #ff5252;border-radius:12px;padding:8px 10px;font:12px/1.4 monospace;max-height:45vh;overflow:auto;white-space:pre-wrap;word-break:break-all';
   (document.body||document.documentElement).appendChild(d);}
- d.innerHTML='<b style="color:#fff;font:bold 14px sans-serif">⚠️ เกมเจอ error — แคปจอนี้ส่งให้ผู้พัฒนา</b> <button onclick="navigator.clipboard&&navigator.clipboard.writeText(this.parentNode.innerText)" style="float:right">คัดลอก</button><button onclick="this.parentNode.remove()" style="float:right;margin-right:6px">ปิด</button>\n'+L.map(x=>x.replace(/</g,'&lt;')).join('\n---\n')+'\n'+navigator.userAgent;}
+ d.innerHTML='<b style="color:#fff;font:bold 14px sans-serif">⚠️ เกมเจอ error — แคปจอนี้ส่งให้ผู้พัฒนา</b> <button onclick="navigator.clipboard&&navigator.clipboard.writeText(this.parentNode.innerText)" style="float:right">คัดลอก</button><button onclick="this.parentNode.remove()" style="float:right;margin-right:6px">ปิด</button>\n'+L.map(x=>x.replace(/</g,'&lt;')).join('\n---\n')+'\nรุ่น '+window.__BUILD+' • '+navigator.userAgent;}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
+window.__BUILD='1.1.3-s2g';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -458,7 +459,7 @@ window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
 <div id="spin" class="hide"><div class="sp-glow" id="spGlow"></div><div class="sp-rays" id="spRays"></div><div class="sp-card" id="spCard"><div class="sp-face sp-back">🥚<small>?</small></div><div class="sp-face sp-front" id="spFront"></div></div><div class="sp-tap" id="spTap"></div><div class="sp-btns hide" id="spBtns"></div><div id="spFx"></div></div>
 <div id="invite" class="hide"><div id="invT"></div><div class="row" id="invB"></div><div class="bar2"><i id="invBar"></i></div></div>
 <div id="prof" class="hide"><div class="box" id="profBox"></div></div>
-<div id="modal" class="hide"><div class="box" id="mbox"></div></div>
+<div id="modal" class="hide"><div class="box" id="mbox" style="position:relative"></div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
@@ -1330,7 +1331,7 @@ function openPatch(back){modal(`<div class="em">📜</div><h2>แพตช์ ${
  ♾️ <b>ไม่จำกัด</b> สุ่มไข่และท้าได้ไม่จำกัดครั้ง<br>
  <small>ของเดิมยังอยู่ครบ: ออโต้ • 2 สกิล • เสริมพลัง • ชิงไก่ • ใบประกาศ</small></div>`,
  [{t:back?'← กลับ':'ลุยเลย! 🐓',c:'g',f:back?openMenu:null}]);S.patch=PATCH;save();}
-function openMenu(){modal(`<div class="em">${isCloud?'☁️':'👤'}</div><h2>${S.pio?'🏅 ':''}${esc(S.nick)}</h2>${isCloud?`<div class="sub">${cloudLocked?'⚠️ หยุดซิงก์ (เปิดในเครื่องอื่น)':cloudRef?`✅ ซิงก์คลาวด์แล้ว${cloudLast?' • ล่าสุด '+new Date(cloudLast).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}):''}`:'⏳ กำลังเชื่อมต่อคลาวด์...'}</div>`:'<div class="sub">📱 เซฟในเครื่องนี้เท่านั้น — เข้าสู่ระบบเพื่อเล่นได้ทุกเครื่อง และชิงไก่ตัวแทนได้</div>'}<p><small>🏆 ชนะชน ${S.pw|0} • 🗼 หอคอยสูงสุดชั้น ${S.towerBest|0} • 📅 เข้าเกมติดกัน ${(S.daily&&S.daily.streak)|0} วัน</small></p>`,
+function openMenu(){modal(`<div style="position:absolute;right:12px;top:8px;font-size:11px;color:#a08a66">รุ่น ${window.__BUILD}</div><div class="em">${isCloud?'☁️':'👤'}</div><h2>${S.pio?'🏅 ':''}${esc(S.nick)}</h2>${isCloud?`<div class="sub">${cloudLocked?'⚠️ หยุดซิงก์ (เปิดในเครื่องอื่น)':cloudRef?`✅ ซิงก์คลาวด์แล้ว${cloudLast?' • ล่าสุด '+new Date(cloudLast).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}):''}`:'⏳ กำลังเชื่อมต่อคลาวด์...'}</div>`:'<div class="sub">📱 เซฟในเครื่องนี้เท่านั้น — เข้าสู่ระบบเพื่อเล่นได้ทุกเครื่อง และชิงไก่ตัวแทนได้</div>'}<p><small>🏆 ชนะชน ${S.pw|0} • 🗼 หอคอยสูงสุดชั้น ${S.towerBest|0} • 📅 เข้าเกมติดกัน ${(S.daily&&S.daily.streak)|0} วัน</small></p>`,
  [{t:`📖 สมุดสะสมไก่ ${CHARS.filter(c=>(S.dex||{})[c.id]).length}/${CHARS.length}`,c:'g',f:openDex},{t:'📜 แพตช์ 1.1.3',f:()=>openPatch(1)},{t:'⚙️ ตั้งค่า',c:'b',f:openSettings},{t:'📖 วิธีเล่น',c:'g',f:openHelp},{t:'📊 เรทสุ่ม',f:()=>modal(`<h2>📊 เรทการสุ่ม (เล้า Lv.${S.lvl})</h2>${rateTable(S.lvl)}`,[{t:'← กลับ',f:openMenu}])},{t:'💾 สำรอง/กู้เซฟ',f:openBackup},{t:'🔄 เปลี่ยนผู้เล่น',c:'r',f:()=>{save();if(net)leaveRoom(true);window.__profiles.switchTo();}},{t:'ปิด'}]);}
 function openSettings(){const on=v=>v?'✅ เปิด':'⬜ ปิด';
  modal(`<div class="em">⚙️</div><h2>ตั้งค่า</h2><p><small>โหมดภาพเบา: ลดความคมและปิดเงา ช่วยให้มือถือรุ่นเก่าลื่นขึ้น (เกมจะรีโหลด)</small></p>`,
