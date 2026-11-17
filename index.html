@@ -450,7 +450,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.2.0-f';
+window.__BUILD='1.2.0-g';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -1417,7 +1417,8 @@ function openPatch(back){modal(`<div class="em">📜</div><h2>แพตช์ ${
  🤫 <b>คอมโบลับ 30 แบบ</b> ไม่บอกสูตร ต้องค้นเอง! เจอครั้งแรกได้ 🪙50 + ประกาศในหมู่บ้าน • ดูที่ 📖 คัมภีร์คอมโบ<br>
  🛡️ บ่อบอท/หอคอย/ผู้คุ้มกัน: <b>แพ้ไม่เสียไก่</b>แล้ว • ออนไลน์: ทีม vs ทีม เดิมพันไก่ 1 ตัว<br>
  📋 <b>ใบสั่งซื้อไม่มีหมด</b> ส่งแล้วลูกค้าใหม่มาใน 3 นาที • ทุก 3 ใบได้ไข่สุ่มฟรี<br>
- ⏩ <b>ข้ามเวลา</b> ที่ตัวสถานที่: แตะไร่ที่กำลังโต • แตะแท่นฟักตอนหมดแรงกด • ปุ่ม ⏩ ในครัว — จ่ายเหรียญให้เสร็จทันที (วันละ 8 ครั้ง)<br>
+ ⏩ <b>ข้ามเวลา</b> ที่ตัวสถานที่: แตะไร่ที่กำลังโต • แตะแท่นฟักตอนหมดแรงกด • ปุ่ม ⏩ ในครัว — จ่ายเหรียญให้เสร็จทันที ไม่จำกัดครั้ง<br>
+ 📦 <b>โกดังไม่ตันแล้ว</b> ใหญ่ขึ้น 2.5 เท่า • 💩 มูลไก่ไม่กินที่ • ของล้นขายให้อัตโนมัติ ไม่ต้องหยุดเก็บ<br>
  🎨 <b>ปรับหน้าตา</b> ไอคอนเด้งเหนืออาคารเมื่อมีของให้เก็บ • 📦 แถบโกดัง • สีระดับไก่ตายตัว (เทา/เขียว/ฟ้า/ม่วง/ทอง) • ไข่สั่นและเปลี่ยนสีก่อนแตก • ✨ ฉากร่างประกาย • แผงเผ่า + ชื่อทัพเด้ง • ไทม์ไลน์คอมโบพร้อมกราฟ ⚡ • ฉากคอมโบลับใหม่ • ข่าววิ่งด้านบน<br>
  ⏰ เวลาเดินต่อตอนปิดจอ/ออกแอป (สูงสุด 24 ชม.) • แก้บั๊กเปิดเกมแล้วค้าง<br><hr style="border:0;border-top:2px dashed #e2cfa5"> 🌾 <b>สกิลฟาร์มของไก่</b> ทุกตัวมีสกิลฟาร์ม (ไข่ไว ปลูกไว ทำอาหารไว ขายแพง ฯลฯ) 🔁 ซ้อนได้ / 1️⃣ ไม่ซ้อน — ทำงานเมื่ออยู่ในเล้า<br>
  📍 <b>บอกที่มาของวัตถุดิบ</b> ของขาดจะบอกว่าหาได้จากไหน + มือชี้ไปที่นั่น<br>
@@ -2505,21 +2506,25 @@ var RECIPES=[{id:'feed',in:{corn:1},out:{feed:3},t:30,lv:1,hide:1},{id:'popcorn'
 var EGG_SEC=480,TIER_SPD=[1,1.15,1.3,1.5,1.8],FEATHER_P=.35,MANURE_P=.5,SEED=6,PLANT_SEC=240,CORN_YIELD=4,FERT_BONUS=3;
 var PLOT_MAX=8,KIT_MAX=4,STO_MAX=10,AUTO_PRICE=6000,TRAC_PRICE=15000,RAID_CD=30*60000,RAID_PCT=.25,RAID_MAX=25,CATCH_P=.25,RAID_FINE=30;
 const plotCost=n=>Math.round(150*Math.pow(1.6,n-2)),kitCost=k=>Math.round(400*Math.pow(1.7,k-1)),stoCost=l=>Math.round(250*Math.pow(1.6,l));
-const stoCap=l=>Math.round(120*Math.pow(1.5,l)),FEED_CAP=300,xpNeed=l=>Math.round(60*Math.pow(l,1.5));
+const stoCap=l=>Math.round(300*Math.pow(1.5,l)),FEED_CAP=300,xpNeed=l=>Math.round(60*Math.pow(l,1.5));
 const rdCap=n=>8+3*n;
 function fmInit(){if(!S.fm)S.fm={lv:1,xp:0,st:{feed:30,corn:6},rd:{egg:0,feather:0,manure:0},acc:0,last:Date.now(),plots:[{s:'e'},{s:'e'}],kit:[null],sto:0,auto:0,trac:0,mk:{},mkT:Date.now(),ord:{d:'',l:[],done:[],bonus:0},rt:{},fert:1};
  const f=S.fm;f.st=f.st&&typeof f.st==='object'?f.st:{feed:30,corn:6};f.rd=f.rd&&typeof f.rd==='object'?f.rd:{};['egg','feather','manure'].forEach(k=>f.rd[k]=+f.rd[k]||0);f.mk=f.mk||{};f.rt=f.rt||{};f.lv=Math.max(1,f.lv|0);f.xp=+f.xp||0;f.acc=+f.acc||0;f.last=+f.last||Date.now();f.sto=f.sto|0;f.auto=f.auto|0;f.trac=f.trac|0;if(f.fert==null)f.fert=1;if(!f.ord||!Array.isArray(f.ord.l)||!Array.isArray(f.ord.done))f.ord={d:'',l:[],done:[],bonus:0};if(!Array.isArray(f.plots))f.plots=[{s:'e'},{s:'e'}];if(!Array.isArray(f.kit))f.kit=[null];}
-const stoUsed=()=>Object.keys(S.fm.st).filter(k=>k!=='feed').reduce((a,k)=>a+(S.fm.st[k]|0),0);
+const stoUsed=()=>Object.keys(S.fm.st).filter(k=>k!=='feed'&&k!=='manure').reduce((a,k)=>a+(S.fm.st[k]|0),0);
 const stoFree=()=>Math.max(0,stoCap(S.fm.sto)-stoUsed());
 const has=(k,n)=>(S.fm.st[k]|0)>=n;
-function addGood(k,n){if(k==='feed'){const room=FEED_CAP-(S.fm.st.feed|0);n=Math.min(n,room);}else n=Math.min(n,stoFree());if(n<=0)return 0;S.fm.st[k]=(S.fm.st[k]|0)+n;return n;}
+let ovSold=0,ovT=0;
+function addGood(k,n){if(n<=0)return 0;if(k==='feed'){const room=FEED_CAP-(S.fm.st.feed|0);n=Math.min(n,room);if(n<=0)return 0;S.fm.st.feed=(S.fm.st.feed|0)+n;return n;}
+ const keep=k==='manure'?n:Math.min(n,stoFree()),over=n-keep;if(keep>0)S.fm.st[k]=(S.fm.st[k]|0)+keep;
+ if(over>0){const c=Math.round(over*GOODS[k].p*(1+farmBuff().sell));S.coins+=c;ovSold+=c;if(Date.now()-ovT>15000){ovT=Date.now();setTimeout(()=>{if(ovSold>0){toast(`📦 โกดังเต็ม — ของเกินขายให้อัตโนมัติ +🪙${fmt(ovSold)}`);ovSold=0;}},400);}}
+ return n;}
 function addXP(x){const f=S.fm;f.xp+=x;let up=0;while(f.xp>=xpNeed(f.lv)){f.xp-=xpNeed(f.lv);f.lv++;up=1;const pz=100*f.lv;S.coins+=pz;
  setTimeout(()=>{fanfare();toast(`🎉 ฟาร์มเลเวล ${f.lv}! +🪙${pz}${RECIPES.filter(r=>r.lv===f.lv).map(r=>' • ปลดสูตร '+GOODS[Object.keys(r.out)[0]].i+GOODS[Object.keys(r.out)[0]].n).join('')}`);},200);}if(up)save();}
 function layers(){return S.items.filter(i=>i.st===2).sort((a,b)=>b.tier-a.tier).slice(0,capacity(S.lvl));}
 function farmTick(){const f=S.fm,now=Date.now();let dt=(now-f.last)/1000;f.last=now;if(!(dt>0))return;dt=Math.min(dt,86400*3);
  const L=layers(),rate=layRate(L);f.acc+=rate*dt;const cap=rdCap(L.length);
  while(f.acc>=1){if((f.st.feed|0)<1||f.rd.egg>=cap){f.acc=Math.min(f.acc,1);break;}if(!(R()<farmBuff().feed))f.st.feed--;f.rd.egg++;f.acc--;if(R()<FEATHER_P+farmBuff().feather)f.rd.feather++;if(R()<MANURE_P)f.rd.manure++;}
- if(f.auto&&f.rd.egg>=1&&stoFree()>0)collectRd(true);if(f.auto&&(f.st.feed|0)<20&&(f.st.corn|0)>0)fillTrough(true);
+ if(f.auto&&f.rd.egg>=1)collectRd(true);if(f.auto&&(f.st.feed|0)<20&&(f.st.corn|0)>0)fillTrough(true);
  if(f.trac)f.plots.forEach((p,i)=>{if(p.s==='g'&&now>=p.t)harvest(i,true);if(p.s==='e'&&S.coins>=SEED)plant(i,true);});
  const rec=dt/1200;Object.keys(f.mk).forEach(k=>{f.mk[k]=Math.min(1,f.mk[k]+rec);if(f.mk[k]>=1)delete f.mk[k];});
  const pb=$('#prodBadge');if(pb){const n=f.plots.filter(p=>p.s==='g'&&now>=p.t).length+f.kit.filter(k=>k&&now>=k.t).length+(f.rd.egg>=cap?1:0);pb.textContent=n;pb.classList.toggle('hide',!n);}}
@@ -2542,7 +2547,7 @@ function buyB(k){const f=S.fm;let c=0,ok=1;
 const goodPrice=k=>{const b=farmBuff();return Math.max(1,Math.round(GOODS[k].p*(S.fm.mk[k]??1)*(1+b.sell+((k==='feather'||k==='pillow')?b.sellF:0))));};
 function sellGood(k,all){const f=S.fm;let n=all?(f.st[k]|0):Math.min(1,f.st[k]|0),tot=0;if(!n)return;
  for(let i=0;i<n;i++){tot+=goodPrice(k);f.mk[k]=Math.max(.45,(f.mk[k]??1)-.012);}f.st[k]-=n;S.coins+=tot;addXP(Math.ceil(tot/40));snd(1300,.08,'triangle',.06,1.2);toast(`💰 ขาย ${GOODS[k].i}x${n} ได้ 🪙${fmt(tot)}`);save();openMarket(true);}
-function buyGood(k,n,price){if(S.coins<price){toast('เหรียญไม่พอ');return;}const got=addGood(k,n);if(!got){toast(k==='feed'?'ถังอาหารเต็ม':'📦 โกดังเต็ม');return;}S.coins-=price;snd(900,.08,'triangle',.05,1.2);toast(`🛒 ซื้อ ${GOODS[k].i}x${got}`);save();openMarket(true);}
+function buyGood(k,n,price){if(S.coins<price){toast('เหรียญไม่พอ');return;}if(k!=='feed'&&stoFree()<n){toast('📦 โกดังเต็ม — ขายของก่อนค่อยซื้อ');return;}const got=addGood(k,n);if(!got){toast(k==='feed'?'ถังอาหารเต็ม':'📦 โกดังเต็ม');return;}S.coins-=price;snd(900,.08,'triangle',.05,1.2);toast(`🛒 ซื้อ ${GOODS[k].i}x${got}`);save();openMarket(true);}
 /* ----- daily orders ----- */
 function fdayKey(){return new Date().toDateString();}
 const ORD_WAIT=3*60000;
@@ -3052,7 +3057,7 @@ function worldTick(dt){if(!S.fm)return;qHand();gpTick();nest.visible=unl('nest')
  // kitchen
  const busy=f.kit.filter(Boolean).length,nxt=Math.min(...f.kit.filter(k=>k&&now<k.t).map(k=>k.t),Infinity);
  if(!unl('kitchen'))kitLb.style.display='none';else putLb(kitLb,kitchen.position,2.6,cdone?'🍳 เสร็จแล้ว! แตะเก็บ':busy?`🍳 ${tLeft(nxt)} <small>${busy}/${f.kit.length}</small>`:'🍳 แตะทำอาหาร',cdone?'go':busy<f.kit.length?'':'');
- if(!unl('market'))mktLb.style.display='none';else putLb(mktLb,market.position,2.25,stoFree()<=0?'🏪 โกดังเต็ม!':'🏪 ตลาด',stoFree()<=0?'warn':'');
+ if(!unl('market'))mktLb.style.display='none';else putLb(mktLb,market.position,2.25,'🏪 ตลาด','');
  if(kpOpen)renderKP();}
 function flyIcons(list,pos,yo,to){if(!list||!list.length)return;const [x,y]=scr(pos,yo);const tg=to==='coin'?$('#coins'):document.querySelector('#nav [data-t="prod"]');const r=tg?tg.getBoundingClientRect():{left:W/2,top:H-40,width:0,height:0};
  list.forEach((t,i)=>{const d=document.createElement('div');d.className='fly';d.textContent=t;d.style.left=(x+(i-(list.length-1)/2)*34)+'px';d.style.top=y+'px';document.body.appendChild(d);
@@ -3070,7 +3075,7 @@ function tapField(i){const f=S.fm;
  save();if(openSheet==='prod')renderProd();}
 function tapCoop(){const f=S.fm;if(S.gacha||(S.hold&&S.hold.length)){reopenHeld();return;}const got=collectRd(true);
  if(got&&got.length){flyIcons(got,nest.position,.6);snd(1200,.1,'triangle',.06,1.2);vib(15);return;}
- if(f.rd.egg>=1&&!stoFree()){toast('📦 โกดังเต็ม! ไปขายที่ 🏪 ตลาดก่อน');return;}
+ 
  floatText(f.rd.egg>0?'ไข่ยังไม่ครบฟอง ⏳':'ยังไม่มีไข่ ⏳',nest.position,1);}
 function fillTrough(quiet){const f=S.fm,need=FEED_CAP-(f.st.feed|0),corn=f.st.corn|0;
  if(need<=0){if(!quiet)floatText('อิ่มแล้ว 😋',trough.position,1);return;}
@@ -3702,7 +3707,7 @@ function startTower(){tbTower();}
 /* ================= ⏩ ซื้อเวลา ================= */
 const TS_DAY=8;
 function tsDay(){const dk=new Date().toDateString();if(!S.tsd||S.tsd.d!==dk)S.tsd={d:dk,n:0};return S.tsd;}
-function tsPrice(sec){const n=tsDay().n;return Math.max(3,Math.ceil(sec/60*0.8*(1+0.15*((S.lvl||1)-1))*(1+0.35*n)));}
+function tsPrice(sec){const n=tsDay().n;return Math.max(3,Math.ceil(sec/60*0.8*(1+0.15*((S.lvl||1)-1))*(1+0.1*Math.min(n,20))));}
 let tsLast=0;
 /* ⏩ ข้ามเวลา — เรียกจากตัวสถานที่เท่านั้น (แท่นฟัก / ไร่ / ครัว) */
 function skipAsk(kind,i){if(B||TBV||S.tut>=0||Date.now()-tsLast<4000)return false;const now=Date.now(),f=S.fm;let sec=0,nm='',ic='';
@@ -3710,9 +3715,9 @@ function skipAsk(kind,i){if(B||TBV||S.tut>=0||Date.now()-tsLast<4000)return fals
  if(kind==='field'){const g=f.plots.filter(p=>p.s==='g'&&p.t>now);if(!g.length)return false;sec=Math.max(...g.map(p=>(p.t-now)/1000));nm=`ไร่ ${g.length} แปลง`;ic='🌽';}
  if(kind==='kit'){const g=f.kit.filter(k=>k&&k.t>now);if(!g.length)return false;sec=Math.max(...g.map(k=>(k.t-now)/1000));nm=`ครัว ${g.length} อย่าง`;ic='🍳';}
  if(sec<5)return false;tsLast=Date.now();const d=tsDay(),pr=tsPrice(sec),left=TS_DAY-d.n;
- modal(`<div class="em">${ic}</div><h2>${nm} อีก ${fmtDur(sec)}</h2><p>จ่ายเหรียญให้เสร็จทันทีไหม?</p><div class="sub">ข้ามได้อีก ${Math.max(0,left)}/${TS_DAY} ครั้งวันนี้ • ยิ่งข้ามบ่อยยิ่งแพง</div>`,
-  left<=0?[{t:'วันนี้ข้ามครบแล้ว',c:'g'}]:[{t:`⏩ เสร็จเลย 🪙${fmt(pr)}`,c:'r',f:()=>skipBuy(kind,i,pr)},{t:'รอเอง',c:'g'}]);return true;}
-function skipBuy(kind,i,pr){const d=tsDay();if(d.n>=TS_DAY)return;if(S.coins<pr){toast(`เหรียญไม่พอ (ต้องใช้ 🪙${fmt(pr)})`);return;}const now=Date.now(),f=S.fm;
+ modal(`<div class="em">${ic}</div><h2>${nm} อีก ${fmtDur(sec)}</h2><p>จ่ายเหรียญให้เสร็จทันทีไหม?</p><div class="sub">ข้ามได้ไม่จำกัด • ข้ามบ่อยในวันเดียวราคาขึ้นนิดหน่อย</div>`,
+  [{t:`⏩ เสร็จเลย 🪙${fmt(pr)}`,c:'r',f:()=>skipBuy(kind,i,pr)},{t:'รอเอง',c:'g'}]);return true;}
+function skipBuy(kind,i,pr){const d=tsDay();if(S.coins<pr){toast(`เหรียญไม่พอ (ต้องใช้ 🪙${fmt(pr)})`);return;}const now=Date.now(),f=S.fm;
  if(kind==='egg'){const sl=S.slots[i];if(!sl)return;sl.p=1;}
  if(kind==='field')f.plots.forEach(p=>{if(p.s==='g'&&p.t>now)p.t=now;});
  if(kind==='kit')f.kit.forEach(k=>{if(k&&k.t>now)k.t=now;});
