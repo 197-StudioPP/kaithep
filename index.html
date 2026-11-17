@@ -203,7 +203,7 @@ h4{margin:10px 0 4px;font-size:15px}
 #ticker.hide{display:none}#ticker.new{animation:tkn .9s ease-out}@keyframes tkn{0%{background:#d63a2a;transform:translateX(-50%) scale(1.08)}}
 .fdl{max-height:58vh;overflow:auto;text-align:left;display:flex;flex-direction:column;gap:6px;margin-top:6px}
 .fdr{background:#fff;border:2px solid #e2cfa5;border-radius:12px;padding:6px 10px;font-size:13.5px;line-height:1.35}.fdr.st{border-color:#d63a2a;background:#fff1ee}.fdr small{color:#8a6a3a}
-.gp{position:absolute;transform:translate(-50%,-50%) rotateX(35deg);width:58px;height:58px;border-radius:50%;border:3px solid #3b2a1a;background:radial-gradient(circle at 50% 35%,#fff6c8,#ffd23f 70%);box-shadow:0 5px 0 #8a5a34,0 0 0 4px rgba(255,255,255,.35);pointer-events:auto;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;font:inherit;color:#3b2a1a;touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+.gp{position:absolute;transform:translate(-50%,-50%) rotateX(35deg);width:50px;height:50px;border-radius:50%;border:3px solid #3b2a1a;background:radial-gradient(circle at 50% 35%,#fff6c8,#ffd23f 70%);box-shadow:0 5px 0 #8a5a34,0 0 0 4px rgba(255,255,255,.35);pointer-events:auto;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;font:inherit;color:#3b2a1a;touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
 .gp b{font-size:22px;line-height:1}.gp small{font-size:10.5px;font-weight:700;line-height:1.1}.gp.hit{animation:gph .14s}.gp.tired{filter:grayscale(.8);opacity:.75}
 @keyframes gph{50%{transform:translate(-50%,-50%) rotateX(35deg) scale(.86);box-shadow:0 1px 0 #8a5a34}}
 .wl{position:absolute;transform:translate(-50%,-100%);background:#fff6e0;border:2px solid #3b2a1a;border-radius:11px;padding:2px 9px;font-size:13px;font-weight:700;white-space:nowrap;pointer-events:auto;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.25);user-select:none;-webkit-user-select:none}
@@ -998,10 +998,17 @@ function mkEgg(){const g=new THREE.Group();
  [[.15,.45,.17],[-.12,.3,.2],[.05,.58,-.15]].forEach(p=>mk(new THREE.SphereGeometry(.035,5,4),0xc9a77a,p[0],p[1],p[2],g,false));
  g.userData={kind:'egg',egg:e};return g;}
 
+/* ---- แตะไก่ในฟาร์ม: แตะครั้งแรกไก่พูด แตะซ้ำเปิดข้อมูล ---- */
+let lastItemTap={id:null,t:0};
+function tapItem(it,r){const now=Date.now();
+ if(lastItemTap.id===it.id&&now-lastItemTap.t<1800){lastItemTap={id:null,t:0};showInfo(it);return;}
+ lastItemTap={id:it.id,t:now};const c=CHARS.find(x=>x.id===it.ch)||{},q=(c.q&&c.q.length)?c.q[Math.floor(R()*c.q.length)]:'กุ๊ก!';
+ if(r&&r.g){floatText(q,r.g.position,1.7);r.g.scale.setScalar(1.15);setTimeout(()=>{if(r.g)r.g.scale.setScalar(1);},140);}
+ snd(900+R()*300,.06,'square',.04,1.4);vib(8);}
 /* ================= FARM ENTITIES ================= */
 const recs=new Map();
 const labelsEl=$('#labels');
-function eggSlot(i){return [-7.3+(i%4)*.9,-.6+Math.floor(i/4)*.9];}
+function eggSlot(i){return [-6.6+(i%4)*.9,-.6+Math.floor(i/4)*.9];}
 function randRoam(){let x,z;do{x=-3+R()*12;z=-2.5+R()*9.5;}while(Math.hypot(x-7.3,z-5.6)<2.1||(x>4.5&&z<-3)||z>4.9);return [x,z];}
 function syncMeshes(){
  const ids=new Set();let ei=0;
@@ -2980,7 +2987,7 @@ function sellSpare(){const f=S.fm,res={corn:10};genOrders();f.ord.l.forEach((o,i
 
 
 /* ---- 👆 ปุ่มบนพื้น: กดรัวๆ เร่งเวลาของสถานที่นั้น (ใช้ ⚡ แรงร่วมกัน) ---- */
-var GP_POS={pump:new THREE.Vector3(-4.45,0,-3.9),coop:new THREE.Vector3(6.45,0,-2.35),field:new THREE.Vector3(-3.1,0,7.55),kitchen:new THREE.Vector3(1.1,0,7.75)};
+var GP_POS={pump:new THREE.Vector3(-4.6,0,-4.6),coop:new THREE.Vector3(6.45,0,-2.35),field:new THREE.Vector3(-3.1,0,7.55),kitchen:new THREE.Vector3(1.1,0,7.75)};
 var GP_FIELD_S=3,GP_KIT_S=3,GP_COOP_S=10;
 function gpTired(pos){floatText('เหนื่อยแล้ว 😮‍💨 พักแป๊บ',pos,.9);snd(220,.08,'sine',.03,.8);}
 function gpSpend(pos){if(Date.now()-lastTap<60)return false;lastTap=Date.now();if(tapB<1){gpTired(pos);return false;}if(R()<farmBuff().free){floatText('🧛 ฟรี!',pos,1.3);return true;}tapB--;return true;}
@@ -3071,19 +3078,19 @@ function loop(now){
   P.g.visible=view==='farm';P.egg.visible=!!sl;P.ring.visible=!!(sl&&sl.p>=1);
   if(sl){const e=P.egg.userData.egg;e.material=M(EGG_COL[sl.tier|0]);e.rotation.z=(sl.p>=1?Math.sin(T*18)*.25:sl.p>.7?Math.sin(T*30)*.12:0)+(P.bump>0?Math.sin(P.bump*40)*.3:0);P.egg.position.y=.28+(sl.p>=1?Math.abs(Math.sin(T*6))*.18:0);P.ring.scale.setScalar(1+Math.sin(T*6)*.12);}
   const [x,y,ok]=scr(P.g.position,sl&&sl.p>=1?1.3:1.05);P.lb.style.display=ok&&view==='farm'?'':'none';P.lb.style.left=x+'px';P.lb.style.top=y+'px';
-  if(!sl){P.lb.className='padlb';P.lb.textContent=S.bag.length?'＋ วางไข่':'🪺 ว่าง';}
+  if(!sl){const first=S.slots.findIndex((x,j)=>!x&&j<pads.length)===i;P.lb.className='padlb';P.lb.textContent=S.bag.length?'＋ วางไข่':'🪺 ว่าง';if(!first)P.lb.style.display='none';}
   else if(sl.p>=1){P.lb.className='padlb ready';P.lb.textContent='🎰 แตะลุ้น!';}
   else{P.lb.className='padlb';P.lb.innerHTML=`${EGG_DOT[sl.tier|0]} ⏳ ${fmtClock((1-sl.p)*sl.dur)}<span class="pb"><i style="width:${sl.p*100}%"></i></span>`;}}
  incBump=Math.max(0,incBump-dt);incub.scale.setScalar(1+(incBump>0?Math.sin(incBump*30)*.06:0));
  gmBump=Math.max(0,gmBump-dt);gmShake=Math.max(0,gmShake-dt);gm.scale.setScalar(1+(gmBump>0?Math.sin(gmBump*30)*.05:0));
  gmBalls.forEach((b,i)=>{b.position.y=b.userData.y+(gmShake>0?Math.abs(Math.sin(T*28+i*1.7))*.22:Math.sin(T*1.5+i)*.015);});
  {const nShow=Math.max(0,S.bag.length-(SP&&SP.stage<2?1:0));eboxEggs.forEach((e,i)=>{const t=S.bag[i];e.visible=i<nShow;if(i<nShow){e.material=M(EGG_COL[t|0]);e.position.y=.47+(t>=3?Math.abs(Math.sin(T*3+i))*.08:0);e.rotation.z=t>=3?Math.sin(T*4+i)*.15:0;}});}
- {const [x,y,ok]=scr(gm.position,3.4);const show=ok&&view==='farm';gmLabel.style.display=show?'':'none';if(show){gmLabel.style.left=x+'px';gmLabel.style.top=y+'px';gmLabel.innerHTML=`🎰 ตู้สุ่มไข่ ${S.tut===2?'<b style="color:#c0392b">ฟรี!</b>':stockLeft()>0?'🪙'+EGG_PRICE(S.lvl):'<b style="color:#c0392b">หมด! พรุ่งนี้</b>'}`;}}
+ {const [x,y,ok]=scr(gm.position,2.5);const show=ok&&view==='farm';gmLabel.style.display=show?'':'none';if(show){gmLabel.style.left=x+'px';gmLabel.style.top=y+'px';gmLabel.innerHTML=`🎰 ตู้สุ่มไข่ ${S.tut===2?'<b style="color:#c0392b">ฟรี!</b>':stockLeft()>0?'🪙'+EGG_PRICE(S.lvl):'<b style="color:#c0392b">หมด! พรุ่งนี้</b>'}`;}}
  {const [x,y,ok]=scr(sign.position,2.6);const show=ok&&view==='farm';signLabel.style.display=show?'':'none';if(show){signLabel.style.left=x+'px';signLabel.style.top=y+'px';{const f=S.fm;if(f&&!unl('sign')){signLabel.style.display='none';}else if(f){genOrders();const dn=f.ord.done.filter(Boolean).length,can=f.ord.l.some((o,i)=>!f.ord.done[i]&&Object.entries(o.its).every(([k,n])=>has(k,n)));const h=`📋 ใบสั่งซื้อ ${dn}/3${can?' <b style="color:#2f7d22">ส่งได้!</b>':''}`;if(signLabel._h!==h){signLabel._h=h;signLabel.innerHTML=h;}}}}}
  {const [x,y,ok]=scr(ebox.position,1.1);const show=ok&&view==='farm';boxLabel.style.display=show?'':'none';if(show){boxLabel.style.left=x+'px';boxLabel.style.top=y+'px';boxLabel.innerHTML=`🧺 กล่องไข่ ${S.bag.length}/${eggCap(S.lvl)}`;}}
  // incubator
  gear.rotation.x+=dt*(S.auto?2:0.4);lamp.material.color.setHSL(.08,1,.55+Math.sin(T*4)*.1);incEgg.rotation.z=Math.sin(T*5)*.15;
- {const [x,y,ok]=scr(incub.position,3);incLabel.style.display=ok&&view==='farm'?'':'none';incLabel.style.left=x+'px';incLabel.style.top=y+'px';incLabel.innerHTML=`🏭 ${S.auto?'':'แตะปั๊ม! • '}${S.bank>=bankCap(S.lvl)?'<b style="color:#c0392b">ถังเต็ม! แตะเก็บ</b> ':''}💰 ${fmt(Math.floor(S.bank))}/${fmt(bankCap(S.lvl))}<span class="pb" style="display:block;height:6px;background:#eadbb8;border-radius:6px;overflow:hidden;margin-top:2px"><i style="display:block;height:100%;width:${Math.min(1,S.mach)*100}%;background:#ffd23f"></i></span>`;}
+ {const [x,y,ok]=scr(incub.position,4.1);incLabel.style.display=ok&&view==='farm'?'':'none';incLabel.style.left=x+'px';incLabel.style.top=y+'px';incLabel.innerHTML=`🏭 ${S.auto?'':'กดปุ่ม 👆 • '}${S.bank>=bankCap(S.lvl)?'<b style="color:#c0392b">ถังเต็ม! แตะเก็บ</b> ':''}💰 ${fmt(Math.floor(S.bank))}/${fmt(bankCap(S.lvl))}<span class="pb" style="display:block;height:6px;background:#eadbb8;border-radius:6px;overflow:hidden;margin-top:2px"><i style="display:block;height:100%;width:${Math.min(1,S.mach)*100}%;background:#ffd23f"></i></span>`;}
  worldTick(dt);
  tutTick();
  crowd.forEach(c=>{c.position.y=Math.abs(Math.sin(T*(B?9:3)+c.userData.ph))*(B?.35:.08);});
