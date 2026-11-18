@@ -451,7 +451,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.3.0-a';
+window.__BUILD='1.3.0-b';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -556,10 +556,16 @@ window.CLOUD=(function(){
  const load=src=>new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s);});
  const ready=load(base+'firebase-app-compat.js').then(()=>Promise.all([load(base+'firebase-auth-compat.js'),load(base+'firebase-firestore-compat.js')])).then(()=>{
   if(!firebase.apps.length)firebase.initializeApp(cfg);const auth=firebase.auth(),db=firebase.firestore();A=auth;
-  return auth.getRedirectResult().catch(()=>null).then(()=>new Promise(r=>{const un=auth.onAuthStateChanged(u=>{un();r({auth,db,user:u});});}));
+  /* Safari บางทีที่เก็บ IndexedDB ค้าง ("Database is closing/hidden") → เช็กก่อน ถ้าพังให้ใช้ที่เก็บสำรอง */
+  const idbOk=()=>new Promise(res=>{let d=0;const fin=v=>{if(!d){d=1;res(v);}};setTimeout(()=>fin(false),1500);
+   try{const r=indexedDB.open('kt_probe',1);r.onupgradeneeded=()=>{try{r.result.createObjectStore('p');}catch(e){}};
+    r.onsuccess=()=>{try{const db=r.result,tx=db.transaction('p','readwrite');tx.objectStore('p').put(Date.now(),'t');tx.oncomplete=()=>{db.close();fin(true);};tx.onerror=tx.onabort=()=>{try{db.close();}catch(e){}fin(false);};}catch(e){fin(false);}};
+    r.onerror=r.onblocked=()=>fin(false);}catch(e){fin(false);}});
+  const P=firebase.auth.Auth.Persistence;
+  return idbOk().then(ok=>{window.__idbOk=ok;return ok?null:auth.setPersistence(P.SESSION).catch(()=>auth.setPersistence(P.NONE)).catch(()=>{});}).then(()=>auth.getRedirectResult()).catch(()=>null).then(()=>new Promise(r=>{const un=auth.onAuthStateChanged(u=>{un();r({auth,db,user:u});});}));
  });
  ready.catch(()=>{});
- const errTh=e=>{const c=(e&&e.code)||'';return ({
+ const errTh=e=>{const c=(e&&e.code)||'';if(/closing|indexed ?db|indexed database/i.test((e&&e.message)||'')){try{if(A)A.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(()=>{});}catch(_){}return 'ที่เก็บข้อมูลของ Safari ค้าง — เกมสลับไปใช้ที่เก็บสำรองแล้ว แตะเข้าสู่ระบบอีกครั้งได้เลย';}return ({
   'auth/invalid-email':'อีเมลไม่ถูกต้อง','auth/user-not-found':'อีเมลหรือรหัสผ่านไม่ถูกต้อง','auth/wrong-password':'อีเมลหรือรหัสผ่านไม่ถูกต้อง',
   'auth/invalid-credential':'อีเมลหรือรหัสผ่านไม่ถูกต้อง','auth/invalid-login-credentials':'อีเมลหรือรหัสผ่านไม่ถูกต้อง',
   'auth/email-already-in-use':'อีเมลนี้สมัครไว้แล้ว ลองกด "เข้าสู่ระบบ"','auth/weak-password':'รหัสผ่านต้องมีอย่างน้อย 6 ตัว',
