@@ -417,7 +417,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.5.0-a';
+window.__BUILD='1.5.0-d';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -1071,7 +1071,7 @@ function tapItem(it,r){const now=Date.now();
 const recs=new Map();
 const labelsEl=$('#labels');
 function eggSlot(i){return [-6.6+(i%4)*.9,-.6+Math.floor(i/4)*.9];}
-function randRoam(){let x,z;do{x=-3+R()*12;z=-2.5+R()*9.5;}while(Math.hypot(x-7.3,z-5.6)<2.1||(x>4.5&&z<-3)||z>4.9);return [x,z];}
+function randRoam(){let x,z;do{x=-3+R()*12;z=-2.5+R()*9.5;}while(Math.hypot(x-7.3,z-5.6)<2.1||(x>4.5&&z<-3)||z>4.9||(z>2.9&&x<3.6));return [x,z];}
 function syncMeshes(){
  const ids=new Set();let ei=0;
  for(const it of S.items){ids.add(it.id);let r=recs.get(it.id);
@@ -2550,6 +2550,7 @@ function srcHint(miss){const k=miss[0];if(!k)return;const s=SRC[k];toast(`ขา
 try{fmInit();farmTick();genOrders();}catch(e){console.error('farm data repaired',e);S.fm=null;fmInit();try{genOrders();}catch(_){}}
 try{migrate130();}catch(e){console.error(e);}
 try{migrate150();}catch(e){console.error(e);}
+setInterval(()=>{try{if(S&&!S.v130)migrate130();if(S&&S.fm&&!S.v150)migrate150();if(S&&S.fm&&S.fm.plots.length<6&&S.v150){while(S.fm.plots.length<6)S.fm.plots.push({s:'e'});save();}}catch(e){}},4000);
 try{if(!S.v131){S.v131=1;t4Ids();save();if(S.tut<0)setTimeout(()=>modal(`<div class="em">⚔️</div><h2>ระบบสู้ใหม่ 1.3.1</h2><div style="text-align:left;line-height:1.6">
 🎯 <b>กดจังหวะ:</b> ลูกศรแดงวิ่งบนแท่ง กด <b>ชน</b> ตอนอยู่ช่องเขียว • กลางช่องเขียว = <b>PERFECT</b> แรง ×1.6<br>
 🛡️ <b>ทีม 4 ช่อง</b> เอก/โท/ตรี/จัตวา ลงสนามพร้อมกัน เลือด/เกราะ/โจมตีรวมกัน (จัดให้อัตโนมัติแล้ว)<br>
@@ -2868,9 +2869,9 @@ setTimeout(()=>{if(!net)autoLobby();},600);
 
 
 /* ================= 👆 ฟาร์มบนจอ (แตะของในฉากได้เลย) ================= */
-const plotXZ=i=>[-4.9+(i%4)*1.2,5.5+Math.floor(i/4)*1.2];
+const plotXZ=i=>[-4.6+(i%4)*2.3,4.2+Math.floor(i/4)*2.3];
 const fieldG=new THREE.Group();scene.add(fieldG);const PL=[];
-for(let i=0;i<PLOT_MAX;i++){const g=new THREE.Group();const [x,z]=plotXZ(i);g.position.set(x,0,z);fieldG.add(g);
+for(let i=0;i<PLOT_MAX;i++){const g=new THREE.Group();const [x,z]=plotXZ(i);g.position.set(x,0,z);g.scale.setScalar(1.9);fieldG.add(g);
  const soil=new THREE.Group();g.add(soil);mk(new THREE.BoxGeometry(1.05,.16,1.05),0x7a4a2a,0,.08,0,soil);[-.3,0,.3].forEach(dz=>mk(new THREE.BoxGeometry(.95,.05,.1),0x5e3820,0,.18,dz,soil,false));
  const crop=new THREE.Group();crop.position.y=.16;g.add(crop);const cobs=[];
  [[-.26,-.26],[.26,-.26],[-.26,.26],[.26,.26]].forEach(([a,b])=>{const st=new THREE.Group();st.position.set(a,0,b);crop.add(st);
@@ -2906,7 +2907,7 @@ for(let i=0;i<6;i++)mk(new THREE.BoxGeometry(.3,.08,1.0),i%2?0xffffff:0xe0403a,-
 market.userData.pick='market';
 // labels (แตะป้ายก็ได้)
 function wLabel(fn){const d=document.createElement('div');d.className='wl';d.addEventListener('pointerdown',e=>{e.stopPropagation();e.preventDefault();if(view==='farm')fn();});labelsEl.appendChild(d);return d;}
-const fieldLb=wLabel(()=>tapField(0)),saleLb=wLabel(()=>tapField(S.fm.plots.length)),coopLb=wLabel(()=>tapCoop()),troughLb=wLabel(()=>tapTrough()),kitLb=wLabel(()=>tapKitchen()),mktLb=wLabel(()=>openMarket());
+const fieldLb=wLabel(()=>tapField(-1)),saleLb=wLabel(()=>tapField(S.fm.plots.length)),coopLb=wLabel(()=>tapCoop()),troughLb=wLabel(()=>tapTrough()),kitLb=wLabel(()=>tapKitchen()),mktLb=wLabel(()=>openMarket());
 function putLb(d,pos,yo,html,cls){const [x,y,ok]=scr(pos,yo);const show=ok&&view==='farm'&&!B;d.style.display=show?'':'none';if(!show)return;d.style.left=x+'px';d.style.top=y+'px';if(d._h!==html){d._h=html;d.innerHTML=html;}d.className='wl'+(cls?' '+cls:'');}
 const fieldC=new THREE.Vector3(),tmpV=new THREE.Vector3();let wlT=0;
 function worldTick(dt){if(!S.fm)return;qHand();gpTick();nest.visible=unl('nest');trough.visible=unl('trough');fieldG.visible=unl('field');kitchen.visible=unl('kitchen');market.visible=unl('market');sign.visible=S.tut>=0||unl('sign');const f=S.fm,now=Date.now();
@@ -2920,7 +2921,7 @@ function worldTick(dt){if(!S.fm)return;qHand();gpTick();nest.visible=unl('nest')
  wlT-=dt;if(wlT>0&&view==='farm'){return;}wlT=.12;
  // field
  let rdy=0,emp=0,minT=Infinity;fieldC.set(0,0,0);f.plots.forEach((p,i)=>{const [x,z]=plotXZ(i);fieldC.x+=x;fieldC.z+=z;if(p.s==='e')emp++;else if(now>=p.t)rdy++;else minT=Math.min(minT,p.t);});fieldC.multiplyScalar(1/Math.max(1,f.plots.length));
- if(!unl('field'))fieldLb.style.display='none';else putLb(fieldLb,fieldC,1.25,rdy?`🌽 เก็บเกี่ยว! ×${rdy}`:emp?`🌱 แตะปลูก ×${emp} <small>🪙${SEED}</small>`:`🌱 ${tLeft(minT)}`,rdy||emp?'go':'');
+ if(!unl('field'))fieldLb.style.display='none';else putLb(fieldLb,fieldC,2.9,rdy?`🌽 เก็บเกี่ยว! ×${rdy}`:emp?`🌱 แตะปลูก ×${emp} <small>${cropOf(S.fm.crop).e}🥚${cropOf(S.fm.crop).cost}</small>`:`🌱 ${tLeft(minT)}`,rdy||emp?'go':'');
  if(f.plots.length<PLOT_MAX&&unl('sale')){const [x,z]=plotXZ(f.plots.length);tmpV.set(x,0,z);putLb(saleLb,tmpV,.6,`＋🪙${fmt(plotCost(f.plots.length))}`,'sm');}else saleLb.style.display='none';
  // coop
  const L=layers(),cap=rdCap(L.length),rate=layRate(L),eg=Math.floor(f.rd.egg),starve=(f.st.feed|0)<1&&L.length;
@@ -2964,7 +2965,7 @@ function sellSpare(){const f=S.fm,res={corn:10};genOrders();f.ord.l.forEach((o,i
 
 
 /* ---- 👆 ปุ่มบนพื้น: กดรัวๆ เร่งเวลาของสถานที่นั้น (ใช้ ⚡ แรงร่วมกัน) ---- */
-var GP_POS={pump:new THREE.Vector3(-4.6,0,-4.6),coop:new THREE.Vector3(6.45,0,-2.35),field:new THREE.Vector3(-3.1,0,7.55),kitchen:new THREE.Vector3(1.1,0,7.75)};
+var GP_POS={pump:new THREE.Vector3(-4.6,0,-4.6),coop:new THREE.Vector3(6.45,0,-2.35),field:new THREE.Vector3(-1.15,0,7.9),kitchen:new THREE.Vector3(1.1,0,7.75)};
 var GP_FIELD_S=3,GP_KIT_S=3,GP_COOP_S=10;
 function gpTired(pos){floatText('เหนื่อยแล้ว 😮‍💨 พักแป๊บ',pos,.9);snd(220,.08,'sine',.03,.8);}
 let gpLastT=0,gpLastK='';
@@ -3277,19 +3278,26 @@ const coopLv=()=>S.cl||1,COOP_UP=[0,3000,8000,14000];
 const GACHA_ETK=1000,GRATE=[50,30,14,5,1];
 function rollStar(){S.p4=(S.p4|0)+1;S.p5=(S.p5|0)+1;let t=roll(GRATE);if(S.p5>=120)t=4;else if(S.p4>=30&&t<3)t=R()<1/6?4:3;if(t>=3)S.p4=0;if(t>=4)S.p5=0;return t;}
 function plant(i,quiet,cid){const f=S.fm,p=f.plots[i];if(!p||p.s!=='e')return false;const c=cropOf(cid||f.crop);if(c.cl>coopLv()){if(!quiet)toast(`🔒 ปลดที่เล้า Lv.${c.cl}`);return false;}
- if((S.etk|0)<c.cost){if(!quiet)toast(`🥚 เบี้ยไข่ไม่พอ (ต้องใช้ ${c.cost})`);return false;}S.etk-=c.cost;const fb=farmBuff(),d=c.sec*1000*Math.max(.4,1-fb.plant-fb.all);f.plots[i]={s:'g',t:Date.now()+d,d,c:c.id};if(!quiet)save();return true;}
+ if((S.etk|0)>=c.cost)S.etk-=c.cost;else if(c.id==='grass'&&S.coins>=c.cost)S.coins-=c.cost;else{if(!quiet)toast(c.id==='grass'?`ไม่มีทั้ง 🥚 และ 🪙 พอค่าเมล็ด (${c.cost})`:`🥚 เบี้ยไข่ไม่พอ (ต้องใช้ ${c.cost}) — ปลูก 🌱 หญ้าก่อนได้ ใช้ 🪙 จ่ายแทนได้`);return false;}const fb=farmBuff(),d=c.sec*1000*Math.max(.4,1-fb.plant-fb.all);f.plots[i]={s:'g',t:Date.now()+d,d,c:c.id};if(!quiet)save();return true;}
 function harvest(i,quiet){const f=S.fm,p=f.plots[i];if(!p||p.s!=='g'||Date.now()<p.t)return 0;const c=cropOf(p.c),y=Math.round(c.y*(1+Math.min(.3,farmBuff().all)));
  S.etk=(S.etk|0)+y;f.plots[i]={s:'e'};addXP(c.cl*2);if(!quiet){snd(900,.08,'triangle',.05,1.3);toast(`${c.e} +🥚${y}`);save();}return y;}
-function tapField(i){const f=S.fm;if(i>=f.plots.length){toast('🌱 ซื้อแปลงเพิ่มที่แท็บ 🏗️ ก่อสร้าง');return;}const now=Date.now();let got=0;
- f.plots.forEach((p,j)=>{if(p.s==='g'&&now>=p.t){const e=cropOf(p.c).e,y=harvest(j,true);if(y){got+=y;const [x,z]=plotXZ(j);floatText(e,new THREE.Vector3(x,0,z),1);feathers(x,.2,z,0xffd23f,5);}}});
- if(got){flyIcons(['🥚+'+fmt(got)],fieldC,1.2);snd(900,.08,'triangle',.05,1.3);vib(15);save();return;}
- if(f.plots.some(p=>p.s==='e')){cropPick();return;}
- if(!skipAsk('field')){const m=Math.min(...f.plots.map(p=>p.t));floatText('⏳ '+tLeft(m),fieldC,1.4);}}
-function cropPick(){const f=S.fm,e=f.plots.filter(p=>p.s==='e').length,cl=coopLv();
- showModal(`<div class="em">🌱</div><h2>ปลูกอะไรดี?</h2><div class="sub">แปลงว่าง ${e} แปลง • มี 🥚${fmt(S.etk|0)} • ปลูกทุกแปลงว่างพร้อมกัน</div><div class="crl">${CROPS.map(c=>{const lk=c.cl>cl;return `<button class="crp ${lk?'lk':''}" data-crop="${c.id}"><span class="ce">${c.e}</span><span class="crm"><b>${c.n}</b><small>${lk?`🔒 ปลดที่เล้า Lv.${c.cl}`:`⏱️ ${fmtDur(c.sec)} • ได้ 🥚${c.y}/แปลง`}</small></span><b class="cc">🥚${c.cost}</b></button>`;}).join('')}</div>`,[{t:'ปิด',c:'g'}]);
+function tapField(i){const f=S.fm,now=Date.now();if(i>=f.plots.length){toast('🌱 ซื้อแปลงเพิ่มที่แท็บ 🏗️ ก่อสร้าง');return;}
+ const reap=j=>{const p=f.plots[j],e=cropOf(p.c).e,y=harvest(j,true);if(y){const [x,z]=plotXZ(j);floatText(`${e} +🥚${y}`,new THREE.Vector3(x,0,z),1);feathers(x,.2,z,0xffd23f,5);}return y;};
+ if(i<0){/* ป้ายเหนือไร่ = ทำทีเดียวทุกแปลง */let got=0;f.plots.forEach((p,j)=>{if(p.s==='g'&&now>=p.t)got+=reap(j);});
+  if(got){flyIcons(['🥚+'+fmt(got)],fieldC,1.2);snd(900,.08,'triangle',.05,1.3);vib(15);save();return;}
+  if(f.plots.some(p=>p.s==='e')){cropPick(-1);return;}
+  if(!skipAsk('field')){const m=Math.min(...f.plots.map(p=>p.t));floatText('⏳ '+tLeft(m),fieldC,1.4);}return;}
+ const p=f.plots[i];
+ if(p.s==='g'&&now>=p.t){reap(i);snd(900,.08,'triangle',.05,1.3);vib(15);save();return;}
+ if(p.s==='e'){cropPick(i);return;}
+ if(!skipAsk('field')){const [x,z]=plotXZ(i);floatText(`${cropOf(p.c).e} ⏳ ${tLeft(p.t)}`,new THREE.Vector3(x,0,z),1.2);}}
+function cropPick(i){const f=S.fm,e=f.plots.filter(p=>p.s==='e').length,cl=coopLv(),one=i>=0;
+ showModal(`<div class="em">🌱</div><h2>${one?`ปลูกแปลงที่ ${i+1}`:`ปลูกทุกแปลงว่าง (${e} แปลง)`}</h2><div class="sub">มี 🥚${fmt(S.etk|0)}${(S.etk|0)<10?'<br>💡 เบี้ยไข่ไม่พอ? 🌱 หญ้าจ่ายด้วย 🪙 เดือยเงินได้':''}</div><div class="crl">${CROPS.map(c=>{const lk=c.cl>cl;return `<button class="crp ${lk?'lk':''}" data-crop="${c.id}"><span class="ce">${c.e}</span><span class="crm"><b>${c.n}</b><small>${lk?`🔒 ปลดที่เล้า Lv.${c.cl}`:`⏱️ ${fmtDur(c.sec)} • ได้ 🥚${c.y}/แปลง`}</small></span><b class="cc">🥚${c.cost}${one?'':'×'+e}</b></button>`;}).join('')}</div>`,
+  one&&e>1?[{t:`🌱 ปลูกทุกแปลงว่าง (${e})`,f:()=>setTimeout(()=>cropPick(-1),50)},{t:'ปิด',c:'g'}]:[{t:'ปิด',c:'g'}]);
  document.querySelectorAll('[data-crop]').forEach(b=>b.onclick=()=>{const c=cropOf(b.dataset.crop);if(c.cl>coopLv()){toast(`🔒 ปลดที่เล้า Lv.${c.cl} (อัปเกรดที่ 🏗️ ก่อสร้าง)`);return;}f.crop=c.id;let n=0;
-  f.plots.forEach((p,j)=>{if(p.s==='e'&&plant(j,true,c.id)){n++;const [x,z]=plotXZ(j);floatText(c.e,new THREE.Vector3(x,0,z),.8);}});
-  if(!n){toast(`🥚 เบี้ยไข่ไม่พอ (ต้องใช้ ${c.cost}/แปลง)`);return;}const cb=[...document.querySelectorAll('#mbox .row button')].pop();if(cb)cb.click();snd(700,.06,'triangle',.05,1.3);floatText(`-🥚${n*c.cost}`,fieldC,1.6);save();});}
+  (one?[i]:f.plots.map((_,j)=>j)).forEach(j=>{if(f.plots[j].s==='e'&&plant(j,true,c.id)){n++;const [x,z]=plotXZ(j);floatText(c.e,new THREE.Vector3(x,0,z),.8);}});
+  if(!n){toast(c.id==='grass'?`ไม่มีทั้ง 🥚 และ 🪙 พอค่าเมล็ด`:`🥚 เบี้ยไข่ไม่พอ (ต้องใช้ ${c.cost}/แปลง) — ลอง 🌱 หญ้าก่อน`);return;}
+  const cb=[...document.querySelectorAll('#mbox .row button')].pop();if(cb)cb.click();snd(700,.06,'triangle',.05,1.3);save();});}
 function coopUp(){const cl=coopLv(),c=COOP_UP[cl];if(!c)return;if((S.etk|0)<c){toast(`🥚 เบี้ยไข่ไม่พอ (ต้องใช้ ${fmt(c)})`);return;}
  modal(`<div class="em">🏠</div><h2>อัปเกรดเล้า Lv.${cl+1}?</h2><p>ปลดพืช ${CROPS.filter(x=>x.cl===cl+1).map(x=>x.e+' '+x.n).join(', ')}<br>ใช้ 🥚${fmt(c)}</p>`,[{t:`อัปเกรด 🥚${fmt(c)}`,c:'r',f:()=>{if((S.etk|0)<c)return;S.etk-=c;S.cl=cl+1;fanfare();toast(`🏠 เล้า Lv.${S.cl}!`);save();renderProd();}},{t:'ไว้ก่อน',c:'g'}]);}
 /* ย้ายเซฟ: ของเก่าทั้งหมด → เดือยเงิน • คืนเงินที่ลงทุนในระบบที่ปิด • ไม่มีใครเสียของ */
