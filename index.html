@@ -404,6 +404,7 @@ body.shake{animation:bsh .5s}
 .t4g{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}.t4s{font:inherit;border:3px solid #3b2a1a;border-radius:12px;background:#fff;padding:6px 4px;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:12px}.t4s small{opacity:.7;font-size:11px}.t4s .emp{color:#8a7350;font-size:18px;padding:16px 0}
 .t4sum{font-weight:700;margin:4px 0}.t4tr{text-align:left;font-size:12.5px;background:#fff;border-radius:10px;padding:5px 8px}.t4tr div{opacity:.55}.t4tr div.on{opacity:1;color:#2f6d1f;font-weight:700}
 .t4k{font-weight:800;color:#2f6d1f;font-size:12px}.t4s .t4d{font-size:10.5px;line-height:1.25}.t4pa{margin-top:6px}.t4pa div{opacity:1}
+.twl{max-height:46vh;overflow:auto;text-align:left;margin:6px 0;display:flex;flex-direction:column;gap:4px}.twf{background:#fff;border:2px solid #e2cfa5;border-radius:10px;padding:5px 8px;font-size:13px;display:flex;flex-direction:column}.twf span{font-size:12px;opacity:.85}.twf.clr{opacity:.6}.twf.cur{border-color:#ff8a00;box-shadow:0 0 0 3px #ffd23f;opacity:1}
 </style>
 </head>
 <body>
@@ -415,7 +416,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.3.2-a';
+window.__BUILD='1.4.0-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -3191,11 +3192,23 @@ function tbPit(pit){if(!tbMine().length){toast('ยังไม่มีไก�
   onEnd:win=>{if(!win)return `เสียค่าเข้า 🪙${p.fee} • ไก่ไม่เป็นไร 🩹`;const pz=tbPrize(pit);S.coins+=pz;const ups=tbMine().map(x=>winUp(x.it,true)).filter(u=>u&&u.lv);save();return `ได้ 🪙${fmt(pz)}${ups.length?'<br>⬆️ เลเวลอัพ '+ups.length+' ตัว!':''}`;}});}
 function tbTower(){if(!tbMine().length){toast('ยังไม่มีไก่โต — ฟักไข่ก่อนนะ');return;}const f=S.tower||1,c=towerPreview(f),n=f<=2?2:f<=5?3:4;
  const en=Array.from({length:n},(_,i)=>{const t=i===0?c.tier:Math.floor(Math.random()*(c.tier+1)),ch=pickChar(t);return {ch,tier:t,lv:Math.max(1,Math.min(10,c.lv+Math.floor(Math.random()*3)-1)),en:Math.floor(f/12),name:chOf(ch).n,hpx:i===0&&c.boss?1.5:1};});
- cbRun({enemy:en,acc:{p:Math.min(.3,.04+f*.008),g:Math.min(.62,.42+f*.008)},ename:`🗼 ชั้น ${f}`,title:`🗼 หอคอยชั้น ${f}${c.boss?' 👹 บอส':''}`,back:()=>showSheet('fight'),again:()=>tbTower(),
-  onEnd:win=>{if(win){const repeat=f<(S.towerBest||0),rw=goldX(repeat?Math.round(c.reward/4):c.reward);S.coins+=rw;S.tower=f+1;let t=`ผ่านชั้น <b>${f}</b>! ได้ 🪙${fmt(rw)}`;
+ cbRun({enemy:en,acc:{p:Math.min(.3,.04+f*.008),g:Math.min(.62,.42+f*.008)},ename:`🗼 ชั้น ${f}`,title:`🗼 ทาวเวอร์เล้า ชั้น ${f}${c.boss?' 👹 บอส':''}`,back:()=>{showSheet('fight');towerScreen();},again:()=>tbTower(),
+  onEnd:win=>{if(win){const first=f>(S.towerBest||0),d=towerDrop(f,first),em=giveDrop(d);S.tower=f+1;let t=`ผ่านชั้น <b>${f}</b>! ${first?'🎁':'↻'} ได้ ${dropTxt(d)}${em}`;
    if(f>(S.towerBest||0)){S.towerBest=f;t+=' • 🎉 สถิติใหม่!';toHost({t:'shout',f});if(c.boss&&(S.cards||0)<CARD_MAX){S.cards=(S.cards||0)+1;t+='<br>🃏 ล้มบอส! ได้การ์ดบล็อก';}}
    tbMine().forEach(x=>winUp(x.it,true));save();return t;}const ck=towerCk(f);S.tower=ck;save();return `ตกหอคอยที่ชั้น ${f} • กลับไปจุดเซฟชั้น <b>${ck}</b><br>ไก่ไม่ตาย ลองจัดทีมใหม่!`;}});}
 function startTower(){tbTower();}
+/* ---------- 🗼 ทาวเวอร์เล้า 1.4.0: ไต่ด่าน + ของดรอปดีขึ้นเรื่อยๆ ---------- */
+const twEggT=f=>f>=40?4:f>=20?3:f>=10?2:1;
+function towerDrop(f,first){const c=towerPreview(f);if(first){const d={c:c.reward,etk:20+8*f};if(c.boss){d.gold=1+Math.floor(f/10);d.egg=twEggT(f);}return d;}
+ const d={c:Math.round(c.reward/4),etk:5+f};if(c.boss&&Math.random()<.1)d.egg=Math.max(0,twEggT(f)-1);return d;}
+const dropTxt=d=>[`🪙${fmt(goldX(d.c))}`,`🥚${d.etk}`,d.gold?`🥇${d.gold}`:'',d.egg!=null?`${EGG_DOT[d.egg]}ไข่★${d.egg+1}`:''].filter(Boolean).join(' ');
+function giveDrop(d){S.coins+=goldX(d.c);S.etk=(S.etk|0)+d.etk;if(d.gold)S.gold=(S.gold|0)+d.gold;let eggMsg='';
+ if(d.egg!=null){if(S.bag.length<eggCap(S.lvl)){S.bag.push(d.egg);eggMsg=`<br>${EGG_DOT[d.egg]} ได้<b>ไข่★${d.egg+1}</b> เข้ากล่องไข่!`;}else{S.etk+=300;eggMsg='<br>🧺 กล่องไข่เต็ม — แปลงไข่เป็น 🥚300';}}return eggMsg;}
+function towerScreen(){const best=S.towerBest||0,cur=S.tower||1,top=Math.max(cur,best)+4,lo=Math.max(1,cur-2);let rows='';
+ for(let f=top;f>=lo;f--){const c=towerPreview(f),first=f>best,d=towerDrop(f,first);rows+=`<div class="twf ${f===cur?'cur':''} ${f<=best?'clr':''}"><b>${f===cur?'👉 ':''}ชั้น ${f}</b>${c.boss?' 👹':''}${towerCk(f)===f&&f>1?' 🚩':''}<span>${f<=best&&f!==cur?'✅ ':''}${first?'🎁 ':'↻ '}${dropTxt(d)}</span></div>`;}
+ showModal(`<div class="em">🗼</div><h2>ทาวเวอร์เล้า</h2><div class="sub">ชั้นสูงสุด <b>${best}</b> • แพ้แล้วตกไปจุดเซฟ 🚩 • ทุก 5 ชั้นมีบอส 👹 ดรอป 🥇 เดือยทอง + ไข่</div><div class="twl">${rows}</div><div class="sub">🎁 = ผ่านครั้งแรก (ของเต็ม) • ↻ = ผ่านซ้ำ (ได้น้อยลง)</div>`,
+  [{t:`⚔️ สู้ชั้น ${cur}`,c:'r',f:()=>tbTower()},{t:'ปิด',c:'g'}]);}
+
 function tbGhostTeam(r){const ok=u=>u&&chOf(u.ch);if(Array.isArray(r.tm)&&r.tm.length)return r.tm.filter(ok).slice(0,4).map(u=>({ch:u.ch,tier:chOf(u.ch).t,lv:cInt(u.lv,1,10),en:cInt(u.en,0,5),name:clip(u.name||chOf(u.ch).n,20),sh:u.sh?1:0}));
  const L=[];const g=r.g&&L2C(r.g.c);if(g)L.push({c:g.id,lv:r.g.lv,en:r.g.en,nm:r.g.nm});(r.farm||[]).forEach(f=>{const k=L2C(f.c);if(k&&L.length<4&&!(g&&f.u===r.gu))L.push({c:k.id,lv:f.lv,en:f.en,nm:f.nm});});
  return L.map(x=>({ch:x.c,tier:chOf(x.c).t,lv:cInt(x.lv||1,1,10),en:cInt(x.en,0,5),name:clip(x.nm||chOf(x.c).n,20)}));}
@@ -3228,12 +3241,12 @@ function renderFight(){if(F.step&&F.step!=='mode'){renderFightOld();return;}cons
  let h=`<div class="card big-card" data-tb="team"><div class="ic" style="display:flex;gap:1px;width:auto">${its.map(it=>it?`<span style="width:30px">${chickSVG(it.ch,30,it.sh)}</span>`:'<span style="width:30px;opacity:.4">＋</span>').join('')}</div><div class="mid"><div class="nm">🛡️ ทีม 4 ช่อง</div><div class="sub">${s?`❤️${s.max} 🛡️${s.ar} ⚔️${s.atk}`:'ยังไม่มีไก่โต'}${act.length?'<br>'+act.map(k=>CTRIBE_N[k]).join(' '):''}<br>👆 แตะเพื่อจัดทีม / ดูสกิล</div></div></div>`;
  h+=`<h4 style="margin:10px 0 4px">🥊 เลือกบ่อแล้วสู้เลย <small>(กดจังหวะเอง)</small></h4>`+PITS.map((p,i)=>`<div class="card big-card ${S.coins<p.fee?'dis':''}" data-tbpit="${i}"><div class="ic">${p.i}</div><div class="mid"><div class="nm">${p.n} ${['😊 ง่าย','😐 สูสี','😈 ยาก'][i]}</div><div class="sub">ค่าเข้า 🪙${p.fee} • ชนะได้ 🪙${tbPrize(i)} • แพ้ไม่เสียไก่</div></div></div>`).join('');
  const f=S.tower||1,c=towerPreview(f);
- h+=`<div class="card big-card" data-tb="tower"><div class="ic">🗼</div><div class="mid"><div class="nm">หอคอย ชั้น ${f}${c.boss?' 👹 บอส!':''}</div><div class="sub">รางวัล 🪙${c.reward} • สูงสุด ${S.towerBest||0}</div></div></div>`;
+ h+=`<div class="card big-card" data-tb="tower"><div class="ic">🗼</div><div class="mid"><div class="nm">ทาวเวอร์เล้า ชั้น ${f}${c.boss?' 👹 บอส!':''}</div><div class="sub">${f>(S.towerBest||0)?'🎁 '+dropTxt(towerDrop(f,true)):'↻ ผ่านซ้ำ'} • สูงสุด ${S.towerBest||0}</div></div></div>`;
  h+=`<div class="card big-card ${net&&net.ready?'':'dis'}" data-tb="online"><div class="ic">🌐</div><div class="mid"><div class="nm">ชนออนไลน์ (ออโต้ วัดการจัดทีม)</div><div class="sub">${net&&net.ready?'วางเดิมพัน + ไก่เดิมพัน 1 ตัว':'ต้องเข้าล็อบบี้ก่อน'}</div></div></div>`;
  h+=`<div class="card"><div class="ic">🪪</div><div class="mid"><div class="sub">ชื่อของคุณในโหมดออนไลน์</div><input id="nick" maxlength="16" value="${esc(S.nick)}" style="font:inherit;font-size:16px;width:100%;border:2px solid #e2cfa5;border-radius:10px;padding:4px 8px"></div></div>`;
  $('#fightB').innerHTML=h;const nk=$('#nick');if(nk)nk.onchange=()=>{const v=nk.value.trim().slice(0,16);if(v){S.nick=v;save();toHost({t:'nick',n:v});window.__profiles.rename(window.__PID,v);toast('เปลี่ยนชื่อเป็น '+esc(v));}};
  $('#fightB').querySelectorAll('[data-tbpit]').forEach(e=>e.onclick=()=>tbPit(+e.dataset.tbpit));
- $('#fightB').querySelectorAll('[data-tb]').forEach(e=>e.onclick=()=>{const k=e.dataset.tb;if(k==='team')t4Editor();else if(k==='tower')tbTower();else if(k==='online'){if(!(net&&net.ready)){toast('เข้าล็อบบี้ก่อนนะ 🌐');showSheet('lobby');return;}F.mode='online';F.step='pit';renderFightOld();}});}
+ $('#fightB').querySelectorAll('[data-tb]').forEach(e=>e.onclick=()=>{const k=e.dataset.tb;if(k==='team')t4Editor();else if(k==='tower')towerScreen();else if(k==='online'){if(!(net&&net.ready)){toast('เข้าล็อบบี้ก่อนนะ 🌐');showSheet('lobby');return;}F.mode='online';F.step='pit';renderFightOld();}});}
 CHARS.forEach(c=>{const k=CK[c.id];if(k){c.skl={i:'⭐',n:k.p[0],d:k.p[1],t:k.p[1]};c.sig=`⭐ ${k.p[0]}: ${k.p[1]}`;}});
 
 
