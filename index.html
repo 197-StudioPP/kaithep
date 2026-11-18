@@ -417,7 +417,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.5.0-d';
+window.__BUILD='1.5.0-e';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -2908,6 +2908,7 @@ market.userData.pick='market';
 // labels (แตะป้ายก็ได้)
 function wLabel(fn){const d=document.createElement('div');d.className='wl';d.addEventListener('pointerdown',e=>{e.stopPropagation();e.preventDefault();if(view==='farm')fn();});labelsEl.appendChild(d);return d;}
 const fieldLb=wLabel(()=>tapField(-1)),saleLb=wLabel(()=>tapField(S.fm.plots.length)),coopLb=wLabel(()=>tapCoop()),troughLb=wLabel(()=>tapTrough()),kitLb=wLabel(()=>tapKitchen()),mktLb=wLabel(()=>openMarket());
+const plotLb=Array.from({length:PLOT_MAX},(_,i)=>wLabel(()=>tapField(i)));
 function putLb(d,pos,yo,html,cls){const [x,y,ok]=scr(pos,yo);const show=ok&&view==='farm'&&!B;d.style.display=show?'':'none';if(!show)return;d.style.left=x+'px';d.style.top=y+'px';if(d._h!==html){d._h=html;d.innerHTML=html;}d.className='wl'+(cls?' '+cls:'');}
 const fieldC=new THREE.Vector3(),tmpV=new THREE.Vector3();let wlT=0;
 function worldTick(dt){if(!S.fm)return;qHand();gpTick();nest.visible=unl('nest');trough.visible=unl('trough');fieldG.visible=unl('field');kitchen.visible=unl('kitchen');market.visible=unl('market');sign.visible=S.tut>=0||unl('sign');const f=S.fm,now=Date.now();
@@ -2922,6 +2923,8 @@ function worldTick(dt){if(!S.fm)return;qHand();gpTick();nest.visible=unl('nest')
  // field
  let rdy=0,emp=0,minT=Infinity;fieldC.set(0,0,0);f.plots.forEach((p,i)=>{const [x,z]=plotXZ(i);fieldC.x+=x;fieldC.z+=z;if(p.s==='e')emp++;else if(now>=p.t)rdy++;else minT=Math.min(minT,p.t);});fieldC.multiplyScalar(1/Math.max(1,f.plots.length));
  if(!unl('field'))fieldLb.style.display='none';else putLb(fieldLb,fieldC,2.9,rdy?`🌽 เก็บเกี่ยว! ×${rdy}`:emp?`🌱 แตะปลูก ×${emp} <small>${cropOf(S.fm.crop).e}🥚${cropOf(S.fm.crop).cost}</small>`:`🌱 ${tLeft(minT)}`,rdy||emp?'go':'');
+ plotLb.forEach((d,i)=>{const p=f.plots[i];if(!p||!unl('field')){d.style.display='none';return;}const [x,z]=plotXZ(i);tmpV.set(x,0,z+.55);const c=cropOf(p.c);
+  if(p.s==='e')putLb(d,tmpV,.3,'🌱 ว่าง','sm');else if(now>=p.t)putLb(d,tmpV,.3,`${c.e} ✅ เก็บ!`,'go sm');else putLb(d,tmpV,.3,`${c.e} ⏳${tLeft(p.t)}`,'sm');});
  if(f.plots.length<PLOT_MAX&&unl('sale')){const [x,z]=plotXZ(f.plots.length);tmpV.set(x,0,z);putLb(saleLb,tmpV,.6,`＋🪙${fmt(plotCost(f.plots.length))}`,'sm');}else saleLb.style.display='none';
  // coop
  const L=layers(),cap=rdCap(L.length),rate=layRate(L),eg=Math.floor(f.rd.egg),starve=(f.st.feed|0)<1&&L.length;
