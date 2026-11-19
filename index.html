@@ -422,7 +422,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.6.4-a';
+window.__BUILD='1.6.4-b';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -3403,16 +3403,16 @@ setInterval(()=>{try{autoFarm();}catch(e){}},2000);
 const ray=new THREE.Raycaster(),mv=new THREE.Vector2();
 /* 🗺️ ลากเลื่อนแผนที่ + หนีบซูม */
 var camOff={x:0,z:0},camZ=1,PT=new Map(),pDrag=null,pinch0=null;
-function camClamp(){camOff.x=Math.max(-3,Math.min(3,camOff.x));camOff.z=Math.max(-5,Math.min(5,camOff.z));camZ=1;}
+function camClamp(){camOff.x=0;camOff.z=0;camZ=1;}
 renderer.domElement.addEventListener('pointerdown',e=>{if(view!=='farm')return;PT.set(e.pointerId,{x:e.clientX,y:e.clientY});
  if(PT.size===1)pDrag={x:e.clientX,y:e.clientY,ox:camOff.x,oz:camOff.z,mv:0,t:performance.now(),e};else{pDrag&&(pDrag.mv=99);const [a,b]=[...PT.values()];pinch0={d:Math.hypot(a.x-b.x,a.y-b.y),z:camZ};}
  try{renderer.domElement.setPointerCapture(e.pointerId);}catch(_){}});
 renderer.domElement.addEventListener('pointermove',e=>{if(!PT.has(e.pointerId))return;PT.set(e.pointerId,{x:e.clientX,y:e.clientY});
  if(PT.size>=2)return;
  if(!pDrag)return;const dx=e.clientX-pDrag.x,dy=e.clientY-pDrag.y;pDrag.mv=Math.max(pDrag.mv,Math.hypot(dx,dy));
- if(pDrag.mv>10){const h=camGoal()[1],k=h/Math.max(1,H);camOff.x=pDrag.ox-dx*k*.85;camOff.z=pDrag.oz-dy*k*1.2;camClamp();}});
+ });
 const pEnd=e=>{if(!PT.has(e.pointerId))return;PT.delete(e.pointerId);if(PT.size<2)pinch0=null;
- if(PT.size===0&&pDrag){const d=pDrag;pDrag=null;if(d.mv<=10)farmPick(d.e);}};
+ if(PT.size===0&&pDrag){const d=pDrag;pDrag=null;if(d.mv<=24)farmPick(d.e);}};
 renderer.domElement.addEventListener('pointerup',pEnd);renderer.domElement.addEventListener('pointercancel',e=>{PT.delete(e.pointerId);if(!PT.size){pDrag=null;pinch0=null;}});
 
 function camFocus(x,z){const g=camGoal(),b=g[0];camOff.x+=x-(b.x);camOff.z+=z-(b.z);camClamp();}
