@@ -413,7 +413,7 @@ body.shake{animation:bsh .5s}
 #nav{display:none!important}
 /* 1.6.4c: ไม่ให้บังฟาร์ม — ภารกิจ+ข่าวย้ายลงล่าง, แถบบนไม่ตัดบรรทัด */
 .hud{flex-wrap:nowrap!important}.hud .chip{flex:none}
-@media (max-width:440px){.hud .chip{font-size:14px;padding:4px 9px}.hud{gap:5px}}
+@media (max-width:440px){.hud .chip{font-size:13px;padding:3px 7px}.hud{gap:4px;padding-left:5px!important;padding-right:5px!important}}
 #quest{top:auto!important;bottom:calc(env(safe-area-inset-bottom) + 44px)!important;left:50%!important;transform:translateX(-50%);max-width:94vw!important;width:max-content}
 #ticker{top:auto!important;bottom:calc(env(safe-area-inset-bottom) + 8px)!important}
 .ckrow{display:flex;align-items:center;gap:8px;background:#fff;border:3px solid #e2cfa5;border-radius:14px;padding:6px 10px;margin-bottom:8px;cursor:pointer}.ckh{flex:1;font-weight:800;font-size:14px;line-height:1.2}.ckh small{display:block;font-weight:400;color:#8a7a5a;font-size:12px}
@@ -436,7 +436,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.7.3-b';
+window.__BUILD='1.7.4-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -467,7 +467,7 @@ window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
   <div class="chip" id="eggChip">🧺 <span id="eggt">-</span></div>
   <div class="chip hide" id="cardChip" title="การ์ดบล็อก">🃏 <span></span></div>
   <div class="chip btnchip hide" id="netChip">🌐 <span></span></div>
-  <div class="chip btnchip" id="meChip" style="margin-left:auto">☰ <span></span></div>
+  <div class="chip btnchip" id="dqChip" style="margin-left:auto">🎯</div><div class="chip btnchip" id="meChip">☰ <span></span></div>
   <div class="hide"><span id="rateBtn"></span><span id="wl"></span></div>
 </div>
 <div id="toasts"></div>
@@ -3650,7 +3650,20 @@ var QUESTS=[
  {stat:()=>S.lvl|0,hl:['[data-p="up"]'],s:'แตะ 🏗️ โรงช่าง → ⬆️ อัพเกรดเครื่องฟัก',t:'อัพเกรดเครื่องฟัก 1 ครั้ง',at:'nav:prod',r:{c:300}},
  {ev:'pvp',t:'ท้าชนทีมเพื่อน',d:'แตะ 🏟️ ซุ้มไก่ชน → ⚔️ ท้า',at:'market',r:{c:300}},
  {chk:()=>coopLv()>=3,hl:['[data-coop="1"]'],t:'อัปเกรดเล้าเป็น Lv.3',d:'ปลด 🌟 ต้นไข่ทอง (2 ชม. ได้ 🥚605/แปลง)',at:'nav:prod',r:{c:600}}];
-function qEv(k,n){if(!S||S.qi==null)return;S.qe=S.qe||{};S.qe[k]=(S.qe[k]|0)+(n||1);}
+var DQ_POOL=[{k:'plant',i:'🌱',t:'ปลูกพืช',n:8,r:{c:80}},{k:'harvest',i:'🌽',t:'เก็บเกี่ยว',n:8,r:{etk:100}},{k:'win',i:'🏆',t:'ชนะการต่อสู้',n:3,r:{c:150}},{k:'spin',i:'🎰',t:'สุ่มไข่',n:1,r:{c:100}},{k:'pvp',i:'🏟️',t:'ท้าชนที่ซุ้มไก่ชน',n:1,r:{etk:100}},{k:'tower',i:'🗼',t:'ไต่ทาวเวอร์',n:1,r:{etk:120}},{k:'hatch',i:'🐣',t:'ฟักไข่ลุ้นไก่',n:1,r:{c:80}}],DQ_BONUS={etk:200,gold:1};
+function dqToday(){const d=new Date().toDateString();if(!S.dq||S.dq.d!==d){let h=cbHash(d+'|'+(S.gid||'x'));const P=DQ_POOL.map(x=>x.k),ks=[];while(ks.length<3){h=(h*1103515245+12345)>>>0;const k=P[h%P.length];if(!ks.includes(k))ks.push(k);}
+ S.dq={d,ks,p:{},done:[],w0:S.w|0,t0:S.tower||1,all:0};}return S.dq;}
+function dqAdd(k,n){try{const q=dqToday();if(!q.ks.includes(k))return;q.p[k]=(q.p[k]|0)+(n||1);dqCheck();}catch(e){}}
+function dqRw(r){return [r.c?'🪙'+r.c:'',r.etk?'🥚'+r.etk:'',r.gold?'🥇'+r.gold:''].filter(Boolean).join(' ');}
+function dqGive(r){if(r.c)S.coins+=r.c;if(r.etk)S.etk=(S.etk|0)+r.etk;if(r.gold)S.gold=(S.gold|0)+r.gold;}
+function dqCheck(){if(!S||S.tut>=0)return;const q=dqToday();q.p.win=Math.max(0,(S.w|0)-q.w0);q.p.tower=Math.max(0,(S.tower||1)-q.t0);let ch=0;
+ q.ks.forEach(k=>{const d=DQ_POOL.find(x=>x.k===k);if(!q.done.includes(k)&&(q.p[k]|0)>=d.n){q.done.push(k);dqGive(d.r);ch=1;toast(`🎯 ภารกิจวันนี้สำเร็จ: ${d.i} ${d.t} → ได้ ${dqRw(d.r)}`);}});
+ if(!q.all&&q.done.length>=q.ks.length){q.all=1;dqGive(DQ_BONUS);ch=1;fanfare();toast(`🎉 ครบ 3 ภารกิจวันนี้! โบนัส ${dqRw(DQ_BONUS)}`);}if(ch)save();}
+function dqOpen(){const q=dqToday();dqCheck();showModal(`<div class="em">🎯</div><h2>ภารกิจวันนี้</h2><div class="sub">ทำเสร็จได้รางวัลเลย ไม่ต้องกดรับ • รีเซ็ตทุกเที่ยงคืน</div><div style="text-align:left;margin-top:8px">${q.ks.map(k=>{const d=DQ_POOL.find(x=>x.k===k),v=Math.min(d.n,q.p[k]|0),ok=q.done.includes(k);
+ return `<div class="card" style="margin-bottom:6px"><div class="ic" style="font-size:26px">${ok?'✅':d.i}</div><div class="mid"><div class="nm">${d.t} ${v}/${d.n}</div><div class="bar"><i style="width:${v/d.n*100}%"></i></div><div class="sub">${ok?'ได้แล้ว ':'รางวัล '}${dqRw(d.r)}</div></div></div>`;}).join('')}
+ <div class="note">🎁 ครบ 3 อย่าง: ${dqRw(DQ_BONUS)} ${q.all?'✅':''}</div></div>`,[{t:'ปิด',c:'g'}]);}
+setInterval(()=>{try{if(S&&S.tut<0){dqCheck();const q=dqToday(),c=document.getElementById('dqChip');if(c){const t=q.all?'🎯✅':`🎯${q.done.length}/3`;if(c.textContent!==t)c.textContent=t;}}}catch(e){}},1500);
+function qEv(k,n){dqAdd(k,n);if(!S||S.qi==null)return;S.qe=S.qe||{};S.qe[k]=(S.qe[k]|0)+(n||1);}
 function qCur(){return S.qi!=null&&S.qi<QUESTS.length?QUESTS[S.qi]:null;}
 function qProg(q){if(q.chk)return q.chk()?1:0;if(q.stat){if(S.qb==null){S.qb=q.stat();}return Math.max(0,q.stat()-S.qb);}return (S.qe||{})[q.ev]|0;}
 const qN=q=>q.chk?1:(q.n||1);
@@ -3689,7 +3702,7 @@ function qGo(q){qHintUntil=Date.now()+8000;if(q.at&&q.at.startsWith('nav:')){con
 function qOpen(){const q=qCur();if(!q){const n=nextAct();if(n)n.go();return;}if(qDone(q)){qClaim();return;}const pr=Math.min(qProg(q),qN(q));
  modal(`<div class="em">📜</div><h2>${esc(q.t)}</h2><div class="sub">ภารกิจ ${S.qi+1}/${QUESTS.length} • ความคืบหน้า ${qShow(q)[1]}</div><p style="text-align:left">${q.d}</p><div class="sub">🎁 รางวัล ${qRw(q.r)}</div>`,
   [{t:'👉 พาไปเลย',c:'g',f:()=>qGo(q)},q.skip?{t:'ข้าม',f:()=>{S.qi++;S.qe={};S.qb=null;qSig='';save();}}:null,{t:'ปิด'}].filter(Boolean));}
-$('#quest').addEventListener('click',qOpen);
+$('#quest').addEventListener('click',qOpen);$('#dqChip').onclick=()=>dqOpen();
 function nextAct(){const f=S.fm,now=Date.now(),go=fn=>()=>{showSheet(null);setView('farm');setTimeout(fn,60);};if(!f)return null;
  const rd=f.plots.filter(p=>p.s==='g'&&now>=p.t).length,em=f.plots.filter(p=>p.s==='e').length;
  if(rd)return {i:'🌽',t:`เก็บเกี่ยว ${rd} แปลง`,s:f.plots.some(p=>p.s==='g'&&now>=p.t+STEAL_GRACE*60000)?'🥷 เพื่อนแอบขโมยได้แล้ว! รีบเก็บ':'แตะแปลงที่ขึ้น ✅ เก็บ!',go:go(()=>tapField(-1))};
