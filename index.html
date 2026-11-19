@@ -421,7 +421,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.5.3-c';
+window.__BUILD='1.5.3-d';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -2936,8 +2936,8 @@ function worldTick(dt){if(!S.fm)return;qHand();gpTick();nest.visible=unl('nest')
  {const keep=new Set();for(const it of S.items){const ro=chRole(it),r=recs.get(it.id);if(!ro||!r)continue;keep.add(it.id);let d=chLb.get(it.id);if(!d){d=wLabel(()=>{const R2=chRole(it);if(R2==='job')jobEditor();else if(R2==='team')t4Editor();});chLb.set(it.id,d);}
   const j=ro==='job'&&S.job.find(j=>j&&j.id===it.id);putLb(d,r.g.position,1.15,ro==='job'?JOBS[j.r].i:'⚔️',ro==='job'?'xs job ic':'xs team ic');}
   for(const [id,d] of chLb)if(!keep.has(id)){d.remove();chLb.delete(id);}}
- plotLb.forEach((d,i)=>{const p=f.plots[i];if(!p||!unl('field')){d.style.display='none';return;}const [x,z]=plotXZ(i);tmpV.set(x,0,z+.55);const c=cropOf(p.c);
-  if(p.s==='e')putLb(d,tmpV,.3,'＋ปลูก','xs');else if(now>=p.t){const w=p.t+STEAL_GRACE*60000;putLb(d,tmpV,.3,`✅เก็บ${p.lo?` 🥷-${p.lo}`:now>=w?' 🥷':''}`,p.lo||now>=w?'go xs warn':'go xs');}else putLb(d,tmpV,.3,`⏳${tLeft(p.t)}`,'xs');});
+ plotLb.forEach((d,i)=>{const p=f.plots[i];if(!p||!unl('field')){d.style.display='none';return;}const [x,z]=plotXZ(i);tmpV.set(x,0,z);const c=cropOf(p.c);
+  if(p.s==='g'&&now>=p.t){const w=p.t+STEAL_GRACE*60000;putLb(d,tmpV,1.9,p.lo||now>=w?'🥷':'✨',p.lo||now>=w?'go xs ic warn':'go xs ic');}else d.style.display='none';});
  if(f.plots.length<PLOT_MAX&&unl('sale')){const [x,z]=plotXZ(f.plots.length);tmpV.set(x,0,z);putLb(saleLb,tmpV,.6,`＋🪙${fmt(plotCost(f.plots.length))}`,'sm');}else saleLb.style.display='none';
  // coop
  const L=layers(),cap=rdCap(L.length),rate=layRate(L),eg=Math.floor(f.rd.egg),starve=(f.st.feed|0)<1&&L.length;
