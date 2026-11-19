@@ -434,7 +434,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.6.7-b';
+window.__BUILD='1.7.0-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -1433,7 +1433,7 @@ function openPatch(back){modal(`<div class="em">📜</div><h2>แพตช์ ${
  ♾️ <b>ไม่จำกัด</b> สุ่มไข่และท้าได้ไม่จำกัดครั้ง<br>
  <small>ของเดิมยังอยู่ครบ: ออโต้ • 2 สกิล • เสริมพลัง • ชิงไก่ • ใบประกาศ</small></div>`,
  [{t:back?'← กลับ':'ลุยเลย! 🐓',c:'g',f:back?openMenu:null}]);S.patch=PATCH;save();}
-function openMenu(){modal(`<div style="position:absolute;right:12px;top:8px;font-size:11px;color:#a08a66">รุ่น ${window.__BUILD}</div><div class="em">${isCloud?'☁️':'👤'}</div><h2>${S.pio?'🏅 ':''}${esc(S.nick)}</h2>${isCloud?`<div class="sub">${cloudLocked?'⚠️ หยุดซิงก์ (เปิดในเครื่องอื่น)':cloudRef?`✅ ซิงก์คลาวด์แล้ว${cloudLast?' • ล่าสุด '+new Date(cloudLast).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}):''}`:'⏳ กำลังเชื่อมต่อคลาวด์...'}</div>`:'<div class="sub">📱 เซฟในเครื่องนี้เท่านั้น — เข้าสู่ระบบเพื่อเล่นได้ทุกเครื่อง และชิงไก่ตัวแทนได้</div>'}<p><small>🏆 ชนะชน ${S.pw|0} • 🗼 หอคอยสูงสุดชั้น ${S.towerBest|0} • 📅 เข้าเกมติดกัน ${(S.daily&&S.daily.streak)|0} วัน</small></p>`,
+function openMenu(){modal(`<div style="position:absolute;right:12px;top:8px;font-size:11px;color:#a08a66">รุ่น ${window.__BUILD}</div><div class="em">${isCloud?'☁️':'👤'}</div><h2>${S.pio?'🏅 ':''}${esc(S.nick)}</h2>${isCloud?`<div class="sub">${cloudLocked?'⚠️ หยุดซิงก์ (เปิดในเครื่องอื่น)':cloudRef?`✅ ซิงก์คลาวด์แล้ว${cloudLast?' • ล่าสุด '+new Date(cloudLast).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}):''}`:'⏳ กำลังเชื่อมต่อคลาวด์...'}</div>`:'<div class="sub">📱 เซฟในเครื่องนี้เท่านั้น — เข้าสู่ระบบเพื่อเล่นได้ทุกเครื่อง และเดิมพันเบี้ยไข่กับเพื่อนได้</div>'}<p><small>🏆 ชนะชน ${S.pw|0} • 🗼 หอคอยสูงสุดชั้น ${S.towerBest|0} • 📅 เข้าเกมติดกัน ${(S.daily&&S.daily.streak)|0} วัน</small></p>`,
  [{t:`📖 สมุดสะสมไก่ ${CHARS.filter(c=>(S.dex||{})[c.id]).length}/${CHARS.length}`,c:'g',f:openDex},{t:'⚙️ ตั้งค่า',c:'b',f:openSettings},{t:'❓ วิธีเล่น',c:'g',f:()=>helpOpen()},{t:'💾 สำรอง/กู้เซฟ',f:openBackup},{t:'🔄 เปลี่ยนผู้เล่น',c:'r',f:()=>{save();if(net)leaveRoom(true);window.__profiles.switchTo();}},{t:'ปิด'}]);}
 function openSettings(){const on=v=>v?'✅ เปิด':'⬜ ปิด';
  modal(`<div class="em">⚙️</div><h2>ตั้งค่า</h2><p><small>โหมดภาพเบา: ลดความคมและปิดเงา ช่วยให้มือถือรุ่นเก่าลื่นขึ้น (เกมจะรีโหลด)</small></p>`,
@@ -1582,7 +1582,7 @@ function renderFightOld(){
  const nk=$('#nick');if(nk)nk.onchange=()=>{const v=nk.value.trim().slice(0,16);if(v){S.nick=v;save();toHost({t:'nick',n:v});window.__profiles.rename(window.__PID,v);toast('เปลี่ยนชื่อเป็น '+esc(v));}};
  bindRoomPanel();
  $('#fightB').querySelectorAll('[data-mode]').forEach(e=>e.onclick=()=>{if(e.dataset.mode==='online'&&!(net&&net.ready)){toast('เข้าล็อบบี้ก่อนนะ 🌐');showSheet('lobby');return;}F.mode=e.dataset.mode;F.step=F.mode==='tower'?'chick':'pit';renderFight();snd(700,.05,'triangle');});
- $('#fightB').querySelectorAll('[data-pit]').forEach(e=>e.onclick=()=>{const i=+e.dataset.pit;if(S.coins<PITS[i].fee){toast('เงินไม่พอค่าเข้าบ่อ 😅');return;}F.pit=i;F.step='chick';renderFight();snd(760,.05,'triangle');});
+ $('#fightB').querySelectorAll('[data-pit]').forEach(e=>e.onclick=()=>{const i=+e.dataset.pit;if(S.coins<PITS[i].fee){toast('เงินไม่พอค่าเข้าบ่อ 😅');return;}F.pit=i;const id=t4Ids().find(x=>x!=null)??(adults()[0]||{}).id;if(F.mode==='online'&&id!=null){(F.target?sendChallenge:startOnline)(id);return;}F.step='chick';renderFight();snd(760,.05,'triangle');});
  $('#fightB').querySelectorAll('[data-ck]').forEach(e=>e.onclick=()=>{if(!e.dataset.ck){toast('ไก่ตัวนี้เทพเกินบ่อนี้! ไปบ่อใหญ่สิ 👑');return;}(F.target?sendChallenge:startOnline)(+e.dataset.ck);});
  $('#fightB').querySelectorAll('[data-tw]').forEach(e=>e.onclick=()=>startTower(+e.dataset.tw));
  $('#fightB').querySelectorAll('[data-back]').forEach(e=>e.onclick=()=>{F.step=e.dataset.back;if(F.step==='mode')F.target=null;renderFight();});
@@ -2078,10 +2078,9 @@ function inviteTick(){if(!invEnd)return;const left=invEnd-Date.now();$('#invBar'
 function pickChicken(pit,cb,onCancel){
  const p=PITS[pit];
  if(S.coins<p.fee){toast(`เงินไม่พอค่าเข้า${p.n} (🪙${p.fee})`);onCancel&&onCancel();return;}
- const ok=S.items.filter(i=>i.st===2&&i.tier<=p.max).sort((a,b)=>b.tier-a.tier);
- if(!ok.length){toast(`ไม่มีไก่โตที่ลง${p.n}ได้ 😅`);onCancel&&onCancel();return;}
- modal(`<div class="em">🐔</div><h2>เลือกไก่ลง${p.n}</h2><p>เลือกไก่เดิมพัน 1 ตัว • ค่าเข้า 🪙${p.fee}<br>สู้กันเป็นทีม — <b>ชนะ</b> ได้ไก่เดิมพันของอีกฝ่าย • <b>แพ้</b> ไก่ตัวนี้ถูกชิงไป</p>`,
-  ok.slice(0,8).map(it=>({t:`${esc(it.name)} ${tagH(it.tier)}${it.buff?BUFFS.find(b=>b.id===it.buff).i:''}`,c:'g',f:()=>cb(it.id)})).concat([{t:'ยกเลิก',f:()=>onCancel&&onCancel()}]));
+ const id=t4Ids().find(x=>x!=null)??(adults()[0]||{}).id;if(id==null){toast('ยังไม่มีทีม — จัดทีมที่ 🏠 เล้าไก่ก่อน');onCancel&&onCancel();return;}
+ modal(`<div class="em">⚔️</div><h2>รับคำท้า ${p.i} ${p.n}?</h2><p>ส่ง <b>ทีม 4 ตัว</b> ลุย (ออโต้) • ค่าเข้า 🪙${p.fee}<br>ชนะได้กองกลาง + 🥚 เดิมพัน (สูงสุด ${PV_MAX}) • แพ้เสีย 🥚 เท่ากัน • <b>ไก่ไม่หาย</b></p>`,
+  [{t:'⚔️ ลุย!',c:'r',f:()=>cb(id)},{t:'ยกเลิก',f:()=>onCancel&&onCancel()}]);
 }
 const infoOf=(it,pit)=>({n:clip(S.nick,16),pid:window.__PID,k:clip(it.name,20),ti:it.tier,bf:it.buff||'',hab:S.hab.slice(0,3),p:pit,lv:it.lv||1,sk:(it.sk||[]).slice(0,3),c:{u:it.u,name:it.name,tier:it.tier,buff:it.buff,lv:it.lv||1,sk:it.sk||[],win:it.win||0,og:it.og||null,beta:it.beta?1:0,ch:it.ch||'',sh:it.sh?1:0,en:it.en|0}});
 
@@ -3289,24 +3288,23 @@ let TBO=null;
 function tbOnlineMatch(d){const it=S.items.find(i=>i.id===MM.id),p=PITS[MM.pit|0];if(!it||!tbMine().length){toHost({t:'endduel'});D=null;cancelSeek();toast('ยังไม่มีทีม');return;}
  const fee=Math.min(S.coins,p.fee);S.coins-=fee;save();$('#mmT').textContent='เจอคู่แล้ว! กำลังแลกทีม... 🤝';$('#mmSub').textContent='';$('#mmBtns').innerHTML='';
  TBO={opp:String(d.opp),pit:MM.pit|0,fee,stake:it.id,nonce:Math.floor(Math.random()*1e9),mine:t4Spec(),theirs:null,t0:Date.now()};
- D={opp:TBO.opp,tb:1,over:false};duelSend({k:'tb',spec:TBO.mine,nonce:TBO.nonce,info:infoOf(it,TBO.pit),n:S.nick});tbOnlineTry();}
+ TBO.ek=Math.min(PV_MAX,S.etk|0);D={opp:TBO.opp,tb:1,over:false};duelSend({k:'tb',spec:TBO.mine,nonce:TBO.nonce,info:infoOf(it,TBO.pit),n:S.nick,ek:TBO.ek});tbOnlineTry();}
 function tbOnlineRecv(x){if(!TBO||!Array.isArray(x.spec))return;TBO.theirs=x.spec.filter(u=>u&&chOf(u.ch)).slice(0,4).map(u=>({ch:u.ch,tier:chOf(u.ch).t,lv:cInt(u.lv,1,10),en:cInt(u.en,0,5),name:clip(u.name,20),sh:u.sh?1:0}));
- if(!TBO.theirs.length)TBO.theirs=[{ch:'sleepy',tier:0,lv:1,en:0,name:'?'}];TBO.tn=x.nonce|0;TBO.tinfo=x.info;TBO.tname=clip(x.n,16)||'คู่แข่ง';tbOnlineTry();}
+ if(!TBO.theirs.length)TBO.theirs=[{ch:'sleepy',tier:0,lv:1,en:0,name:'?'}];TBO.tn=x.nonce|0;TBO.tinfo=x.info;TBO.tek=cInt(x.ek,0,PV_MAX);TBO.tname=clip(x.n,16)||'คู่แข่ง';tbOnlineTry();}
 function tbOnlineTry(){if(!TBO||!TBO.theirs||TBV)return;const me=net.myId,op=TBO.opp,first=me<op,o=TBO;
  const seed=cbHash([first?me+':'+o.nonce:op+':'+o.tn,first?op+':'+o.tn:me+':'+o.nonce].join('|'));MM=null;$('#mm').classList.add('hide');
  cbRun({mine:o.mine,enemy:o.theirs,seed,side:first?0:1,auto:true,ename:esc(o.tname),title:`🌐 ${PITS[o.pit].i} vs ${esc(o.tname)}`,back:()=>showSheet('fight'),
-  onEnd:win=>{toHost({t:'endduel'});D=null;TBO=null;const stake=S.items.find(i=>i.id===o.stake);
-   if(win){const pz=Math.round(o.fee*2*.95);S.coins+=pz;let t=`ได้กองกลาง 🪙${fmt(pz)}`,k='';if(o.tinfo&&o.tinfo.c){const g=captureChicken(o.tinfo);k=g.c.name;toHost({t:'brag',o:o.tname,k:g.c.name});t+=`<br>🐔 <b>ชิงได้!</b> ${esc(g.c.name)} ของ ${esc(o.tname)}`;}
-    tbMine().forEach(x=>winUp(x.it,true));feedAdd({a:S.nick,b:o.tname,w:1,k,m:'⚔️'});save();return t;}
-   if(stake){S.items=S.items.filter(i=>i.id!==stake.id);S.lost={pid:clip(o.tinfo&&o.tinfo.pid,40),n:o.tname,u:stake.u,name:stake.name,t:Date.now()};t4Ids();}save();
-   return `${stake?`<b>${esc(stake.name)}</b> ถูกชิงไปอยู่กับ ${esc(o.tname)} 😭<br>ท้าชิงคืนได้ที่ล็อบบี้`:'เสียค่าเข้า'}`;}});}
+  onEnd:win=>{toHost({t:'endduel'});D=null;TBO=null;const W=Math.min(o.ek|0,o.tek|0);
+   if(win){const pz=Math.round(o.fee*2*.95);S.coins+=pz;if(W)S.etk=(S.etk|0)+W;tbMine().forEach(x=>winUp(x.it,true));feedAdd({a:S.nick,b:o.tname,w:1,k:W?'🥚'+W:'',m:'⚔️'});save();
+    return `ได้กองกลาง 🪙${fmt(pz)}${W?` + 🥚${fmt(W)} จาก ${esc(o.tname)}`:''}`;}
+   if(W)S.etk=Math.max(0,(S.etk|0)-W);save();return `${W?`เสีย 🥚${fmt(W)} ให้ ${esc(o.tname)}`:'เสียค่าเข้า'} • ไก่ไม่หาย 🩹`;}});}
 function tbOnlineAbort(){if(!TBO)return;if(!TBV){S.coins+=TBO.fee;save();toast('คู่แข่งหลุด — คืนค่าเข้าให้');$('#mm').classList.add('hide');}TBO=null;D=null;MM=null;}
 setInterval(()=>{if(TBO&&!TBV&&Date.now()-TBO.t0>20000){toHost({t:'endduel'});tbOnlineAbort();}},2000);
 /* ---------- หน้าลานประลอง ---------- */
 function renderFight(){if(F.step&&F.step!=='mode'){renderFightOld();return;}const its=t4Items(),sp=its.filter(Boolean).map(i=>({ch:i.ch,lv:i.lv,en:i.en})),s=sp.length?cbSide(sp,''):null,T=cbTribes(sp),act=Object.keys(T.c).filter(k=>T.c[k]>=2);
  let h=`<div class="card big-card"><div class="ic" style="display:flex;gap:1px;width:auto">${its.map(it=>it?`<span style="width:30px">${chickSVG(it.ch,30,it.sh)}</span>`:'<span style="width:30px;opacity:.4">＋</span>').join('')}</div><div class="mid"><div class="nm">🛡️ ทีม 4 ช่อง</div><div class="sub">${s?`❤️${s.max} 🛡️${s.ar} ⚔️${s.atk}`:'ยังไม่มีไก่โต'}${act.length?'<br>'+act.map(k=>CTRIBE_N[k]).join(' '):''}<br>🏠 จัดทีมได้ที่ <b>เล้าไก่</b></div></div></div>`;
  h+=`<h4 style="margin:10px 0 4px">🥊 เลือกบ่อแล้วสู้เลย <small>(กดจังหวะเอง)</small></h4>`+PITS.map((p,i)=>`<div class="card big-card ${S.coins<p.fee?'dis':''}" data-tbpit="${i}"><div class="ic">${p.i}</div><div class="mid"><div class="nm">${p.n} ${['😊 ง่าย','😐 สูสี','😈 ยาก'][i]}</div><div class="sub">ค่าเข้า 🪙${p.fee} • ชนะได้ 🪙${tbPrize(i)} • แพ้ไม่เสียไก่</div></div></div>`).join('');
- h+=`<div class="card big-card ${net&&net.ready?'':'dis'}" data-tb="online"><div class="ic">🌐</div><div class="mid"><div class="nm">ชนออนไลน์ (ออโต้ วัดการจัดทีม)</div><div class="sub">${net&&net.ready?'วางเดิมพัน + ไก่เดิมพัน 1 ตัว':'ต้องเข้าล็อบบี้ก่อน'}</div></div></div>`;
+ h+=`<div class="card big-card ${net&&net.ready?'':'dis'}" data-tb="online"><div class="ic">🌐</div><div class="mid"><div class="nm">ชนออนไลน์ (ออโต้ วัดการจัดทีม)</div><div class="sub">${net&&net.ready?`ค่าเข้า 🪙 + เดิมพัน 🥚 สูงสุด ${PV_MAX} • ไก่ไม่หาย`:'ต้องเข้าล็อบบี้ก่อน'}</div></div></div>`;
  h+=`<div class="card"><div class="ic">🪪</div><div class="mid"><div class="sub">ชื่อของคุณในโหมดออนไลน์</div><input id="nick" maxlength="16" value="${esc(S.nick)}" style="font:inherit;font-size:16px;width:100%;border:2px solid #e2cfa5;border-radius:10px;padding:4px 8px"></div></div>`;
  $('#fightB').innerHTML=h;const nk=$('#nick');if(nk)nk.onchange=()=>{const v=nk.value.trim().slice(0,16);if(v){S.nick=v;save();toHost({t:'nick',n:v});window.__profiles.rename(window.__PID,v);toast('เปลี่ยนชื่อเป็น '+esc(v));}};
  $('#fightB').querySelectorAll('[data-tbpit]').forEach(e=>e.onclick=()=>tbPit(+e.dataset.tbpit));
