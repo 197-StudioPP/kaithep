@@ -601,7 +601,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='2.2.0-a';
+window.__BUILD='2.3.0-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -848,6 +848,36 @@ const $=s=>document.querySelector(s);
 const R=Math.random, pick=a=>a[Math.floor(R()*a.length)];
 let GSPD=1;const wait=ms=>new Promise(r=>setTimeout(r,ms/GSPD));
 
+
+/* ╔══════════════════════════════════════════════════════════════════╗
+   ║ 🧩 โซนเพิ่มของ (MOD ZONE) — เพิ่มไก่ / คอมโบ ได้ที่นี่ที่เดียว          ║
+   ║ อ่านคู่มือ "คู่มือผู้พัฒนาไก่เทพ" ประกอบ • ห้ามเปลี่ยน id ของไก่ที่ปล่อยแล้ว ║
+   ╚══════════════════════════════════════════════════════════════════╝ */
+var MOD_CHICKENS=[
+ /* ตัวอย่าง — ลบ /* กับ *\/ ที่ครอบออก เพื่อเปิดใช้
+ {id:'ninja',            // รหัสภาษาอังกฤษ ห้ามซ้ำ ห้ามเปลี่ยนภายหลัง
+  t:2,                   // ระดับ 0=★1 1=★2 2=★3 3=★4 4=★5
+  w:1,                   // น้ำหนักสุ่มในระดับเดียวกัน (1 = เท่ากัน, 0.5 = ออกยากกว่าครึ่ง)
+  n:'ไก่นินจา',e:'🥷',d:'เงียบ เร็ว มาไม่ให้สุ่มให้เสียง',
+  q:['...','ข้ามาแล้ว','ฟุ่บ!'],     // คำพูดในฟาร์ม
+  body:0x2b2b3a,         // สีตัว (hex) • ใส่ tail:[0x..,0x..,0x..] เพิ่มสีหางได้
+  hp:60,ar:24,atk:28,    // เลือด / เกราะ / โจมตี (ดูของตัวอื่นเทียบ)
+  tribe:'blood',         // เผ่า: myst, food, gang, blood, gold, sky (ใส่ 2 ตัวเผ่าเดียวกันได้โบนัส)
+  passive:['เงาไร้เสียง','ศัตรูเกราะ -6%'],      // ชื่อ+คำอธิบายสกิลติดตัว (แสดงผลเท่านั้น)
+  skills:[               // [ชื่อ, คำอธิบาย, ผล] ตามช่อง เอก / โท / ตรี / จัตวา
+   ['ดาวกระจาย','ครั้งหน้าเจาะเกราะ 30%',{nx:{n:1,pierce:.3}}],
+   ['ซ่อนตัว','เกราะ +20 (2 ตา)',{tb:{ar:20,t:2}}],
+   ['ระเบิดควัน','ป่วนแท่งศัตรู',{dis:'fog'}],
+   ['คาถาเงา','3 ครั้งถัดไป แรง +40%',{nx:{n:3,dmgUp:.4}}]],
+  draw:{front:'<path d="M70 34 h30 v8 h-30z" fill="#111"/>'}   // ของแต่งบนตัว (SVG ในกรอบ 120x120) — ไม่ใส่ก็ได้
+ },
+ */
+];
+var MOD_COMBOS=[
+ /* ตัวอย่าง:
+ {a:'ninja',b:'mystic',n:'นินจาสายมู',i:'🥷🔮',d:'ศัตรูเกราะ −10%',me:{},foe:{arPct:-.1}},
+ */
+];
 /* ================= DATA ================= */
 const TIERS=[
  {n:'ธรรมดา',sp:'ไก่บ้านขนขาว นิสัยดี กินเก่ง ยังไม่มีพลังพิเศษ',c:'#8a8a8a',body:0xf3eee2,tail:[0xe8e0cc,0xd8cfb8,0xe8e0cc],sell:15},
@@ -898,6 +928,7 @@ function chickSVG(id,size,sh){const c=chOf(id)||CHARS[0],t=c.t,T=TIERS[t],body=c
  if(id_==='sueb'){back+=`<path d="M74 44 q-46 -2 -56 52 q30 -8 48 6z" fill="#2a1640" stroke="#3b2a1a" stroke-width="2"/><path d="M70 50 q-34 2 -44 40 q22 -6 38 2z" fill="#b03060"/><path d="M66 46 l18 -12 l6 8z" fill="#2a1640"/>`;front+=`<path d="M94 49 l2 6 l2 -6z M99 48 l2 6 l2 -6z" fill="#fff" stroke="#3b2a1a" stroke-width=".8"/>`;eye=`<circle cx="86" cy="38" r="6" fill="#fff" stroke="#3b2a1a" stroke-width="1.5"/><circle cx="88" cy="38" r="3" fill="#d0021b"/>`;}
  if(id_==='rainbow')front+=`<text x="22" y="34" font-size="13">🌈</text>`;
  if(id_==='skyking')front+=`<path d="M70 20 l4 -12 l6 8 l6 -10 l6 10 l6 -8 l4 12z" fill="#ffd23f" stroke="#3b2a1a" stroke-width="1.5"/><text x="20" y="30" font-size="16">⚡</text>`;
+ if(c.draw){front+=c.draw.front||'';back+=c.draw.back||'';if(c.draw.eye!=null)eye=c.draw.eye;}
  const comb=(id_==='skyking'||id_==='kaprao')?'':`<circle cx="76" cy="22" r="6" fill="#d63a2a"/><circle cx="84" cy="19" r="6.5" fill="#d63a2a"/><circle cx="92" cy="23" r="5.5" fill="#d63a2a"/>`;
  return `<svg viewBox="0 0 120 120" width="${size||100}" height="${size||100}" xmlns="http://www.w3.org/2000/svg" style="display:block">${defs}
   <ellipse cx="60" cy="108" rx="34" ry="6" fill="rgba(0,0,0,.18)"/><g ${sh?`filter="url(#${u}s)"`:''}>
@@ -963,9 +994,10 @@ function autoPlay(){if(!AUTO||!B||B.ended||B.tw||B.busy||B.myLocked)return;if(wa
 function spdTxt(){return '⏩ x'+GSPD;}
 const actReady=f=>!!(f&&ACT[f.ch])&&(f.chg|0)>=(f.used?ACT_RE:ACT_FIRST);
 const CSTAT={sleepy:[55,35,18],kaprao:[50,28,16],lost:[68,22,17],hothead:[54,18,28],fluffy:[58,40,16],uncle:[64,28,20],scar:[60,20,26],mystic:[52,26,21],hero:[56,24,22],goldleaf:[62,42,20],boss:[72,30,24],sueb:[59,22,29],rainbow:[66,34,26],skyking:[63,28,32],colonel:[68,34,23]};
+(MOD_CHICKENS||[]).forEach(m=>{try{if(!m||!m.id||CHARS.some(c=>c.id===m.id))return;CHARS.push({id:m.id,t:m.t|0,w:m.w==null?1:m.w,n:m.n||m.id,e:m.e||'🐔',d:m.d||'',q:m.q&&m.q.length?m.q:['กุ๊ก!'],body:m.body,tail:m.tail,draw:m.draw,nw:1});CSTAT[m.id]=[m.hp||55,m.ar||25,m.atk||20];}catch(e){console.error('MOD chicken',e);}});
 CHARS.forEach(c=>{const st=CSTAT[c.id]||[50,25,18];c.hp=st[0];c.ar=st[1];c.atk=st[2];});
 const starOf=t=>(t|0)+1;
-CHARS.forEach(c=>{c.skl=CSK[c.id];c.sig=`${c.skl.i} ${c.skl.n}: ${c.skl.d}`;});
+CHARS.forEach(c=>{c.skl=CSK[c.id]||{i:'⭐',n:'',d:'',t:''};c.sig=`${c.skl.i} ${c.skl.n}: ${c.skl.d}`;});
 const SHINY_P=.01,DAILY_SPIN=1e9;
 const TPERK=['ไม่มีโบนัส','รางวัลชนะ +35%','HP +1 • รางวัลชนะ +70%','HP +2 • รางวัลชนะ +105% (ลงได้แค่บ่อใหญ่)','HP +3 • รางวัลชนะ +140% (ลงได้แค่บ่อใหญ่)'];
 const chOf=id=>CHARS.find(c=>c.id===id)||null;
@@ -2911,7 +2943,7 @@ let BD={};try{BD=JSON.parse(localStorage.getItem('kaitep_board'))||{};}catch(e){
 let bdT=0;setTimeout(()=>{try{glCheck();}catch(e){}},2500);
 const L2C=x=>CHARS[(x||'').charCodeAt(0)-97]||null,C2L=id=>String.fromCharCode(97+CHARS.findIndex(c=>c.id===id));
 function bdSave(){try{localStorage.setItem('kaitep_board',JSON.stringify(BD));}catch(e){}}
-function bdSan(r){if(!r||typeof r!=='object')return null;const id=String(r.id||'');if(!/^[a-z0-9]{6,20}$/.test(id))return null;const now=Date.now(),az=v=>String(v||'').replace(/[^a-n]/g,'');
+function bdSan(r){if(!r||typeof r!=='object')return null;const id=String(r.id||'');if(!/^[a-z0-9]{6,20}$/.test(id))return null;const now=Date.now(),az=v=>String(v||'').replace(/[^a-z]/g,'');
  let g=null;if(r.g&&typeof r.g==='object'){const c=az(r.g.c).slice(0,1),k=L2C(c);if(k)g={c,t:k.t,lv:cInt(r.g.lv,1,10),en:cInt(r.g.en,0,5),sk:String(r.g.sk||'').split(',').filter(x=>SKILLS.some(z=>z.id===x)).slice(0,3),bf:BUFFS.some(b=>b.id===r.g.bf)?r.g.bf:'',sh:r.g.sh?1:0,nm:clip(String(r.g.nm||k.n),20)};}
  const h=Array.isArray(r.h)&&r.h.length===3?r.h.map(v=>cInt(v,0,100)):[34,33,33];
  const gl=Array.isArray(r.gl)?r.gl.slice(-8).filter(x=>x&&/^[a-z0-9]{6,20}$/.test(String(x.to))).map(x=>({to:String(x.to),w:x.w?1:0,ts:Math.min(now+60000,+x.ts||0)})):[];
@@ -3044,7 +3076,7 @@ function ghostUpload(force){if(!cgDb||!cgUser||cloudLocked)return;if(!force&&Dat
  cgDb.collection('ghosts').doc(cgUser.uid).set(JSON.parse(JSON.stringify({...r,uid:cgUser.uid,gu:rep?rep.u:'',farm,tm:defSpec(),lp:lg().p,lw:lg().wk,ek:S.etk|0,shu:+S.pvSh||0,lc:pvLeft().e,lg:pvLeft().g,eg:myEggs().length,et:(myEggs()[0]||{t:0}).t,t:Date.now()}))).catch(()=>{});}
 function cgFetch(){if(!cgDb||Date.now()-cgT<20000)return;cgT=Date.now();
  cgDb.collection('ghosts').orderBy('t','desc').limit(60).get().then(q=>{const N={};q.docs.forEach(d=>{const x=d.data()||{};const r=bdSan(x);if(!r||r.ss!==SEASON||r.id===S.gid)return;r.uid=String(x.uid||d.id);r.gu=String(x.gu||'').slice(0,24);r.cloud=1;r.tm=Array.isArray(x.tm)?x.tm.slice(0,4).filter(u=>u&&typeof u==='object'):[];r.ek=cInt(x.ek,0,1e9);r.shu=Math.max(0,+x.shu||0);r.lc=x.lc==null?PV_DAY_E:cInt(x.lc,0,PV_DAY_E);r.lg=x.lg==null?0:cInt(x.lg,0,PV_DAY_G);r.eg=cInt(x.eg,0,99);r.et=cInt(x.et,0,4);
-  r.farm=(Array.isArray(x.farm)?x.farm:[]).slice(0,40).map(f=>{const k=L2C(String(f&&f.c||'').replace(/[^a-n]/g,'').slice(0,1));if(!k||!f.u)return null;return {u:String(f.u).slice(0,24),c:C2L(k.id),t:k.t,lv:cInt(f.lv,1,10),en:cInt(f.en,0,5),sh:f.sh?1:0,nm:clip(String(f.nm||k.n),20),bf:BUFFS.some(b=>b.id===f.bf)?f.bf:'',sk:String(f.sk||'').split(',').filter(z=>SKILLS.some(q=>q.id===z)).slice(0,3)};}).filter(Boolean);N[r.id]=r;});CG=N;if($('#bdl'))openBoard(true);if($('#pvh'))pvpHub(true);}).catch(()=>{});}
+  r.farm=(Array.isArray(x.farm)?x.farm:[]).slice(0,40).map(f=>{const k=L2C(String(f&&f.c||'').replace(/[^a-z]/g,'').slice(0,1));if(!k||!f.u)return null;return {u:String(f.u).slice(0,24),c:C2L(k.id),t:k.t,lv:cInt(f.lv,1,10),en:cInt(f.en,0,5),sh:f.sh?1:0,nm:clip(String(f.nm||k.n),20),bf:BUFFS.some(b=>b.id===f.bf)?f.bf:'',sk:String(f.sk||'').split(',').filter(z=>SKILLS.some(q=>q.id===z)).slice(0,3)};}).filter(Boolean);N[r.id]=r;});CG=N;if($('#bdl'))openBoard(true);if($('#pvh'))pvpHub(true);}).catch(()=>{});}
 async function processSteals(docs){if(stealBusy)return;if(B){setTimeout(()=>processSteals(docs),5000);return;}stealBusy=true;const lost=[];
  for(const d of docs){const x=d.data()||{};const it=S.items.find(i=>i.u===x.u&&i.st===2);
   if(it){S.items=S.items.filter(i=>i!==it);if(S.rep===it.id)S.rep=null;const nm=clip(String(x.fromName||'?'),16);lost.push({n:nm,name:it.name,gd:(repOf()||{}).name||''});S.lost={pid:clip('fb_'+x.from,40),n:nm,u:it.u,name:it.name,t:+x.ts||Date.now()};}
@@ -3430,6 +3462,11 @@ var DIS={shrink:{i:'🌀',n:'ช่องหด',d:'ช่องเขียว�
  drunk:{i:'🫨',n:'ลูกศรเมา',d:'ลูกศรวิ่งช้าสลับเร็ว'},rev:{i:'↩️',n:'กลับทิศ',d:'ลูกศรวิ่งย้อนกลับกะทันหัน'},fog:{i:'🌫️',n:'หมอกบัง',d:'หมอกบังแท่งครึ่งหนึ่ง'},fake:{i:'🎭',n:'ช่องหลอก',d:'มีช่องเขียวปลอมเพิ่ม 1 ช่อง'}};
 var DIS_OF={sleepy:'drunk',kaprao:'fog',lost:'rev',hothead:'fast',fluffy:'fake',uncle:'shrink',scar:'jump',mystic:'ghost',hero:'shrink',goldleaf:'fog',boss:'fast',sueb:'ghost',rainbow:'fake',skyking:'jump',colonel:'shrink'};
 Object.keys(DIS_OF).forEach(id=>{if(!FX[id]||!CK[id])return;const k=DIS_OF[id],D=DIS[k];FX[id][2]=(s,o)=>{o.dis=(o.dis||[]).filter(x=>x.k!==k);o.dis.push({k,t:2});};CK[id].s[2]=[CK[id].s[2][0],`ป่วนแท่งศัตรู ${D.i} ${D.n} 2 ตา — ${D.d}`];});
+function modFx(sp){return (s,o)=>{try{if(!sp)return;if(sp.nx)s.nx.push(Object.assign({n:1},sp.nx));if(sp.tb)s.tb.push(Object.assign({t:2},sp.tb));if(sp.foe)o.tb.push(Object.assign({t:2},sp.foe));if(sp.heal)heal(s,sp.heal);if(sp.ult)s.ult=Math.min(100,s.ult+sp.ult);if(sp.foeUlt)o.ult=Math.max(0,o.ult-sp.foeUlt);
+ if(sp.dot)o.dot.push({v:sp.dot,t:3});if(sp.dis&&DIS[sp.dis]){o.dis=(o.dis||[]).filter(x=>x.k!==sp.dis);o.dis.push({k:sp.dis,t:2});}}catch(e){}};}
+(MOD_CHICKENS||[]).forEach(m=>{try{if(!m||!m.id)return;const S4=(m.skills||[]).slice(0,4);while(S4.length<4)S4.push(['กุ๊ก!','—',{}]);
+ CK[m.id]={p:m.passive||['ไก่ใหม่','—'],s:S4.map((x,i)=>{let d=x[1]||'';if(i===2&&x[2]&&x[2].dis&&DIS[x[2].dis])d=`ป่วนแท่งศัตรู ${DIS[x[2].dis].i} ${DIS[x[2].dis].n} 2 ตา — ${DIS[x[2].dis].d}`;return [x[0],d];})};
+ FX[m.id]=S4.map(x=>modFx(x[2]));if(S4[2]&&S4[2][2]&&S4[2][2].dis)DIS_OF[m.id]=S4[2][2].dis;if(m.tribe)CTRIBE[m.id]=m.tribe;}catch(e){console.error('MOD skills',e);}});
 const cbRng=seed=>{let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};};
 const cbHash=s=>{let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;};
 /* ---------- ทีม 4 ช่อง ---------- */
@@ -3462,6 +3499,8 @@ var COMBOS=[
  {a:'lost',b:'sleepy',n:'งงงวยหาวนอน',i:'❓😴',d:'เริ่มไฟต์ป่วนศัตรู 🫨 ลูกศรเมา 1 ตา',f:(x,y)=>{y.dis=(y.dis||[]).concat([{k:'drunk',t:1}]);}},
  {a:'hero',b:'colonel',n:'กองพันฮีโร่',i:'🦸🎖️',d:'ช่องเขียวเรากว้าง +10%',f:(x,y)=>x.tb.push({gw:.1,t:99})},
  {a:'boss',b:'sueb',n:'มาเฟียแวมไพร์',i:'😎🧛',d:'ศัตรูเติมอันติช้าลง 20%',f:(x,y)=>y.tb.push({ultRate:-.2,t:99})}];
+(MOD_COMBOS||[]).forEach(c=>{try{if(!c||!c.a||!c.b)return;const ap=(x,e)=>{if(!e)return;if(e.atkPct)x.tb.push({atkPct:e.atkPct,t:99});if(e.arPct)x.ar=Math.round(x.ar*(1+e.arPct));if(e.hpPct){x.max=Math.round(x.max*(1+e.hpPct));x.hp=x.max;}if(e.gw)x.tb.push({gw:e.gw,t:99});if(e.slow)x.tb.push({slow:e.slow,t:99});if(e.ult)x.ult=Math.max(x.ult,e.ult);if(e.dis&&DIS[e.dis])x.dis=(x.dis||[]).concat([{k:e.dis,t:1}]);};
+ COMBOS.push({a:c.a,b:c.b,n:c.n||'คอมโบใหม่',i:c.i||'🔗',d:c.d||'',f:(x,y)=>{ap(x,c.me);ap(y,c.foe);}});}catch(e){}});
 function combosOf(chs){const H=new Set(chs);return COMBOS.filter(c=>H.has(c.a)&&H.has(c.b));}
 function cbPair(A,B,rng){rng=rng||Math.random;[[A,B],[B,A]].forEach(([x,y])=>{x.combo=combosOf(x.units.map(u=>u.ch));x.combo.forEach(c=>{try{c.f(x,y);}catch(e){}});});[[A,B],[B,A]].forEach(([x,y])=>{if(x.tr.myst>=2)y.ar=Math.round(y.ar*.9);if(x.tr.blood>=2){y.max=Math.round(y.max*.9);y.hp=y.max;}
  if(x.has.boss)y.tb.push({atk:-10,t:3});if(x.has.skyking)x.ult=Math.max(x.ult,50);if(x.has.rainbow)x.rb=rbuf(x,rng);});}
@@ -3659,7 +3698,7 @@ function comboBox(chs){const H=new Set(chs),own=new Set(adults().map(i=>i.ch)),o
 const tbEditor=t4Editor;
 function skBar(d){const w=/ช่องเขียว(?:ทีม)? ?\+|ช่องเขียว \+/.test(d),c=/กลางแท่ง/.test(d),sl=/ลูกศร.*ช้า/.test(d),nw=/ช่องเขียว.*แคบ/.test(d),pa=/PERFECT|เพอร์เฟกต์/.test(d);if(!(w||c||sl||nw||pa))return '';
  const W=nw?12:w?34:20,L=c?50-W/2:62;return `<span class="skb"><i style="left:${L}%;width:${W}%${pa?';background:#2fbf00':''}"></i><b style="left:${c?50:L+W/2}%">${sl?'🐢':'▲'}</b></span>`;}
-function ckInfoH(ch,cur){const k=CK[ch];if(!k)return '';const C=['atk','buf','deb','ult'],TN=['ใช้ตอนตี','บัพทีมเรา','ดีบัพศัตรู','อันติเมต'];
+function ckInfoH(ch,cur){const k=CK[ch];if(!k)return '';const C=['atk','buf','deb','ult'],TN=['ใช้ตอนตี','บัพทีมเรา','ป่วนแท่งศัตรู','อันติเมต'];
  return `<div class="skg"><div class="skt pas"><span class="ski">⭐</span><div><b>${k.p[0]}</b><small class="skc">ติดตัวเสมอ</small><div class="skd">${k.p[1]}</div>${skBar(k.p[1])}</div></div>
  ${k.s.map((x,i)=>`<div class="skt ${C[i]} ${cur===i?'cur':''}"><span class="ski">${SLOT_I[i]}</span><div><b>${x[0]}</b><small class="skc">ช่อง${SLOT_N[i]} • ${TN[i]}${cur===i?' • ✅ ใช้อยู่':''}</small><div class="skd">${x[1]}</div>${skBar(x[1])}</div></div>`).join('')}</div>
  <div class="sub" style="font-size:11.5px">💡 ไก่ใช้สกิลตาม <b>ช่องที่ยืนในทีม</b> — ยืนช่องไหนใช้สกิลช่องนั้น</div>`;}
