@@ -531,6 +531,14 @@ body.shake{animation:bsh .5s}
 .cbstg .sd.cheer .un .cwing{animation:wflap .2s infinite alternate}.cbstg .sd.cheer .un .chead{animation:crow 1s infinite}
 /* แพ้ */
 .cbstg .sd.ko .un .chead{animation:none;transform:rotate(30deg)}.cbstg .sd.ko .un .cwing{animation:none;transform:rotate(20deg)}
+.cbbar .gzf{position:absolute;top:0;bottom:0;background:linear-gradient(#9dff6e,#4fd12a);box-shadow:0 0 12px #6cff3a}.cbbar.def .gzf{background:linear-gradient(#a8e6ff,#4bb8ff);box-shadow:0 0 12px #4bb8ff}
+.cbbar .fog{position:absolute;top:-4px;bottom:-4px;width:50%;z-index:3;border-radius:8px;background:radial-gradient(circle at 30% 40%,#fff 0 20%,transparent 21%) 0 0/28px 24px,linear-gradient(#e9eef2,#c9d3db);opacity:.96;animation:fogm 2s ease-in-out infinite alternate}
+@keyframes fogm{to{background-position:14px 0,0 0}}
+.cbbar.dis{box-shadow:0 0 0 3px #a8743f,0 4px 0 3px #4a2c15,0 0 16px 4px rgba(176,48,224,.7)!important;animation:dish .6s ease-in-out infinite alternate}@keyframes dish{to{box-shadow:0 0 0 3px #a8743f,0 4px 0 3px #4a2c15,0 0 22px 8px rgba(176,48,224,.9)}}
+.cbbar .gz.jmp{animation:jmp .3s}@keyframes jmp{0%{opacity:.2;transform:scaleY(.3)}100%{opacity:1;transform:scaleY(1)}}
+.cbtags i.dis{background:#e9c8ff!important;border-color:#7a2fa8!important;animation:tgp .5s}
+.t4s.sl0{border-color:#c0392b;background:#fff1ee}.t4s.sl1{border-color:#2f7d22;background:#effbe8}.t4s.sl2{border-color:#7a2fa8;background:#f6edff}.t4s.sl3{border-color:#c79a00;background:#fffbe6}.t4s .skb{width:90px;margin:2px auto 6px}
+.cbx{text-align:left;background:#f6edff;border:2px dashed #7a2fa8;border-radius:12px;padding:6px 8px;margin:6px 0;font-size:12.5px}.cbx .on{color:#3d1660;margin-top:3px}.cbx .nr{opacity:.75;margin-top:3px;font-size:12px}
 .pwb{font-size:11px;border-radius:8px;padding:0 6px;margin-left:4px;white-space:nowrap}.pwb.g{background:#d9ffc8}.pwb.y{background:#fff0a8}.pwb.r{background:#ffc9bf}
 .cpinfo{background:#fff3c4;border:2px solid #e2c36a;border-radius:12px;padding:6px 10px;margin:0 0 8px;font-size:13px;text-align:center;line-height:1.35}.cpinfo small{color:#7a5a2a}
 .wl.job{background:#e8f6d8;border-color:#4c8a2a}.wl.team{background:#ffe0d6;border-color:#b23a2a}
@@ -591,7 +599,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.9.8-a';
+window.__BUILD='2.0.0-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -3361,7 +3369,7 @@ function gpTick(){for(const k in GP)GP[k].style.display='none';return;const f=S.
 const CTRIBE={sleepy:'myst',kaprao:'food',lost:'gang',hothead:'blood',fluffy:'gold',uncle:'gang',scar:'blood',mystic:'myst',hero:'sky',goldleaf:'gold',boss:'gang',sueb:'blood',rainbow:'any',skyking:'sky',colonel:'gang'};
 const CTRIBE_N={myst:'🌙 มายา',blood:'🔥 เลือดร้อน',gold:'🛡️ ขนทอง',gang:'👊 นักเลงบ่อ',sky:'⚡ ฟ้า',food:'🍲 อาหาร',any:'🌈 รุ้ง'};
 const CTRIBE_D={myst:'ศัตรูเกราะ -10%',gang:'เลือด +10%',blood:'ศัตรูเลือด -10%',gold:'เกราะ +10%',sky:'อันติเมตเต็มตั้งแต่เริ่ม',food:'ผ่าน 5 รอบ ฟื้นเลือด 50%',any:'นับเป็นทุกเผ่า • เกราะ/เลือด/โจมตี +2%'};
-const SLOT_N=['เอก','โท','ตรี','จัตวา'],SLOT_I=['🗡️','💪','🌀','🌟'],SLOT_D=['สกิลหลัก','บัพ','ดีบัพศัตรู','อันติเมต'];
+const SLOT_N=['เอก','โท','ตรี','จัตวา'],SLOT_I=['🗡️','💪','🌀','🌟'],SLOT_D=['ตีหลัก','บัพทีมเรา','ป่วนแท่งศัตรู','อันติเมต'];
 const ACC={easy:{p:.05,g:.45},normal:{p:.12,g:.58},hard:{p:.25,g:.62},auto:{p:.15,g:.6}};
 /* สกิลตามเอกสารออกแบบ: p = ติดตัว, s = [เอก, โท, ตรี, จัตวา] (ตัวเลขหน่วย ×2 เพราะทีมรวม 4 ตัว) */
 const CK={
@@ -3398,6 +3406,11 @@ sueb:[s=>s.nx.push({n:1,pierce:.3}),s=>{s.tb.push({atk:28,t:2});s.hp=Math.max(1,
 rainbow:[s=>s.nx.push({n:1,gw:.1,dmgUp:.15}),s=>{s.tb.push({ar:16,t:2});heal(s,16);},(s,o)=>o.tb.push({ar:-12,acc:-.05,t:2}),s=>s.nx.push({n:3,gCycle:1})],
 skyking:[s=>s.nx.push({n:1,slow:.5}),s=>s.tb.push({atk:30,acc:.1,t:2}),(s,o)=>{o.ult=Math.max(0,o.ult-25);},s=>{s.nx.push({n:3,acc:.3});s.skyU={left:3,perf:0};}],
 colonel:[s=>s.nx.push({n:1,slow:.2}),s=>s.tb.push({ar:16,t:2}),(s,o)=>o.tb.push({gw:-.15,t:2}),s=>s.nx.push({n:2,dmgUp:.4,gw:.15})]};
+/* 🌀 ช่องตรี = ป่วนแท่งชนอีกฝั่ง */
+var DIS={shrink:{i:'🌀',n:'ช่องหด',d:'ช่องเขียวแคบลงครึ่งหนึ่ง'},fast:{i:'⚡',n:'ลูกศรเร่ง',d:'ลูกศรวิ่งเร็วขึ้น 40%'},ghost:{i:'👻',n:'ลูกศรล่องหน',d:'ลูกศรหายตอนวิ่งผ่านกลางแท่ง'},jump:{i:'🔀',n:'ช่องย้ายที่',d:'ช่องเขียวกระโดดย้ายระหว่างวิ่ง'},
+ drunk:{i:'🫨',n:'ลูกศรเมา',d:'ลูกศรวิ่งช้าสลับเร็ว'},rev:{i:'↩️',n:'กลับทิศ',d:'ลูกศรวิ่งย้อนกลับกะทันหัน'},fog:{i:'🌫️',n:'หมอกบัง',d:'หมอกบังแท่งครึ่งหนึ่ง'},fake:{i:'🎭',n:'ช่องหลอก',d:'มีช่องเขียวปลอมเพิ่ม 1 ช่อง'}};
+var DIS_OF={sleepy:'drunk',kaprao:'fog',lost:'rev',hothead:'fast',fluffy:'fake',uncle:'shrink',scar:'jump',mystic:'ghost',hero:'shrink',goldleaf:'fog',boss:'fast',sueb:'ghost',rainbow:'fake',skyking:'jump',colonel:'shrink'};
+Object.keys(DIS_OF).forEach(id=>{if(!FX[id]||!CK[id])return;const k=DIS_OF[id],D=DIS[k];FX[id][2]=(s,o)=>{o.dis=(o.dis||[]).filter(x=>x.k!==k);o.dis.push({k,t:2});};CK[id].s[2]=[CK[id].s[2][0],`ป่วนแท่งศัตรู ${D.i} ${D.n} 2 ตา — ${D.d}`];});
 const cbRng=seed=>{let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};};
 const cbHash=s=>{let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;};
 /* ---------- ทีม 4 ช่อง ---------- */
@@ -3414,22 +3427,34 @@ const t4Spec=()=>t4Items().map(it=>it?{ch:it.ch,tier:it.tier|0,lv:it.lv||1,en:it
 const t4Slots=()=>t4Items().map(it=>it?it.ch:null);
 const tbMySpec=t4Spec;
 function cbTribes(units){const c={};let any=0;units.forEach(u=>{const t=CTRIBE[u.ch];if(t==='any')any++;else if(t)c[t]=(c[t]||0)+1;});Object.keys(c).forEach(k=>c[k]+=any);return {c,any};}
-function cbSide(units,name,slots){const s={name,units,slots:slots||units.map(u=>u.ch).concat([null,null,null,null]).slice(0,4),max:0,ar:0,atk:0,sk:0,ult:0,skI:0,food:0,fed:0,hits:0,tb:[],nx:[],dot:[],stun:0,streak:0,hot:0,own:0,has:{},ultRate:0};
+function cbSide(units,name,slots){const s={name,units,slots:slots||units.map(u=>u.ch).concat([null,null,null,null]).slice(0,4),max:0,ar:0,atk:0,sk:0,ult:0,skI:0,food:0,fed:0,hits:0,tb:[],nx:[],dot:[],dis:[],stun:0,streak:0,hot:0,own:0,has:{},ultRate:0};
  units.forEach(u=>{const c=chOf(u.ch)||{hp:50,ar:25,atk:18},lv=u.lv||1,en=u.en|0;s.has[u.ch]=1;s.max+=c.hp*(1+.06*(lv-1)+.05*en);s.ar+=c.ar*(1+.03*(lv-1));s.atk+=c.atk*(1+.05*(lv-1)+.05*en);});
  const T=cbTribes(units);s.tr=T.c;if(T.c.gang>=2)s.max*=1.1;if(T.c.gold>=2)s.ar*=1.1;if(T.c.sky>=2)s.ult=100;if(T.c.food>=2)s.food=1;
  if(T.any){const k=1+.02*T.any;s.max*=k;s.ar*=k;s.atk*=k;}
  s.max=Math.round(s.max*(units[0]&&units[0].hpx||1));s.ar=Math.round(s.ar);s.atk=Math.round(s.atk);s.hp=s.max;return s;}
-function cbPair(A,B,rng){rng=rng||Math.random;[[A,B],[B,A]].forEach(([x,y])=>{if(x.tr.myst>=2)y.ar=Math.round(y.ar*.9);if(x.tr.blood>=2){y.max=Math.round(y.max*.9);y.hp=y.max;}
+var COMBOS=[
+ {a:'sleepy',b:'colonel',n:'เวรยามไม่หลับ',i:'😴🎖️',d:'ลูกศรเราช้าลง 12% ทั้งไฟต์',f:(x,y)=>x.tb.push({slow:.12,t:99})},
+ {a:'hothead',b:'hero',n:'ไฟพิทักษ์',i:'🔥🦸',d:'โจมตีทีม +10%',f:(x,y)=>x.tb.push({atkPct:.1,t:99})},
+ {a:'kaprao',b:'goldleaf',n:'ข้าวกะเพราไข่ดาว',i:'🌿✨',d:'เลือดสูงสุด +10%',f:(x,y)=>{x.max=Math.round(x.max*1.1);x.hp=x.max;}},
+ {a:'mystic',b:'rainbow',n:'มนต์เจ็ดสี',i:'🔮🌈',d:'เริ่มไฟต์อันติ 35%',f:(x,y)=>{x.ult=Math.max(x.ult,35);}},
+ {a:'sueb',b:'scar',n:'แผลสยอง',i:'🧛🩹',d:'เกราะศัตรู −12%',f:(x,y)=>{y.ar=Math.round(y.ar*.88);}},
+ {a:'boss',b:'uncle',n:'เจ้าถิ่นบ่อใหญ่',i:'😎👴',d:'โจมตีศัตรู −8%',f:(x,y)=>y.tb.push({atkPct:-.08,t:99})},
+ {a:'skyking',b:'fluffy',n:'ปีกฟ้าขนนุ่ม',i:'⚡🎀',d:'เกราะทีม +12%',f:(x,y)=>{x.ar=Math.round(x.ar*1.12);}},
+ {a:'lost',b:'sleepy',n:'งงงวยหาวนอน',i:'❓😴',d:'เริ่มไฟต์ป่วนศัตรู 🫨 ลูกศรเมา 1 ตา',f:(x,y)=>{y.dis=(y.dis||[]).concat([{k:'drunk',t:1}]);}},
+ {a:'hero',b:'colonel',n:'กองพันฮีโร่',i:'🦸🎖️',d:'ช่องเขียวเรากว้าง +10%',f:(x,y)=>x.tb.push({gw:.1,t:99})},
+ {a:'boss',b:'sueb',n:'มาเฟียแวมไพร์',i:'😎🧛',d:'ศัตรูเติมอันติช้าลง 20%',f:(x,y)=>y.tb.push({ultRate:-.2,t:99})}];
+function combosOf(chs){const H=new Set(chs);return COMBOS.filter(c=>H.has(c.a)&&H.has(c.b));}
+function cbPair(A,B,rng){rng=rng||Math.random;[[A,B],[B,A]].forEach(([x,y])=>{x.combo=combosOf(x.units.map(u=>u.ch));x.combo.forEach(c=>{try{c.f(x,y);}catch(e){}});});[[A,B],[B,A]].forEach(([x,y])=>{if(x.tr.myst>=2)y.ar=Math.round(y.ar*.9);if(x.tr.blood>=2){y.max=Math.round(y.max*.9);y.hp=y.max;}
  if(x.has.boss)y.tb.push({atk:-10,t:3});if(x.has.skyking)x.ult=Math.max(x.ult,50);if(x.has.rainbow)x.rb=rbuf(x,rng);});}
 const sm=(s,k)=>s.tb.reduce((a,b)=>a+(b[k]||0),0);
 function nxAgg(s){const a={};s.nx.forEach(x=>{for(const k in x)if(k!=='n')a[k]=(a[k]||0)+x[k];});return a;}
-function aimMods(s){const n=nxAgg(s);return {gw:(n.gw||0)+sm(s,'gw'),slow:(n.slow||0)+sm(s,'slow')+(s.has.sleepy?.15:0),acc:(n.acc||0)+sm(s,'acc'),center:n.center||0,perfAny:n.perfAny||0};}
+function aimMods(s){const n=nxAgg(s);return {gw:(n.gw||0)+sm(s,'gw'),slow:(n.slow||0)+sm(s,'slow')+(s.has.sleepy?.15:0),acc:(n.acc||0)+sm(s,'acc'),center:n.center||0,perfAny:n.perfAny||0,dis:(s.dis||[]).map(d=>d.k)};}
 const aAtk=s=>Math.max(1,(s.atk+sm(s,'atk')+s.hot*4)*(1+sm(s,'atkPct')));
 const aAr=s=>Math.max(0,s.ar+sm(s,'ar')+(s.has.lost&&s.hp<s.max*.5?16:0)+(s.has.hero&&s.hp<s.max*.3?20:0));
 function ultOk(s){const u=s.slots[3];if(u==='colonel'&&s.streak>=3)return true;if(u==='scar')return s.ult>=100||(s.hp<s.max*.5&&s.ult>=60);return s.ult>=100||(s.hp<s.max*.3&&s.ult>=50);}
 const skSlot=s=>{for(let i=0;i<3;i++){const k=(s.skI+i)%3;if(s.slots[k])return k;}return -1;};
 function rollKind(rng,acc,m){m=m||{gw:0,slow:0,acc:0};const g=Math.max(.05,Math.min(.92,acc.g*(1+m.gw)*(1+m.slow*.6)+m.acc+(m.center?.1:0))),p=Math.max(0,Math.min(.6,acc.p*(1+m.gw*.5)*(1+m.slow*.6)+m.acc*.3+(m.center?.04:0)));
- const r=rng();let k=r<p?'p':r<Math.min(.97,p+g)?'g':'m';if(k==='g'&&m.perfAny)k='p';return k;}
+ const dn=(m.dis||[]).length,g2=g*Math.pow(.8,dn),p2=p*Math.pow(.6,dn);const r=rng();let k=r<p2?'p':r<Math.min(.97,p2+g2)?'g':'m';if(k==='g'&&m.perfAny)k='p';return k;}
 /* ตาเริ่ม: เลือดไหล / มึน / บัพสุ่มของบักเขียว */
 function cbBegin(st,ai,rng){const s=st.S[ai],ev={ai};s.own++;
  s.dot.forEach(d=>{s.hp=Math.max(0,s.hp-d.v);ev.dot=(ev.dot||0)+d.v;d.t--;});s.dot=s.dot.filter(d=>d.t>0);
@@ -3461,7 +3486,7 @@ function cbRes(st,ai,kind,ev,rng){const a=st.S[ai],d=st.S[1-ai],n=nxAgg(a);ev.ki
  if(a.skyU){if(kind==='p')a.skyU.perf++;if(--a.skyU.left<=0){if(a.skyU.perf>=2){const z=Math.round(aAtk(a)*.75*100/(100+aAr(d)));d.hp=Math.max(0,d.hp-z);ev.bolt=z;}a.skyU=null;}}
  a.sk=Math.min(100,a.sk+(kind==='p'?40:green?25:10));
  if(!ev.ult)a.ult=Math.min(100,a.ult+(dmg?12:4)*Math.max(.2,1+a.ultRate+sm(a,'ultRate')));if(dmg)d.ult=Math.min(100,d.ult+15*Math.max(.2,1+d.ultRate+sm(d,'ultRate')));if(dmg)a.hits++;
- done();a.tb.forEach(b=>b.t--);a.tb=a.tb.filter(b=>b.t>0);
+ done();a.tb.forEach(b=>b.t--);a.tb=a.tb.filter(b=>b.t>0);if(a.dis){a.dis.forEach(d=>d.t--);a.dis=a.dis.filter(d=>d.t>0);}
  st.turn++;[a,d].forEach(s=>{if(s.food&&!s.fed&&st.turn>=10&&s.hp>0&&s.hp<s.max){s.fed=1;const h=Math.round(s.max*.5);heal(s,h);ev.heal=(ev.heal||[]).concat([[st.S.indexOf(s),h]]);}});
  if(d.hp<=0)st.win=ai;else if(a.hp<=0)st.win=1-ai;else if(st.turn>=(st.maxT||40))st.win=(st.S[0].hp/st.S[0].max>=st.S[1].hp/st.S[1].max)?0:1;return ev;}
 /* ตาเดียวแบบออโต้ (ใช้จำลองสมดุล + ออนไลน์) */
@@ -3493,15 +3518,16 @@ function cbRun(ctx){if(TBV||B)return;const mine=ctx.mine||t4Spec();if(!mine.leng
  if($('#cbskip'))$('#cbskip').onclick=()=>{TBV.skip=true;};
   $('#cbult').onclick=()=>{const m=TBV.st.S[TBV.my];if(TBV.defing)return;if(ultOk(m)&&TBV.tapRes&&!TBV.pend.ult){TBV.pend.ult=1;TBV.tapRes('re');}};
  {const h=$('#cbhit');h.style.touchAction='manipulation';h.addEventListener('pointerdown',e=>{e.preventDefault();if(TBV&&TBV.tapRes){const x=TBV.xNow?TBV.xNow(e.timeStamp):TBV.x;const ar=$('#cbar');if(ar)ar.style.left=x*100+'%';TBV.tapRes(x);}});}
- cbUI();cbLoop();}
+ cbUI();setTimeout(()=>{if(!TBV)return;[meS,opS].forEach((sd,j)=>(sd.combo||[]).forEach((c,k)=>setTimeout(()=>{if(TBV)cbFloat(j?0:1,`🔗 ${c.i} ${c.n}!`,'sk');},k*700)));},400);cbLoop();}
 function cbTags(m,def,fired){const t=[],pc=v=>Math.round(Math.abs(v)*100)+'%';
  if(fired)t.push(`<i class="fire">${fired}</i>`);
+ (m.dis||[]).forEach(k=>{const D=DIS[k];if(D)t.push(`<i class="dn dis">${D.i} โดนป่วน: ${D.n}</i>`);});
  if(m.gw>.001)t.push(`<i class="up">🎯 ช่อง${def?'ฟ้า':'เขียว'}กว้าง +${pc(m.gw)}</i>`);else if(m.gw<-.001)t.push(`<i class="dn">🌀 ช่องแคบลง −${pc(m.gw)}</i>`);
  if(m.slow>.001)t.push(`<i class="up">🐢 ลูกศรช้า ${pc(m.slow)}</i>`);
  if(m.acc>.001)t.push(`<i class="up">👁️ แม่น +${pc(m.acc)}</i>`);else if(m.acc<-.001)t.push(`<i class="dn">😵 แม่นลด −${pc(m.acc)}</i>`);
  if(m.center)t.push('<i class="up">📍 ช่องอยู่กลางแท่ง</i>');if(m.perfAny)t.push('<i class="up">✨ เขียวทั้งหมด = PERFECT</i>');
  const e=$('#cbtags');if(e)e.innerHTML=t.join('');}
-function cbDefMods(s){return {gw:sm(s,'gw'),slow:sm(s,'slow')+(s.has.sleepy?.15:0),acc:sm(s,'acc'),center:0,perfAny:0};}
+function cbDefMods(s){return {gw:sm(s,'gw'),slow:sm(s,'slow')+(s.has.sleepy?.15:0),acc:sm(s,'acc'),center:0,perfAny:0,dis:(s.dis||[]).map(d=>d.k)};}
 function cbCut(sd,k,mine,dly){if(!TBV||TBV.skip)return;const id=sd.slots[k];if(!id||!CK[id])return;const u=sd.units.find(x=>x.ch===id)||{ch:id};
  const go=()=>{const v=$('#cbv');if(!v||!TBV)return;v.querySelectorAll('.cbcut').forEach(x=>x.remove());const d=document.createElement('div');d.className='cbcut'+(mine?'':' op')+(k===3?' ul':'');
   d.innerHTML=`<span class="cpic">${chickSVG(id,78,u.sh)}</span><div><span class="si">${SLOT_I[k]}</span> <b>${CK[id].s[k][0]}</b><small>${esc(u.name||(chOf(id)||{}).n||'')} • ${CK[id].s[k][1]}</small></div>`;v.appendChild(d);setTimeout(()=>d.remove(),1150);};
@@ -3524,10 +3550,19 @@ function cbUI(){if(!TBV)return;const st=TBV.st;[0,1].forEach(vi=>{const s=st.S[v
  $('#cbturn').textContent=`รอบ ${Math.floor(st.turn/2)+1}`;}
 function cbFloat(vi,txt,cls){const f=$('#cbf'+vi);if(!f||TBV.skip)return;const d=document.createElement('span');d.className='cbft '+(cls||'');d.innerHTML=txt;f.appendChild(d);setTimeout(()=>d.remove(),1200);}
 function cbMsg(t){const m=$('#cbmsg');if(m&&!TBV.skip)m.innerHTML=t;}
-function cbBar(m){const w=Math.max(.06,Math.min(.55,.18*(1+m.gw)+m.acc*.3+(m.center?.04:0))),l=m.center?.5-w/2:.06+Math.random()*(.88-w),gz=$('#cbgz'),pz=$('#cbpz'),pw=Math.min(.45,(.025*(1+m.gw*.5)+m.acc*.05))/w;
- gz.style.left=l*100+'%';gz.style.width=w*100+'%';pz.style.width=m.perfAny?'100%':pw*200+'%';pz.style.marginLeft=m.perfAny?'-50%':-pw*100+'%';return {l,r:l+w,pw:pw*w,per:1500*(1+m.slow),all:m.perfAny};}
+function cbBar(m){const D=new Set(m.dis||[]);const w=Math.max(.05,Math.min(.55,(.18*(1+m.gw)+m.acc*.3+(m.center?.04:0))*(D.has('shrink')?.5:1))),l=m.center?.5-w/2:.06+Math.random()*(.88-w),gz=$('#cbgz'),pz=$('#cbpz'),pw=Math.min(.45,(.025*(1+m.gw*.5)+m.acc*.05))/w;
+ gz.style.left=l*100+'%';gz.style.width=w*100+'%';pz.style.width=m.perfAny?'100%':pw*200+'%';pz.style.marginLeft=m.perfAny?'-50%':-pw*100+'%';
+ const bar=$('#cbbar');bar.querySelectorAll('.gzf,.fog').forEach(e=>e.remove());bar.classList.toggle('dis',D.size>0);
+ if(D.has('fake')){let fl=.06+Math.random()*(.88-w);if(Math.abs(fl-l)<w)fl=l>.5?Math.max(.03,l-w-.15):Math.min(.94-w,l+w+.15);const f=document.createElement('i');f.className='gz gzf';f.style.left=fl*100+'%';f.style.width=w*100+'%';const pp=pz.cloneNode();pp.removeAttribute('id');f.appendChild(pp);bar.appendChild(f);}
+ if(D.has('fog')){const f=document.createElement('i');f.className='fog';const left=(l+w/2)<.5;f.style.left=left?'0':'50%';bar.appendChild(f);}
+ return {l,r:l+w,w,pw:pw*w,per:1500*(1+m.slow)*(D.has('fast')?.6:1),all:m.perfAny,D};}
 function cbTap(z,tmo){return new Promise(res=>{TBV.tapRes=res;const t0=performance.now();if(tmo)setTimeout(()=>{if(TBV&&TBV.tapRes===res)res('to');},tmo);const ar=$('#cbar'),hit=$('#cbhit');hit.disabled=false;hit.classList.add('go');
- TBV.xNow=ts=>{const n=performance.now(),tt=ts&&ts>t0&&ts<=n+5?ts:n,ph=((tt-t0)%z.per)/z.per;return ph<.5?ph*2:2-ph*2;};const fr=()=>{if(!TBV||TBV.tapRes!==res)return;const x=TBV.xNow();TBV.x=x;ar.style.left=x*100+'%';requestAnimationFrame(fr);};requestAnimationFrame(fr);}).then(x=>{if(TBV)TBV.tapRes=null;const hit=$('#cbhit');if(hit){hit.disabled=true;hit.classList.remove('go');}
+ const D=z.D||new Set(),tri=u=>{u=((u%1)+1)%1;return u<.5?u*2:2-u*2;};let jumped=false;
+ TBV.xNow=ts=>{const n=performance.now(),tt=ts&&ts>t0&&ts<=n+5?ts:n,e=tt-t0;let u=e/z.per;if(D.has('drunk'))u+=.07*Math.sin(e/170);if(D.has('rev'))u+=.16*Math.sin(e/380);return tri(u);};
+ const fr=()=>{if(!TBV||TBV.tapRes!==res)return;const x=TBV.xNow();TBV.x=x;ar.style.left=x*100+'%';
+  if(D.has('ghost'))ar.style.opacity=(x>.28&&x<.72)?'0':'1';
+  if(D.has('jump')&&!jumped&&performance.now()-t0>z.per*.45){jumped=true;let nl=.06+Math.random()*(.88-z.w);if(Math.abs(nl-z.l)<z.w*1.2)nl=z.l>.5?.08:.9-z.w;z.l=nl;z.r=nl+z.w;const gz=$('#cbgz');if(gz){gz.style.left=nl*100+'%';gz.classList.remove('jmp');void gz.offsetWidth;gz.classList.add('jmp');}}
+  requestAnimationFrame(fr);};requestAnimationFrame(fr);}).then(x=>{if(TBV)TBV.tapRes=null;const hit=$('#cbhit');if(hit){hit.disabled=true;hit.classList.remove('go');}const ar2=$('#cbar');if(ar2)ar2.style.opacity='1';
  if(x==='to')return 'm';if(x==null||x==='re')return x;const c=(z.l+z.r)/2,inG=x>=z.l&&x<=z.r;return inG&&(z.all||Math.abs(x-c)<=z.pw)?'p':inG?'g':'m';});}
 async function cbLoop(){const T=TBV;
  while(TBV===T&&T.st.win==null){const st=T.st,ai=st.turn%2,a=st.S[ai],isMe=ai===T.my,human=isMe&&!T.auto,tv=isMe?0:1,av=1-tv;cbUI();
@@ -3544,9 +3579,9 @@ async function cbLoop(){const T=TBV;
    kind=rollKind(T.rng,isMe?ACC.auto:(T.ctx.acc||ACC.auto),aimMods(a));
    if(!isMe&&!T.auto&&!T.skip){const me=st.S[1-ai],dm=cbDefMods(me);cbMsg(`${ev.ult?'🌟 ศัตรูปล่อยอันติ!':ev.sk!=null?`😤 ศัตรูใช้ <b>${ev.skn}</b>`:'😤 ศัตรูพุ่งเข้าใส่!'} กด <b>กัน</b> ตอนลูกศรอยู่ช่องฟ้า!`);
     $('#cbbar').classList.add('def');$('#cbbar').classList.remove('fev');$('#cbhit').textContent='🛡️ กัน';cbTags(dm,1,ev.sk!=null?`${ev.ske} ศัตรู: ${ev.skd}`:'');T.defing=1;
-    const z=cbBar(dm);await cbW(ev.sk!=null||ev.ult?750:250);let dk=await cbTap(z,z.per*1.6);T.defing=0;if(!TBV)return;if(dk==null)dk=rollKind(T.rng,{p:.06,g:.4});ev.def=dk;$('#cbhit').textContent='ชน';}
+    const z=cbBar(dm);await cbW(ev.sk!=null||ev.ult?750:250);let dk=await cbTap(z,z.per*1.6);T.defing=0;if(!TBV)return;if(dk==null)dk=rollKind(T.rng,{p:.06,g:.4},{gw:0,slow:0,acc:0,dis:dm.dis});ev.def=dk;$('#cbhit').textContent='ชน';}
    else{if(!T.skip){$('#cbgz').style.width='0';$('#cbtags').innerHTML='';cbMsg(isMe?'🤖 ออโต้กำลังตี...':'😤 ศัตรูกำลังตี...');}await cbW(isMe?350:450);}}
-  if(ev.def==null&&!(T.ctx.boss&&isMe))ev.def=rollKind(T.rng,!isMe||!T.ctx.acc?{p:.06,g:.4}:{p:T.ctx.acc.p*.5,g:T.ctx.acc.g*.6});
+  if(ev.def==null&&!(T.ctx.boss&&isMe))ev.def=rollKind(T.rng,!isMe||!T.ctx.acc?{p:.06,g:.4}:{p:T.ctx.acc.p*.5,g:T.ctx.acc.g*.6},{gw:0,slow:0,acc:0,dis:(st.S[1-ai].dis||[]).map(d=>d.k)});
   const AI=cbActor(a,ev),TI=Math.floor(Math.random()*Math.max(1,st.S[1-ai].units.length));cbLunge(av,AI);if(!T.skip)await cbW(170);
   cbRes(st,ai,kind,ev,T.rng);
   {const tu=cbUnit(tv,TI),au=cbUnit(av,AI),allT=()=>document.querySelectorAll('#cbsd'+tv+' .un');
@@ -3580,14 +3615,16 @@ function t4Editor(){const its=t4Items(),sp=its.filter(Boolean).map(i=>({ch:i.ch,
  const trs=Object.keys(T.c).map(k=>`<div class="${T.c[k]>=2?'on':''}">${CTRIBE_N[k]} ${Math.min(T.c[k],4)}/2 → ${T.c[k]>=2?'✅ ':''}${CTRIBE_D[k]}</div>`).join('')+(T.any?`<div class="on">${CTRIBE_N.any} ×${T.any} → ✅ ${CTRIBE_D.any}</div>`:'');
  const pas=[...new Set(its.filter(Boolean).map(i=>i.ch))].map(c=>`<div>⭐ ${chOf(c).e} <b>${CK[c].p[0]}</b>: ${CK[c].p[1]}</div>`).join('');
  showModal(`<div class="em">🛡️</div><h2>จัดทีม 4 ช่อง</h2><div class="sub">ไก่ 4 ตัวลงสนามพร้อมกัน • เลือด/เกราะ/โจมตีรวมกัน • แต่ละช่องใช้สกิลของไก่ในช่องนั้น</div>
- <div class="t4g">${its.map((it,i)=>`<button class="t4s" data-t4="${i}">${SLOT_I[i]} <b>${SLOT_N[i]}</b><small>${SLOT_D[i]}</small>${it?`<span class="pic">${chickSVG(it.ch,40,it.sh)}</span><span>${esc(it.name)} ${tagH(it.tier)}</span><span class="t4k">${CK[it.ch].s[i][0]}</span><small class="t4d">${CK[it.ch].s[i][1]}</small>`:'<span class="emp">＋ ว่าง</span>'}</button>`).join('')}</div>
- ${s?`<div class="t4sum">❤️ ${s.max} • 🛡️ ${s.ar} • ⚔️ ${s.atk}</div>`:''}<div class="t4tr">${trs||'<div>ใส่ไก่เผ่าเดียวกัน 2 ตัวขึ้นไปได้โบนัสเผ่า</div>'}</div>${pas?`<div class="t4tr t4pa">${pas}</div>`:''}`,
+ <div class="t4g">${its.map((it,i)=>`<button class="t4s sl${i}" data-t4="${i}">${SLOT_I[i]} <b>${SLOT_N[i]}</b><small>${SLOT_D[i]}</small>${it?`<span class="pic">${chickSVG(it.ch,56,it.sh)}</span><span>${esc(it.name)} ${tagH(it.tier)}</span><span class="t4k">${CK[it.ch].s[i][0]}</span><small class="t4d">${CK[it.ch].s[i][1]}</small>${skBar(CK[it.ch].s[i][1])}`:'<span class="emp">＋ ว่าง</span>'}</button>`).join('')}</div>
+ ${s?`<div class="t4sum">❤️ ${s.max} • 🛡️ ${s.ar} • ⚔️ ${s.atk}</div>`:''}${comboBox(its.filter(Boolean).map(i=>i.ch))}<div class="t4tr">${trs||'<div>ใส่ไก่เผ่าเดียวกัน 2 ตัวขึ้นไปได้โบนัสเผ่า</div>'}</div>${pas?`<div class="t4tr t4pa">${pas}</div>`:''}`,
  [{t:'✨ จัดอัตโนมัติ',f:()=>{t4Auto();save();t4Editor();}},{t:'✅ เสร็จ',c:'g',f:()=>{qEv('team');save();if(openSheet==='fight')renderFight();}}]);
  document.querySelectorAll('[data-t4]').forEach(e=>e.onclick=()=>t4Pick(+e.dataset.t4));}
 function t4Pick(slot){const ids=t4Ids(),L=adults().filter(i=>!isWorker(i.id)&&(!ids.includes(i.id)||ids[slot]===i.id)).sort((a,b)=>b.tier-a.tier||(b.lv||1)-(a.lv||1));
- showModal(`<div class="em">${SLOT_I[slot]}</div><h2>ช่อง${SLOT_N[slot]} • ${SLOT_D[slot]}</h2><div class="sub">เลือกไก่ที่สกิล${SLOT_N[slot]}ถูกใจ</div><div style="max-height:52vh;overflow:auto;text-align:left;margin-top:6px">${L.map(i=>{const c=chOf(i.ch);return `<div class="card" data-pk="${i.id}" style="margin-bottom:6px;cursor:pointer"><div class="ic" style="width:44px;height:44px">${chickSVG(i.ch,44,i.sh)}</div><div class="mid"><div class="nm">${chE(i)}${esc(i.name)}${enT(i)} ${tagH(i.tier)} <small>Lv.${i.lv||1}</small></div><div class="sub">${SLOT_I[slot]} <b>${CK[i.ch].s[slot][0]}</b>: ${CK[i.ch].s[slot][1]}<br>❤️${c.hp} 🛡️${c.ar} ⚔️${c.atk} • ${CTRIBE_N[CTRIBE[i.ch]]||''}</div></div></div>`;}).join('')||'<p>ไม่มีไก่ว่าง</p>'}</div>`,
+ showModal(`<div class="em">${SLOT_I[slot]}</div><h2>ช่อง${SLOT_N[slot]} • ${SLOT_D[slot]}</h2><div class="sub">เลือกไก่ที่สกิล${SLOT_N[slot]}ถูกใจ</div><div style="max-height:52vh;overflow:auto;text-align:left;margin-top:6px">${L.map(i=>{const c=chOf(i.ch);return `<div class="card" data-pk="${i.id}" style="margin-bottom:6px;cursor:pointer"><div class="ic" style="width:44px;height:44px">${chickSVG(i.ch,44,i.sh)}</div><div class="mid"><div class="nm">${chE(i)}${esc(i.name)}${enT(i)} ${tagH(i.tier)} <small>Lv.${i.lv||1}</small></div><div class="sub">${SLOT_I[slot]} <b>${CK[i.ch].s[slot][0]}</b>: ${CK[i.ch].s[slot][1]}${(()=>{const H=t4Items().filter((x,j)=>x&&j!==slot).map(x=>x.ch),cs=COMBOS.filter(c=>(c.a===i.ch&&H.includes(c.b))||(c.b===i.ch&&H.includes(c.a)));return cs.length?`<br><b style="color:#7a2fa8">🔗 เข้าคอมโบ: ${cs.map(c=>c.i+' '+c.n).join(', ')}</b>`:'';})()}<br>❤️${c.hp} 🛡️${c.ar} ⚔️${c.atk} • ${CTRIBE_N[CTRIBE[i.ch]]||''}</div></div></div>`;}).join('')||'<p>ไม่มีไก่ว่าง</p>'}</div>`,
  [{t:'เอาออก',f:()=>{S.t4[slot]=null;save();t4Editor();}},{t:'← กลับ',c:'g',f:t4Editor}]);
  document.querySelectorAll('[data-pk]').forEach(e=>e.onclick=()=>{S.t4[slot]=+e.dataset.pk;save();t4Editor();});}
+function comboBox(chs){const H=new Set(chs),own=new Set(adults().map(i=>i.ch)),on=COMBOS.filter(c=>H.has(c.a)&&H.has(c.b)),near=COMBOS.filter(c=>!on.includes(c)&&(H.has(c.a)||H.has(c.b)));
+ return `<div class="cbx"><b>🔗 คอมโบเด็ค ${on.length?`(${on.length})`:''}</b>${on.map(c=>`<div class="on">✅ ${c.i} <b>${c.n}</b> — ${c.d}</div>`).join('')}${near.slice(0,3).map(c=>{const miss=H.has(c.a)?c.b:c.a,M=chOf(miss)||{};return `<div class="nr">➕ ${c.i} <b>${c.n}</b> — ใส่ ${M.e||''}${M.n||miss}${own.has(miss)?'':' (ยังไม่มี)'} • ${c.d}</div>`;}).join('')}${!on.length&&!near.length?'<div class="nr">ใส่ไก่บางคู่ด้วยกันจะเกิดคอมโบ — ดูในหน้าเลือกไก่</div>':''}</div>`;}
 const tbEditor=t4Editor;
 function skBar(d){const w=/ช่องเขียว(?:ทีม)? ?\+|ช่องเขียว \+/.test(d),c=/กลางแท่ง/.test(d),sl=/ลูกศร.*ช้า/.test(d),nw=/ช่องเขียว.*แคบ/.test(d),pa=/PERFECT|เพอร์เฟกต์/.test(d);if(!(w||c||sl||nw||pa))return '';
  const W=nw?12:w?34:20,L=c?50-W/2:62;return `<span class="skb"><i style="left:${L}%;width:${W}%${pa?';background:#2fbf00':''}"></i><b style="left:${c?50:L+W/2}%">${sl?'🐢':'▲'}</b></span>`;}
@@ -3603,7 +3640,7 @@ const goldX=v=>Math.round(v*(tbMine().some(x=>x.it.ch==='goldleaf')?1.15:1));
 function tbPrize(i){const t=t4AvgT();return goldX([15+6*t,90*(1+.25*t),380*(1+.25*t)][i]);}
 function cbMirror(o){const used=new Set();return tbMine().map(x=>{let c,g=0;do{c=pickChar(x.it.tier);g++;}while(used.has(c)&&g<20);used.add(c);return {ch:c,tier:chOf(c).t,lv:Math.max(1,Math.min(10,(x.it.lv||1)+o.d)),en:Math.min(5,(x.it.en|0)+(o.en|0)),name:chOf(c).n};});}
 function tbPit(pit){if(!tbMine().length){toast('ยังไม่มีไก่โต — ฟักไข่ก่อนนะ');return;}const p=PITS[pit];if(S.coins<p.fee){toast(`เดือยเงินไม่พอค่าเข้า (🪙${p.fee})`);return;}S.coins-=p.fee;save();
- const o=[{d:-1,acc:ACC.easy},{d:0,acc:ACC.normal},{d:1,en:1,acc:ACC.hard}][pit];
+ const o=[{d:-1,acc:ACC.easy},{d:0,acc:ACC.normal},{d:0,acc:{p:.17,g:.6}}][pit];
  cbRun({enemy:cbMirror(o),acc:o.acc,ename:'🤖 '+tbBotName(),title:`${p.i} ${p.n}`,back:()=>showSheet('fight'),again:()=>tbPit(pit),
   onEnd:win=>{if(!win)return `เสียค่าเข้า 🪙${p.fee} • ไก่ไม่เป็นไร 🩹`;const pz=tbPrize(pit);S.coins+=pz;const ups=tbMine().map(x=>winUp(x.it,true)).filter(u=>u&&u.lv);save();return `ได้ 🪙${fmt(pz)}${ups.length?'<br>⬆️ เลเวลอัพ '+ups.length+' ตัว!':''}`;}});}
 function tbTower(){if(!tbMine().length){toast('ยังไม่มีไก่โต — ฟักไข่ก่อนนะ');return;}const f=S.tower||1,c=towerPreview(f),n=Math.max(1,Math.min(f<=2?2:f<=5?3:4,tbMine().length));
@@ -3717,9 +3754,9 @@ function migrate130(){if(S.v130)return;S.v130=1;S.etk=(S.etk|0)+1000;S.gold=S.go
 
 /* ================= 🌱 1.5.0: ฟาร์มเบี้ยไข่ • สุ่มไก่ด้วยเบี้ยไข่ ================= */
 var OFF={nest:1,trough:1,kitchen:1,market:1,sign:1};
-var CROPS=[{id:'grass',n:'หญ้าไข่อ่อน',e:'🌱',cost:10,sec:60,y:17,cl:1},{id:'corn',n:'ข้าวโพดไข่',e:'🌽',cost:30,sec:600,y:55,cl:1},{id:'star',n:'ดอกไข่ดาว',e:'🌼',cost:100,sec:1800,y:175,cl:2},{id:'gold',n:'ต้นไข่ทอง',e:'🌟',cost:300,sec:7200,y:605,cl:3},{id:'emp',n:'ต้นไข่จักรพรรดิ',e:'👑',cost:800,sec:21600,y:1805,cl:4}];
+var CROPS=[{id:'grass',n:'หญ้าไข่อ่อน',e:'🌱',cost:5,sec:60,y:7,cl:1},{id:'corn',n:'ข้าวโพดไข่',e:'🌽',cost:30,sec:600,y:75,cl:1},{id:'star',n:'ดอกไข่ดาว',e:'🌼',cost:100,sec:1800,y:250,cl:2},{id:'gold',n:'ต้นไข่ทอง',e:'🌟',cost:300,sec:7200,y:1100,cl:3},{id:'emp',n:'ต้นไข่จักรพรรดิ',e:'👑',cost:800,sec:21600,y:3600,cl:4}];
 var cropOf=id=>CROPS.find(c=>c.id===id)||CROPS[0];
-var coopLv=()=>S.cl||1,COOP_UP=[0,3000,8000,14000];
+var coopLv=()=>S.cl||1,COOP_UP=[0,1500,6000,12000];
 var GACHA_ETK=100,GRATE=[50,30,14,5,1];
 function rollStar(){S.p4=(S.p4|0)+1;S.p5=(S.p5|0)+1;let t=roll(GRATE);if(S.p5>=120)t=4;else if(S.p4>=30&&t<3)t=R()<1/6?4:3;if(t>=3)S.p4=0;if(t>=4)S.p5=0;return t;}
 function plant(i,quiet,cid){const f=S.fm,p=f.plots[i];if(!p||p.s!=='e')return false;const c=cropOf(cid||f.crop);if(c.cl>coopLv()){if(!quiet)toast(`🔒 ปลดที่เล้า Lv.${c.cl}`);return false;}
@@ -4038,7 +4075,7 @@ var UNL={field:0,list:0,vil:0,chat:0,prod:0,nest:9999,trough:9999,kitchen:9999,m
 var UNL_NAME={nest:'🧺 รังไข่หน้าเล้า',trough:'🥣 รางอาหาร',field:'🌽 ไร่ข้าวโพด',list:'🐔 แท็บไก่ฉัน',kitchen:'🍳 โรงครัว',market:'🏪 แผงตลาด',sign:'📋 ป้ายใบสั่งซื้อ',vil:'🏘️ หมู่บ้าน + ลานประลอง',chat:'💬 แชท',sale:'🌱 ซื้อแปลงปลูก',prod:'🏗️ ก่อสร้าง'};
 function unl(k){if(OFF[k])return false;if(S.qall)return true;if(S.qi==null)return false;return S.qi>=(UNL[k]|0);}
 var QUESTS=[
- {ev:'plant',t:'ปลูกพืชในไร่',d:'แตะ 🌱 ไร่ → เลือก <b>หญ้าไข่อ่อน</b> (🪙10 • 1 นาที ได้ 🥚17/แปลง)',s:'แตะ 🌱 ไร่ → เลือกพืช',at:'field',r:{c:50,etk:60}},
+ {ev:'plant',t:'ปลูกพืชในไร่',d:'แตะ 🌱 ไร่ → เลือก <b>หญ้าไข่อ่อน</b> (🪙5 • 1 นาที ได้ 🥚7/แปลง)',s:'แตะ 🌱 ไร่ → เลือกพืช',at:'field',r:{c:50,etk:60}},
  {ev:'harvest',t:'เก็บเกี่ยวได้เบี้ยไข่',d:'พืชโตแล้ว แตะ 🌱 ไร่ เก็บ → ได้ 🥚 เบี้ยไข่',at:'field',r:{c:50,etk:80}},
  {ev:'spin',t:'สุ่มไก่ด้วยเบี้ยไข่',d:'แตะ 🎰 ตู้สุ่มไข่ → กด สุ่ม ×10 • ไข่ ★1–★3 ฟักเข้าเล้าทันที • ★4 ขึ้นไปเก็บไว้ลุ้นบนแท่น',s:'แตะ 🎰 ตู้สุ่มไข่ → สุ่ม ×10',at:'gacha',r:{c:100}},
  {chk:()=>adults().length>=3,t:'มีไก่ในเล้า 3 ตัว',d:'สุ่มที่ 🎰 ตู้สุ่มไข่ ได้ไก่เข้าเล้าเลย',s:'แตะ 🎰 ตู้สุ่มไข่',at:'gacha',r:{c:60}},
@@ -4047,14 +4084,14 @@ var QUESTS=[
  {stat:()=>S.w|0,hl:['[data-tbpit="0"]'],s:'แตะ ⚔️ ลานประลอง → 🪣 บ่อเล็ก → กด ชน ตอนลูกศรอยู่ช่องเขียว',t:'ชนะชนไก่ 1 ครั้ง',d:'กด <b>ชน</b> ตอนลูกศรแดงอยู่ในช่องเขียว • กลางช่องเขียว = PERFECT',at:'nav:fight',r:{c:150,etk:100}},
  {ev:'info',t:'ดูสกิลไก่ของคุณ',d:'แตะ 🏠 เล้าไก่ → แตะไก่ ดูค่าพลังและสกิล',at:'nav:list',r:{c:50}},
  {chk:()=>jobList().some(Boolean),hl:['[data-ck="job"]'],s:'แตะ 🏠 เล้าไก่ → 👷 ทำงานในเล้า',t:'ส่งไก่ทำงานในเล้า',d:'ไก่ในเล้าช่วยไร่: 🌿 พืชโตไว • 🧺 ได้ 🥚 เพิ่ม • 🪙 ค่าเมล็ดถูก<br>ไก่ดาวต่ำทำงานเก่งกว่า! (ไก่ที่ทำงานลงทีมไม่ได้)',at:'nav:list',r:{c:200,etk:100}},
- {chk:()=>coopLv()>=2,hl:['[data-coop="1"]'],s:'แตะ 🏗️ โรงช่าง → 🏠 เล้าไก่',t:'อัปเกรดเล้าเป็น Lv.2',d:'ปลด 🌼 ดอกไข่ดาว (30 นาที ได้ 🥚175/แปลง)',at:'nav:prod',r:{c:300}},
+ {chk:()=>coopLv()>=2,hl:['[data-coop="1"]'],s:'แตะ 🏗️ โรงช่าง → 🏠 เล้าไก่',t:'อัปเกรดเล้าเป็น Lv.2',d:'ปลด 🌼 ดอกไข่ดาว (30 นาที ได้ 🥚250/แปลง)',at:'nav:prod',r:{c:300}},
  {chk:()=>(S.towerBest|0)>=2,pg:()=>[Math.min(2,S.towerBest|0),2,'ชั้น'],s:'แตะ 🗼 ทาวเวอร์เล้า ในฟาร์ม',t:'ผ่านทาวเวอร์ชั้น 2',d:'ไต่ทาวเวอร์ได้ 🥚 เบี้ยไข่ทุกชั้น • ทุก 5 ชั้นมีบอสดรอป 🥇+ไข่',at:'nav:tower',r:{c:150,etk:150}},
  {ev:'visit',t:'เยี่ยมฟาร์มเพื่อน',at:'nav:vil',r:{c:100}},
  {ev:'chat',t:'ทักทายในแชท',at:'nav:chat',r:{c:50}},
  {chk:()=>(S.towerBest|0)>=5,pg:()=>[Math.min(5,S.towerBest|0),5,'ชั้น'],t:'ล้มบอสทาวเวอร์ชั้น 5',d:'บอสดรอป 🥇 เดือยทอง + ไข่★2',at:'nav:tower',r:{c:300,etk:200}},
  {stat:()=>S.lvl|0,hl:['[data-p="up"]'],s:'แตะ 🏗️ โรงช่าง → ⬆️ อัพเกรดเครื่องฟัก',t:'อัพเกรดเครื่องฟัก 1 ครั้ง',at:'nav:prod',r:{c:300}},
  {ev:'pvp',t:'ท้าชนทีมเพื่อน',d:'แตะ 🏟️ ซุ้มไก่ชน → ⚔️ ท้า',at:'market',r:{c:300}},
- {chk:()=>coopLv()>=3,hl:['[data-coop="1"]'],t:'อัปเกรดเล้าเป็น Lv.3',d:'ปลด 🌟 ต้นไข่ทอง (2 ชม. ได้ 🥚605/แปลง)',at:'nav:prod',r:{c:600}}];
+ {chk:()=>coopLv()>=3,hl:['[data-coop="1"]'],t:'อัปเกรดเล้าเป็น Lv.3',d:'ปลด 🌟 ต้นไข่ทอง (2 ชม. ได้ 🥚1,100/แปลง)',at:'nav:prod',r:{c:600}}];
 var DQ_POOL=[{k:'plant',i:'🌱',t:'ปลูกพืช',n:8,r:{c:80}},{k:'harvest',i:'🌽',t:'เก็บเกี่ยว',n:8,r:{etk:100}},{k:'win',i:'🏆',t:'ชนะการต่อสู้',n:3,r:{c:150}},{k:'spin',i:'🎰',t:'สุ่มไข่',n:1,r:{c:100}},{k:'pvp',i:'🏟️',t:'ท้าชนที่ซุ้มไก่ชน',n:1,r:{etk:100}},{k:'tower',i:'🗼',t:'ไต่ทาวเวอร์',n:1,r:{etk:120}},{k:'hatch',i:'🐣',t:'ฟักไข่ลุ้นไก่',n:1,r:{c:80}}],DQ_BONUS={etk:200,gold:1};
 function dqToday(){const d=new Date().toDateString();if(!S.dq||S.dq.d!==d){let h=cbHash(d+'|'+(S.gid||'x'));const P=DQ_POOL.map(x=>x.k),ks=[];while(ks.length<3){h=(h*1103515245+12345)>>>0;const k=P[h%P.length];if(!ks.includes(k))ks.push(k);}
  S.dq={d,ks,p:{},done:[],w0:S.w|0,t0:S.tower||1,all:0};}return S.dq;}
