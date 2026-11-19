@@ -601,7 +601,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='2.1.0-a';
+window.__BUILD='2.2.0-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -2534,7 +2534,7 @@ function clientRecv(d){
   if(!MM||B||TBV||TBO){toHost({t:'endduel'});return;}
   tbOnlineMatch(d);
  }
- else if(d.t==='duel'&&D&&D.tb&&d.d){if(d.d.k==='tb')tbOnlineRecv(d.d);}
+ else if(d.t==='duel'&&D&&D.tb&&d.d){if(d.d.k==='tb')tbOnlineRecv(d.d);else if(d.d.k==='tbx')tbxRecv(d.d);}
  else if(d.t==='duel'&&D&&!D.over&&d.d){
   const x=d.d,r=x.r|0;
   if(x.k==='c'&&typeof x.c==='string'){D.oc[r]=x.c;if(r===D.r)oppLockedNow();}
@@ -2543,7 +2543,7 @@ function clientRecv(d){
   if(x.k==='q'){D.oq=D.oq||{};D.oq[x.rd|0]=Math.max(0,Math.min(2,x.v|0));return;}
   duelStep();
  }
- else if(d.t==='oppleft'){if(TBO){tbOnlineAbort();return;}if(D&&B&&B.online&&!B.ended)endBattle(true,'คู่แข่งหลุดออกจากห้อง — ชนะบาย');}
+ else if(d.t==='oppleft'){if(TBV&&TBV.ctx.live){TBV.gone=1;if(TBV.waitR){const r=TBV.waitR;TBV.waitR=null;r(null);}return;}if(TBO){tbOnlineAbort();return;}if(D&&B&&B.online&&!B.ended)endBattle(true,'คู่แข่งหลุดออกจากห้อง — ชนะบาย');}
 }
 let invChal=false;
 function acceptChal(from,pit,id){
@@ -3527,7 +3527,7 @@ function cbPanel(s,i){return `<div class="cbp ${i?'me':'op'}" id="cbp${i}">${i?'
 function cbRun(ctx){if(TBV||B)return;const mine=ctx.mine||t4Spec();if(!mine.length){toast('ยังไม่มีไก่โต — ฟักไข่ก่อนนะ');return;}
  const side=ctx.side|0,seed=ctx.seed!=null?ctx.seed:Math.floor(Math.random()*4294967295),rng=cbRng(seed);
  const meS=cbSide(mine,S.nick||'ฉัน',ctx.mine?null:t4Slots()),opS=cbSide(ctx.enemy,ctx.ename||'ศัตรู');const st={S:side?[opS,meS]:[meS,opS],turn:0,win:null};cbPair(st.S[0],st.S[1],rng);if(ctx.mod)ctx.mod(st,meS,opS);
- TBV={ctx,st,rng,my:side,auto:!!ctx.auto||!!S.cbAuto,lock:!!ctx.auto,spd:S.tbSpd||1,skip:false,pend:{sk:0,ult:0}};
+ TBV={ctx,st,rng,my:side,auto:ctx.live?false:(!!ctx.auto||!!S.cbAuto),lock:!!ctx.auto||!!ctx.live,inbox:{},spd:S.tbSpd||1,skip:false,pend:{sk:0,ult:0}};
  showSheet(null);if(typeof hideInvite==='function')hideInvite();$('#mm').classList.add('hide');setView('tb');
  const v=$('#cbv');v.classList.remove('hide');
  v.innerHTML=`<div class="cbtop"><b>${ctx.title||'⚔️'}</b><span id="cbturn"></span><button class="btn" id="cbauto">${TBV.lock?'🤖 ออโต้':'🤖 ออโต้: '+(TBV.auto?'เปิด':'ปิด')}</button><button class="btn" id="cbspd">⏩ x${TBV.spd}</button>${TBV.lock?'<button class="btn" id="cbskip">⏭️</button>':''}</div>
@@ -3584,24 +3584,35 @@ function cbTap(z,tmo){return new Promise(res=>{TBV.tapRes=res;const t0=performan
   if(D.has('jump')&&!jumped&&performance.now()-t0>z.per*.45){jumped=true;let nl=.06+Math.random()*(.88-z.w);if(Math.abs(nl-z.l)<z.w*1.2)nl=z.l>.5?.08:.9-z.w;z.l=nl;z.r=nl+z.w;const gz=$('#cbgz');if(gz){gz.style.left=nl*100+'%';gz.classList.remove('jmp');void gz.offsetWidth;gz.classList.add('jmp');}}
   requestAnimationFrame(fr);};requestAnimationFrame(fr);}).then(x=>{if(TBV)TBV.tapRes=null;const hit=$('#cbhit');if(hit){hit.disabled=true;hit.classList.remove('go');}const ar2=$('#cbar');if(ar2)ar2.style.opacity='1';
  if(x==='to')return 'm';if(x==null||x==='re')return x;const c=(z.l+z.r)/2,inG=x>=z.l&&x<=z.r;return inG&&(z.all||Math.abs(x-c)<=z.pw)?'p':inG?'g':'m';});}
+/* 🌐 ดวลสด: ส่งผลการกดผ่านเน็ต */
+function tbxRecv(x){const T=TBV;if(!T||!T.ctx.live||!x||(x.ty!=='atk'&&x.ty!=='def'))return;const k=x.ty+':'+(x.t|0);const ok=v=>['p','g','m'].includes(v)?v:'m';
+ const m={ty:x.ty,t:x.t|0,kind:ok(x.kind),def:ok(x.def),ult:x.ult?1:0};T.inbox[k]=m;if(T.waitK===k&&T.waitR){const r=T.waitR;T.waitR=null;r(m);}}
+function tbxWait(T,k,ms){if(T.inbox[k])return Promise.resolve(T.inbox[k]);if(T.gone)return Promise.resolve(null);return new Promise(res=>{T.waitK=k;T.waitR=res;setTimeout(()=>{if(T.waitR===res){T.waitR=null;res(null);}},ms);});}
+function tbxGone(T){T.st.win=T.my;T.forfeit=1;toast('📡 คู่แข่งหลุด/ไม่ตอบ — ชนะบาย');}
 async function cbLoop(){const T=TBV;
  while(TBV===T&&T.st.win==null){const st=T.st,ai=st.turn%2,a=st.S[ai],isMe=ai===T.my,human=isMe&&!T.auto,tv=isMe?0:1,av=1-tv;cbUI();
   const ev=cbBegin(st,ai,T.rng);if(ev.gim){cbFloat(av,'👹 '+ev.gim+'!','ul');cbPop('👹 '+ev.gim,'ctr');}if(ev.dot){cbFloat(av,'🩸 -'+ev.dot,'dm');document.querySelectorAll('#cbsd'+av+' .un').forEach(u=>{cbUA(u,'hurt',400);cbUF(u,'🩸','dm');});}if(ev.myst)cbFloat(av,'🔮 '+ev.myst,'sk');
   if(st.win!=null)break;if(ev.stun){cbFloat(av,'💫 มึน! ข้ามตา','m');document.querySelectorAll('#cbsd'+av+' .un').forEach(u=>{cbUA(u,'wob',900);cbUF(u,'💫','sk');});cbUI();await cbW(900);continue;}
-  let kind;
+  let kind;const tk=st.turn;
   if(human){T.pend={sk:0,ult:0};cbMsg('👆 กด <b>ชน</b> ตอนลูกศรอยู่ในช่องเขียว!');
    if(a.sk>=100&&ev.sk==null){const e1=cbPre(st,ai,{ai},true,false);if(e1.sk!=null){ev.sk=e1.sk;ev.skn=e1.skn;ev.skd=e1.skd;ev.ske=e1.ske;T.pend.sk=1;cbCut(a,e1.sk,1);cbFloat(av,`${SLOT_I[e1.sk]} ${e1.skn}!`,'sk');snd(900,.08,'triangle',.05,1.5);}}
    $('#cbbar').classList.remove('def');$('#cbhit').textContent='ชน';
-   for(;;){const z=cbBar(aimMods(a));cbTags(aimMods(a),0,ev.sk!=null?`${ev.ske} ${ev.skn}: ${ev.skd}`:ev.ult?`🌟 ${ev.un}: ${ev.ud||''}`:'');$('#cbbar').classList.toggle('fev',(a.pc|0)>=2);cbUI();kind=await cbTap(z);if(!TBV)return;if(kind!=='re')break;
+   for(;;){const z=cbBar(aimMods(a));z.live=T.ctx.live;cbTags(aimMods(a),0,ev.sk!=null?`${ev.ske} ${ev.skn}: ${ev.skd}`:ev.ult?`🌟 ${ev.un}: ${ev.ud||''}`:'');$('#cbbar').classList.toggle('fev',(a.pc|0)>=2);cbUI();kind=await cbTap(z,T.ctx.live?9000:0);if(!TBV)return;if(kind!=='re')break;
     const e2=cbPre(st,ai,{ai},T.pend.sk&&!ev.sk,T.pend.ult&&!ev.ult);if(e2.sk!=null){ev.sk=e2.sk;ev.skn=e2.skn;ev.skd=e2.skd;ev.ske=e2.ske;cbCut(a,e2.sk,1);cbFloat(av,`${SLOT_I[e2.sk]} ${e2.skn}!`,'sk');snd(900,.08,'triangle',.05,1.5);}if(e2.ult){ev.ult=1;ev.un=e2.un;ev.ud=e2.ud;cbCut(a,3,1,e2.sk!=null?600:0);cbFloat(av,`🌟 ${e2.un||'อันติเมต'}!`,'ul');fanfare();}}
-   if(kind==null){cbPre(st,ai,ev,a.sk>=100,ultOk(a));kind=rollKind(T.rng,ACC.auto,aimMods(a));}}
+   if(kind==null){cbPre(st,ai,ev,a.sk>=100,ultOk(a));kind=rollKind(T.rng,ACC.auto,aimMods(a));}
+   if(T.ctx.live){duelSend({k:'tbx',ty:'atk',t:tk,kind,ult:ev.ult?1:0});$('#cbhit').disabled=true;cbMsg('⏳ รอคู่แข่งกด <b>กัน</b>...');const m=await tbxWait(T,'def:'+tk,15000);if(TBV!==T)return;if(!m){tbxGone(T);break;}ev.def=m.def;}}
+  else if(T.ctx.live){$('#cbgz').style.width='0';$('#cbtags').innerHTML='';cbMsg('😤 คู่แข่งกำลังเล็ง...');const m=await tbxWait(T,'atk:'+tk,30000);if(TBV!==T)return;if(!m){tbxGone(T);break;}
+   cbPre(st,ai,ev,a.sk>=100,!!m.ult);if(ev.sk!=null){cbFloat(av,`${SLOT_I[ev.sk]} ${ev.skn}!`,'sk');cbCut(a,ev.sk,0);}if(ev.ult){cbFloat(av,`🌟 ${ev.un||'อันติเมต'}!`,'ul');cbCut(a,3,0,ev.sk!=null?600:0);fanfare();}
+   kind=m.kind;const me=st.S[1-ai],dm=cbDefMods(me);cbMsg(`${ev.ult?'🌟 คู่แข่งปล่อยอันติ!':'😤 คู่แข่งพุ่งเข้าใส่!'} กด <b>กัน</b> ตอนลูกศรอยู่ช่องฟ้า!`);
+   $('#cbbar').classList.add('def');$('#cbbar').classList.remove('fev');$('#cbhit').textContent='🛡️ กัน';cbTags(dm,1,ev.sk!=null?`${ev.ske} คู่แข่ง: ${ev.skd}`:'');T.defing=1;
+   const z=cbBar(dm);await cbW(ev.sk!=null||ev.ult?700:200);let dk=await cbTap(z,z.per*1.6);T.defing=0;if(TBV!==T)return;if(dk==null||dk==='re')dk='m';ev.def=dk;duelSend({k:'tbx',ty:'def',t:tk,def:dk});$('#cbhit').textContent='ชน';}
   else{cbPre(st,ai,ev,a.sk>=100,ultOk(a));if(ev.sk!=null){cbFloat(av,`${SLOT_I[ev.sk]} ${ev.skn}!`,'sk');cbCut(a,ev.sk,isMe);}if(ev.ult)cbCut(a,3,isMe,ev.sk!=null?600:0);if(ev.ult){cbFloat(av,`🌟 ${ev.un||'อันติเมต'}!`,'ul');if(!T.skip)fanfare();}
    kind=rollKind(T.rng,isMe?ACC.auto:(T.ctx.acc||ACC.auto),aimMods(a));
    if(!isMe&&!T.auto&&!T.skip){const me=st.S[1-ai],dm=cbDefMods(me);cbMsg(`${ev.ult?'🌟 ศัตรูปล่อยอันติ!':ev.sk!=null?`😤 ศัตรูใช้ <b>${ev.skn}</b>`:'😤 ศัตรูพุ่งเข้าใส่!'} กด <b>กัน</b> ตอนลูกศรอยู่ช่องฟ้า!`);
     $('#cbbar').classList.add('def');$('#cbbar').classList.remove('fev');$('#cbhit').textContent='🛡️ กัน';cbTags(dm,1,ev.sk!=null?`${ev.ske} ศัตรู: ${ev.skd}`:'');T.defing=1;
     const z=cbBar(dm);await cbW(ev.sk!=null||ev.ult?750:250);let dk=await cbTap(z,z.per*1.6);T.defing=0;if(!TBV)return;if(dk==null)dk=rollKind(T.rng,{p:.06,g:.4},{gw:0,slow:0,acc:0,dis:dm.dis});ev.def=dk;$('#cbhit').textContent='ชน';}
    else{if(!T.skip){$('#cbgz').style.width='0';$('#cbtags').innerHTML='';cbMsg(isMe?'🤖 ออโต้กำลังตี...':'😤 ศัตรูกำลังตี...');}await cbW(isMe?350:450);}}
-  if(ev.def==null&&!(T.ctx.boss&&isMe))ev.def=rollKind(T.rng,!isMe||!T.ctx.acc?{p:.06,g:.4}:{p:T.ctx.acc.p*.5,g:T.ctx.acc.g*.6},{gw:0,slow:0,acc:0,dis:(st.S[1-ai].dis||[]).map(d=>d.k)});
+  if(!T.ctx.live&&ev.def==null&&!(T.ctx.boss&&isMe))ev.def=rollKind(T.rng,!isMe||!T.ctx.acc?{p:.06,g:.4}:{p:T.ctx.acc.p*.5,g:T.ctx.acc.g*.6},{gw:0,slow:0,acc:0,dis:(st.S[1-ai].dis||[]).map(d=>d.k)});
   const AI=cbActor(a,ev),TI=Math.floor(Math.random()*Math.max(1,st.S[1-ai].units.length));cbLunge(av,AI);if(!T.skip)await cbW(170);
   cbRes(st,ai,kind,ev,T.rng);
   {const tu=cbUnit(tv,TI),au=cbUnit(av,AI),allT=()=>document.querySelectorAll('#cbsd'+tv+' .un');
@@ -3729,7 +3740,7 @@ function tbOnlineRecv(x){if(!TBO||!Array.isArray(x.spec))return;TBO.theirs=x.spe
  if(!TBO.theirs.length)TBO.theirs=[{ch:'sleepy',tier:0,lv:1,en:0,name:'?'}];TBO.tn=x.nonce|0;TBO.tinfo=x.info;TBO.tek=cInt(x.ek,0,PV_MAX);TBO.tname=clip(x.n,16)||'คู่แข่ง';tbOnlineTry();}
 function tbOnlineTry(){if(!TBO||!TBO.theirs||TBV)return;const me=net.myId,op=TBO.opp,first=me<op,o=TBO;
  const seed=cbHash([first?me+':'+o.nonce:op+':'+o.tn,first?op+':'+o.tn:me+':'+o.nonce].join('|'));MM=null;$('#mm').classList.add('hide');
- cbRun({mine:o.mine,enemy:o.theirs,seed,side:first?0:1,auto:true,ename:esc(o.tname),title:`🌐 ${PITS[o.pit].i} vs ${esc(o.tname)}`,back:()=>showSheet('fight'),
+ cbRun({mine:o.mine,enemy:o.theirs,seed,side:first?0:1,live:true,ename:esc(o.tname),title:`🌐 ${PITS[o.pit].i} vs ${esc(o.tname)}`,back:()=>showSheet('fight'),
   onEnd:win=>{toHost({t:'endduel'});D=null;TBO=null;const W=Math.min(o.ek|0,o.tek|0);
    if(win){const pz=Math.round(o.fee*2*.95);S.coins+=pz;if(W)S.etk=(S.etk|0)+W;tbMine().forEach(x=>winUp(x.it,true));feedAdd({a:S.nick,b:o.tname,w:1,k:W?'🥚'+W:'',m:'⚔️'});save();
     return `ได้กองกลาง 🪙${fmt(pz)}${W?` + 🥚${fmt(W)} จาก ${esc(o.tname)}`:''}`;}
@@ -3760,7 +3771,7 @@ function renderFight(){if(F.step&&F.step!=='mode'){renderFightOld();return;}cons
  h+=`<h4 style="margin:10px 0 4px">🎯 ท้าทายรายวัน</h4>`+dcCard();
  h+=`<h4 style="margin:10px 0 4px">🥊 เลือกบ่อแล้วสู้เลย <small>(กดจังหวะเอง)</small></h4>`+PITS.map((p,i)=>`<div class="card big-card ${S.coins<p.fee?'dis':''}" data-tbpit="${i}"><div class="ic">${p.i}</div><div class="mid"><div class="nm">${p.n} ${['😊 ง่าย','😐 สูสี','😈 ยาก'][i]}</div><div class="sub">ค่าเข้า 🪙${p.fee} • ชนะได้ 🪙${tbPrize(i)} • แพ้ไม่เสียไก่</div></div></div>`).join('');
  if((S.w|0)>0)h+=`<h4 style="margin:10px 0 4px">👹 บอสประจำสัปดาห์</h4>`+wbCard();
- h+=`<div class="card big-card ${net&&net.ready?'':'dis'}" data-tb="online"><div class="ic">🌐</div><div class="mid"><div class="nm">ชนออนไลน์ (ออโต้ วัดการจัดทีม)</div><div class="sub">${net&&net.ready?`ค่าเข้า 🪙 + เดิมพัน 🥚 สูงสุด ${PV_MAX} • ไก่ไม่หาย`:'ต้องเข้าล็อบบี้ก่อน'}</div></div></div>`;
+ h+=`<div class="card big-card ${net&&net.ready?'':'dis'}" data-tb="online"><div class="ic">🌐</div><div class="mid"><div class="nm">ดวลสด 🌐 กดเองทั้งคู่ — ตีและกันกันจริง</div><div class="sub">${net&&net.ready?`ค่าเข้า 🪙 + เดิมพัน 🥚 สูงสุด ${PV_MAX} • ไก่ไม่หาย`:'ต้องเข้าล็อบบี้ก่อน'}</div></div></div>`;
  $('#fightB').innerHTML=h;const nk=$('#nick');if(nk)nk.onchange=()=>{const v=nk.value.trim().slice(0,16);if(v){S.nick=v;save();toHost({t:'nick',n:v});window.__profiles.rename(window.__PID,v);toast('เปลี่ยนชื่อเป็น '+esc(v));}};
  $('#fightB').querySelectorAll('[data-tbpit]').forEach(e=>e.onclick=()=>tbPit(+e.dataset.tbpit));
  $('#fightB').querySelectorAll('[data-tb]').forEach(e=>e.onclick=()=>{const k=e.dataset.tb;if(k==='team')t4Editor();else if(k==='dc')dcFight();else if(k==='boss')wbFight();else if(k==='tower')towerScreen();else if(k==='pvp'){showSheet(null);pvpHub();}else if(k==='shield')buyShield();else if(k==='online'){if(!(net&&net.ready)){toast('เข้าล็อบบี้ก่อนนะ 🌐');showSheet('lobby');return;}F.mode='online';F.step='pit';renderFightOld();}});}
