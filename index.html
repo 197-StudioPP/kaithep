@@ -599,7 +599,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='2.0.0-a';
+window.__BUILD='2.0.1-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -3451,12 +3451,13 @@ function nxAgg(s){const a={};s.nx.forEach(x=>{for(const k in x)if(k!=='n')a[k]=(
 function aimMods(s){const n=nxAgg(s);return {gw:(n.gw||0)+sm(s,'gw'),slow:(n.slow||0)+sm(s,'slow')+(s.has.sleepy?.15:0),acc:(n.acc||0)+sm(s,'acc'),center:n.center||0,perfAny:n.perfAny||0,dis:(s.dis||[]).map(d=>d.k)};}
 const aAtk=s=>Math.max(1,(s.atk+sm(s,'atk')+s.hot*4)*(1+sm(s,'atkPct')));
 const aAr=s=>Math.max(0,s.ar+sm(s,'ar')+(s.has.lost&&s.hp<s.max*.5?16:0)+(s.has.hero&&s.hp<s.max*.3?20:0));
-function ultOk(s){const u=s.slots[3];if(u==='colonel'&&s.streak>=3)return true;if(u==='scar')return s.ult>=100||(s.hp<s.max*.5&&s.ult>=60);return s.ult>=100||(s.hp<s.max*.3&&s.ult>=50);}
+function ultOk(s){if(s.noUlt)return false;const u=s.slots[3];if(u==='colonel'&&s.streak>=3)return true;if(u==='scar')return s.ult>=100||(s.hp<s.max*.5&&s.ult>=60);return s.ult>=100||(s.hp<s.max*.3&&s.ult>=50);}
 const skSlot=s=>{for(let i=0;i<3;i++){const k=(s.skI+i)%3;if(s.slots[k])return k;}return -1;};
 function rollKind(rng,acc,m){m=m||{gw:0,slow:0,acc:0};const g=Math.max(.05,Math.min(.92,acc.g*(1+m.gw)*(1+m.slow*.6)+m.acc+(m.center?.1:0))),p=Math.max(0,Math.min(.6,acc.p*(1+m.gw*.5)*(1+m.slow*.6)+m.acc*.3+(m.center?.04:0)));
  const dn=(m.dis||[]).length,g2=g*Math.pow(.8,dn),p2=p*Math.pow(.6,dn);const r=rng();let k=r<p2?'p':r<Math.min(.97,p2+g2)?'g':'m';if(k==='g'&&m.perfAny)k='p';return k;}
 /* ตาเริ่ม: เลือดไหล / มึน / บัพสุ่มของบักเขียว */
 function cbBegin(st,ai,rng){const s=st.S[ai],ev={ai};s.own++;
+ if(s.gim&&s.own%s.gim.e===0){const o=st.S[1-ai],ks=s.gim.rnd?[pick(Object.keys(DIS))]:s.gim.k;ks.forEach(k=>{o.dis=(o.dis||[]).filter(x=>x.k!==k);o.dis.push({k,t:1});});ev.gim=ks.map(k=>DIS[k].i+' '+DIS[k].n).join(' + ');}
  s.dot.forEach(d=>{s.hp=Math.max(0,s.hp-d.v);ev.dot=(ev.dot||0)+d.v;d.t--;});s.dot=s.dot.filter(d=>d.t>0);
  if(s.hp<=0){st.win=1-ai;return ev;}
  if(s.has.mystic&&s.own%2===0)ev.myst=rbuf(s,rng,16);
@@ -3566,7 +3567,7 @@ function cbTap(z,tmo){return new Promise(res=>{TBV.tapRes=res;const t0=performan
  if(x==='to')return 'm';if(x==null||x==='re')return x;const c=(z.l+z.r)/2,inG=x>=z.l&&x<=z.r;return inG&&(z.all||Math.abs(x-c)<=z.pw)?'p':inG?'g':'m';});}
 async function cbLoop(){const T=TBV;
  while(TBV===T&&T.st.win==null){const st=T.st,ai=st.turn%2,a=st.S[ai],isMe=ai===T.my,human=isMe&&!T.auto,tv=isMe?0:1,av=1-tv;cbUI();
-  const ev=cbBegin(st,ai,T.rng);if(ev.dot){cbFloat(av,'🩸 -'+ev.dot,'dm');document.querySelectorAll('#cbsd'+av+' .un').forEach(u=>{cbUA(u,'hurt',400);cbUF(u,'🩸','dm');});}if(ev.myst)cbFloat(av,'🔮 '+ev.myst,'sk');
+  const ev=cbBegin(st,ai,T.rng);if(ev.gim){cbFloat(av,'👹 '+ev.gim+'!','ul');cbPop('👹 '+ev.gim,'ctr');}if(ev.dot){cbFloat(av,'🩸 -'+ev.dot,'dm');document.querySelectorAll('#cbsd'+av+' .un').forEach(u=>{cbUA(u,'hurt',400);cbUF(u,'🩸','dm');});}if(ev.myst)cbFloat(av,'🔮 '+ev.myst,'sk');
   if(st.win!=null)break;if(ev.stun){cbFloat(av,'💫 มึน! ข้ามตา','m');document.querySelectorAll('#cbsd'+av+' .un').forEach(u=>{cbUA(u,'wob',900);cbUF(u,'💫','sk');});cbUI();await cbW(900);continue;}
   let kind;
   if(human){T.pend={sk:0,ult:0};cbMsg('👆 กด <b>ชน</b> ตอนลูกศรอยู่ในช่องเขียว!');
@@ -3643,9 +3644,15 @@ function tbPit(pit){if(!tbMine().length){toast('ยังไม่มีไก�
  const o=[{d:-1,acc:ACC.easy},{d:0,acc:ACC.normal},{d:0,acc:{p:.17,g:.6}}][pit];
  cbRun({enemy:cbMirror(o),acc:o.acc,ename:'🤖 '+tbBotName(),title:`${p.i} ${p.n}`,back:()=>showSheet('fight'),again:()=>tbPit(pit),
   onEnd:win=>{if(!win)return `เสียค่าเข้า 🪙${p.fee} • ไก่ไม่เป็นไร 🩹`;const pz=tbPrize(pit);S.coins+=pz;const ups=tbMine().map(x=>winUp(x.it,true)).filter(u=>u&&u.lv);save();return `ได้ 🪙${fmt(pz)}${ups.length?'<br>⬆️ เลเวลอัพ '+ups.length+' ตัว!':''}`;}});}
-function tbTower(){if(!tbMine().length){toast('ยังไม่มีไก่โต — ฟักไข่ก่อนนะ');return;}const f=S.tower||1,c=towerPreview(f),n=Math.max(1,Math.min(f<=2?2:f<=5?3:4,tbMine().length));
+var TW_BOSS=[{n:'ลุงหงอนหมอก',e:'🌫️',k:['fog'],ev:2},{n:'เจ๊ลูกศรซิ่ง',e:'⚡',k:['fast'],ev:1},{n:'บักเขียวสายมู',e:'🎭',k:['fake'],ev:2},{n:'ผีไก่ล่องหน',e:'👻',k:['ghost','shrink'],ev:2},
+ {n:'จอมกระโดด',e:'🔀',k:['jump'],ev:1},{n:'ไก่เมาค้าง',e:'🫨',k:['drunk','rev'],ev:2},{n:'เทพป่วนบ่อ',e:'🌀',k:[],ev:1,rnd:1}];
+const twBoss=f=>f%5===0?TW_BOSS[(f/5-1)%TW_BOSS.length]:null;
+function twBossTxt(B){return B.rnd?'ป่วนแท่งเราแบบสุ่มทุกตา':`ป่วนแท่งเรา ${B.k.map(k=>DIS[k].i+' '+DIS[k].n).join(' + ')} ${B.ev===1?'ทุกตา':'ทุก '+B.ev+' ตา'}`;}
+function tbTower(ok){if(!tbMine().length){toast('ยังไม่มีไก่โต — ฟักไข่ก่อนนะ');return;}const B0=twBoss(S.tower||1);
+ if(B0&&!ok){showModal(`<div class="em">${B0.e}</div><h2>บอสชั้น ${S.tower}: ${B0.n}</h2><div class="note">👹 ลูกเล่น: <b>${twBossTxt(B0)}</b></div><div class="sub">💡 ใส่ไก่ที่ช่องโททำให้ช่องเขียวกว้าง / ลูกศรช้า ไว้รับมือ • คอมโบช่วยได้</div>`,[{t:'⚔️ ลุยเลย',c:'r',f:()=>tbTower(1)},{t:'🛡️ จัดเด็คก่อน',f:t4Editor},{t:'ปิด'}]);return;}
+ const f=S.tower||1,c=towerPreview(f),n=Math.max(1,Math.min(f<=2?2:f<=5?3:4,tbMine().length));
  const en=Array.from({length:n},(_,i)=>{const t=i===0?c.tier:Math.floor(Math.random()*(c.tier+1)),ch=pickChar(t);return {ch,tier:t,lv:Math.max(1,Math.min(10,c.lv+Math.floor(Math.random()*3)-1)),en:Math.floor(f/12),name:chOf(ch).n,hpx:i===0&&c.boss?1.5:1};});
- cbRun({enemy:en,acc:{p:Math.min(.3,.04+f*.008),g:Math.min(.62,.42+f*.008)},ename:`🗼 ชั้น ${f}`,title:`🗼 ทาวเวอร์เล้า ชั้น ${f}${c.boss?' 👹 บอส':''}`,back:()=>{showSheet('fight');towerScreen();},again:()=>tbTower(),
+ const BB=twBoss(f);cbRun({mod:BB?(st,me,op)=>{op.gim={k:BB.k,e:BB.ev,rnd:BB.rnd};}:null,enemy:en,acc:{p:Math.min(.3,.04+f*.008),g:Math.min(.62,.42+f*.008)},ename:BB?`${BB.e} ${BB.n}`:`🗼 ชั้น ${f}`,title:`🗼 ทาวเวอร์เล้า ชั้น ${f}${c.boss?' 👹 บอส':''}`,back:()=>{showSheet('fight');towerScreen();},again:()=>tbTower(1),
   onEnd:win=>{if(win){const first=f>(S.towerBest||0),d=towerDrop(f,first),em=giveDrop(d);S.tower=f+1;let t=`ผ่านชั้น <b>${f}</b>! ${first?'🎁':'↻'} ได้ ${dropTxt(d)}${em}`;
    if(f>(S.towerBest||0)){S.towerBest=f;t+=' • 🎉 สถิติใหม่!';toHost({t:'shout',f});if(c.boss&&(S.cards||0)<CARD_MAX){S.cards=(S.cards||0)+1;t+='<br>🃏 ล้มบอส! ได้การ์ดบล็อก';}}
    tbMine().forEach(x=>winUp(x.it,true));save();return t;}const ck=towerCk(f);S.tower=ck;save();return `ตกหอคอยที่ชั้น ${f} • กลับไปจุดเซฟชั้น <b>${ck}</b><br>ไก่ไม่ตาย ลองจัดทีมใหม่!`;}});}
@@ -3658,7 +3665,7 @@ const dropTxt=d=>[`🪙${fmt(goldX(d.c))}`,`🥚${d.etk}`,d.gold?`🥇${d.gold}`
 function giveDrop(d){S.coins+=goldX(d.c);S.etk=(S.etk|0)+d.etk;if(d.gold)S.gold=(S.gold|0)+d.gold;let eggMsg='';
  if(d.egg!=null){if(S.bag.length<eggCap(S.lvl)){S.bag.push(d.egg);eggMsg=`<br>${EGG_DOT[d.egg]} ได้<b>ไข่★${d.egg+1}</b> เข้ากล่องไข่!`;}else{S.etk+=300;eggMsg='<br>🧺 กล่องไข่เต็ม — แปลงไข่เป็น 🥚300';}}return eggMsg;}
 function towerScreen(){const best=S.towerBest||0,cur=S.tower||1,top=Math.max(cur,best)+4,lo=Math.max(1,cur-2);let rows='';
- for(let f=top;f>=lo;f--){const c=towerPreview(f),first=f>best,d=towerDrop(f,first);rows+=`<div class="twf ${f===cur?'cur':''} ${f<=best?'clr':''}"><b>${f===cur?'👉 ':''}ชั้น ${f}</b>${c.boss?' 👹':''}${towerCk(f)===f&&f>1?' 🚩':''}<span>${f<=best&&f!==cur?'✅ ':''}${first?'🎁 ':'↻ '}${dropTxt(d)}</span></div>`;}
+ for(let f=top;f>=lo;f--){const c=towerPreview(f),first=f>best,d=towerDrop(f,first);rows+=`<div class="twf ${f===cur?'cur':''} ${f<=best?'clr':''}"><b>${f===cur?'👉 ':''}ชั้น ${f}</b>${c.boss?` 👹 <small>${twBoss(f)?twBoss(f).e+' '+twBoss(f).n:''}</small>`:''}${towerCk(f)===f&&f>1?' 🚩':''}<span>${f<=best&&f!==cur?'✅ ':''}${first?'🎁 ':'↻ '}${dropTxt(d)}</span></div>`;}
  showModal(`<div class="em">🗼</div><h2>ทาวเวอร์เล้า</h2><div class="sub">ชั้นสูงสุด <b>${best}</b> • แพ้แล้วตกไปจุดเซฟ 🚩 • ทุก 5 ชั้นมีบอส 👹 ดรอป 🥇 เดือยทอง + ไข่</div><div class="twl">${rows}</div><div class="sub">🎁 = ผ่านครั้งแรก (ของเต็ม) • ↻ = ผ่านซ้ำ (ได้น้อยลง)</div>`,
   [{t:`⚔️ สู้ชั้น ${cur}`,c:'r',f:()=>tbTower()},{t:'ปิด',c:'g'}]);}
 
@@ -3704,15 +3711,34 @@ function tbOnlineTry(){if(!TBO||!TBO.theirs||TBV)return;const me=net.myId,op=TBO
    if(W)S.etk=Math.max(0,(S.etk|0)-W);save();return `${W?`เสีย 🥚${fmt(W)} ให้ ${esc(o.tname)}`:'เสียค่าเข้า'} • ไก่ไม่หาย 🩹`;}});}
 function tbOnlineAbort(){if(!TBO)return;if(!TBV){S.coins+=TBO.fee;save();toast('คู่แข่งหลุด — คืนค่าเข้าให้');$('#mm').classList.add('hide');}TBO=null;D=null;MM=null;}
 setInterval(()=>{if(TBO&&!TBV&&Date.now()-TBO.t0>20000){toHost({t:'endduel'});tbOnlineAbort();}},2000);
+/* ---------- 🎯 ด่านท้าทายรายวัน ---------- */
+var DC_RULES=[{k:'noult',e:'🚫🌟',n:'ห้ามใช้อันติ',d:'ทั้งสองฝั่งใช้อันติไม่ได้ — วัดกันที่จังหวะล้วนๆ'},{k:'chaos',e:'🌀',n:'บ่อป่วน',d:'ศัตรูป่วนแท่งเราแบบสุ่มทุกตา'},{k:'duo',e:'2️⃣',n:'คู่หูเท่านั้น',d:'ลงได้แค่ช่องเอกกับโท 2 ตัว'},
+ {k:'giant',e:'🦖',n:'ไก่ยักษ์',d:'ศัตรูตัวเดียว เลือด ×3 ตีแรง'},{k:'glass',e:'💥',n:'เลือดบาง',d:'เลือดทั้งสองฝั่งเหลือ 40% — กดพลาดทีเดียวเจ็บ'},{k:'mirror',e:'🪞',n:'กระจกเงา',d:'ศัตรูเป็นเด็คเดียวกับเราเป๊ะๆ'}];
+function dcToday(){const d=new Date().toDateString();if(!S.dc||S.dc.d!==d){let h=cbHash(d+'|dc');S.dc={d,k:DC_RULES[h%DC_RULES.length].k,w:0,tries:0};}return S.dc;}
+function dcCard(){const c=dcToday(),R0=DC_RULES.find(r=>r.k===c.k);return `<div class="card big-card" data-tb="dc" style="background:${c.w?'#e8f6d8':'#fff3c4'}"><div class="ic">${R0.e}</div><div class="mid"><div class="nm">🎯 ด่านท้าทายวันนี้: ${R0.n}${c.w?' ✅':''}</div><div class="sub">${R0.d}<br>${c.w?'ผ่านแล้ว! พรุ่งนี้มีโจทย์ใหม่':'ผ่านครั้งแรกได้ 🥇1 + ไข่หายาก ★3'}</div></div></div>`;}
+function dcFight(){const c=dcToday(),k=c.k,mine=t4Spec();if(!mine.length){toast('ยังไม่มีทีม');return;}const lv=Math.max(1,Math.round(mine.reduce((a,u)=>a+(u.lv||1),0)/mine.length)),mt=Math.max(...mine.map(u=>u.tier|0));
+ const mk=(t,l,x)=>{const ch=pickChar(t);return Object.assign({ch,tier:t,lv:Math.min(10,l),en:0,name:chOf(ch).n},x||{});};
+ let enemy,me=null,mod=null;
+ if(k==='duo'){me=mine.slice(0,2);enemy=[0,1].map(()=>mk(mt,lv));}
+ else if(k==='giant'){enemy=[mk(Math.min(4,mt+1),lv+1,{hpx:12})];}
+ else if(k==='mirror'){enemy=mine.map(u=>({ch:u.ch,tier:u.tier,lv:Math.min(10,(u.lv||1)),en:u.en|0,name:u.name}));}
+ else enemy=mine.map(u=>mk(u.tier|0,lv));
+ if(k==='noult')mod=(st,m,o)=>{m.noUlt=1;o.noUlt=1;};if(k==='chaos')mod=(st,m,o)=>{o.gim={k:[],e:1,rnd:1};};if(k==='glass')mod=(st,m,o)=>{[m,o].forEach(x=>{x.max=Math.round(x.max*.4);x.hp=x.max;});};
+ if(k==='giant')mod=(st,m,o)=>{o.atk=Math.round(o.atk*3.4);};
+ c.tries++;save();const R0=DC_RULES.find(r=>r.k===k);
+ cbRun({mine:me||undefined,enemy,mod,acc:ACC.normal,ename:`${R0.e} ${R0.n}`,title:`🎯 ด่านท้าทาย: ${R0.n}`,back:()=>showSheet('fight'),again:()=>dcFight(),
+  onEnd:win=>{if(!win)return `ยังไม่ผ่าน — ลองจัดเด็คใหม่แล้วสู้อีกได้ไม่จำกัด 💪`;tbMine().forEach(x=>winUp(x.it,true));if(c.w){save();return 'ผ่านอีกรอบ! (รางวัลรับไปแล้ววันนี้)';}
+   c.w=1;S.gold=(S.gold|0)+1;let t='🎉 ผ่านด่านท้าทาย! ได้ 🥇1';if(S.bag.length<eggCap(S.lvl)){giveEgg(2);t+=' + ไข่หายาก ★3';}else{S.coins+=500;t+=' + 🪙500';}S.dcN=(S.dcN|0)+1;save();return t;}});}
 /* ---------- หน้าลานประลอง ---------- */
 function renderFight(){if(F.step&&F.step!=='mode'){renderFightOld();return;}const its=t4Items(),sp=its.filter(Boolean).map(i=>({ch:i.ch,lv:i.lv,en:i.en})),s=sp.length?cbSide(sp,''):null,T=cbTribes(sp),act=Object.keys(T.c).filter(k=>T.c[k]>=2);
  let h=`<div class="card big-card"><div class="ic" style="display:flex;gap:1px;width:auto">${its.map(it=>it?`<span style="width:30px">${chickSVG(it.ch,30,it.sh)}</span>`:'<span style="width:30px;opacity:.4">＋</span>').join('')}</div><div class="mid"><div class="nm">🛡️ ทีม 4 ช่อง</div><div class="sub">${s?`❤️${s.max} 🛡️${s.ar} ⚔️${s.atk}`:'ยังไม่มีไก่โต'}${act.length?'<br>'+act.map(k=>CTRIBE_N[k]).join(' '):''}<br>🏠 จัดทีมได้ที่ <b>เล้าไก่</b></div></div></div>`;
+ h+=`<h4 style="margin:10px 0 4px">🎯 ท้าทายรายวัน</h4>`+dcCard();
  h+=`<h4 style="margin:10px 0 4px">🥊 เลือกบ่อแล้วสู้เลย <small>(กดจังหวะเอง)</small></h4>`+PITS.map((p,i)=>`<div class="card big-card ${S.coins<p.fee?'dis':''}" data-tbpit="${i}"><div class="ic">${p.i}</div><div class="mid"><div class="nm">${p.n} ${['😊 ง่าย','😐 สูสี','😈 ยาก'][i]}</div><div class="sub">ค่าเข้า 🪙${p.fee} • ชนะได้ 🪙${tbPrize(i)} • แพ้ไม่เสียไก่</div></div></div>`).join('');
  if((S.w|0)>0)h+=`<h4 style="margin:10px 0 4px">👹 บอสประจำสัปดาห์</h4>`+wbCard();
  h+=`<div class="card big-card ${net&&net.ready?'':'dis'}" data-tb="online"><div class="ic">🌐</div><div class="mid"><div class="nm">ชนออนไลน์ (ออโต้ วัดการจัดทีม)</div><div class="sub">${net&&net.ready?`ค่าเข้า 🪙 + เดิมพัน 🥚 สูงสุด ${PV_MAX} • ไก่ไม่หาย`:'ต้องเข้าล็อบบี้ก่อน'}</div></div></div>`;
  $('#fightB').innerHTML=h;const nk=$('#nick');if(nk)nk.onchange=()=>{const v=nk.value.trim().slice(0,16);if(v){S.nick=v;save();toHost({t:'nick',n:v});window.__profiles.rename(window.__PID,v);toast('เปลี่ยนชื่อเป็น '+esc(v));}};
  $('#fightB').querySelectorAll('[data-tbpit]').forEach(e=>e.onclick=()=>tbPit(+e.dataset.tbpit));
- $('#fightB').querySelectorAll('[data-tb]').forEach(e=>e.onclick=()=>{const k=e.dataset.tb;if(k==='team')t4Editor();else if(k==='boss')wbFight();else if(k==='tower')towerScreen();else if(k==='pvp'){showSheet(null);pvpHub();}else if(k==='shield')buyShield();else if(k==='online'){if(!(net&&net.ready)){toast('เข้าล็อบบี้ก่อนนะ 🌐');showSheet('lobby');return;}F.mode='online';F.step='pit';renderFightOld();}});}
+ $('#fightB').querySelectorAll('[data-tb]').forEach(e=>e.onclick=()=>{const k=e.dataset.tb;if(k==='team')t4Editor();else if(k==='dc')dcFight();else if(k==='boss')wbFight();else if(k==='tower')towerScreen();else if(k==='pvp'){showSheet(null);pvpHub();}else if(k==='shield')buyShield();else if(k==='online'){if(!(net&&net.ready)){toast('เข้าล็อบบี้ก่อนนะ 🌐');showSheet('lobby');return;}F.mode='online';F.step='pit';renderFightOld();}});}
 CHARS.forEach(c=>{const k=CK[c.id];if(k){c.skl={i:'⭐',n:k.p[0],d:k.p[1],t:k.p[1]};c.sig=`⭐ ${k.p[0]}: ${k.p[1]}`;}});
 
 
