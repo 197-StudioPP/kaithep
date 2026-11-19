@@ -411,6 +411,11 @@ body.shake{animation:bsh .5s}
 .wl.warn{background:#ffb3a0;border-color:#b23a2a}
 .wl.xs{font-size:10.5px;padding:0 5px;border-width:1.5px;border-radius:8px;line-height:1.5;opacity:.92}.wl.ic{padding:0 3px;border-radius:50%}
 #nav{display:none!important}
+/* 1.6.4c: ไม่ให้บังฟาร์ม — ภารกิจ+ข่าวย้ายลงล่าง, แถบบนไม่ตัดบรรทัด */
+.hud{flex-wrap:nowrap!important}.hud .chip{flex:none}
+@media (max-width:440px){.hud .chip{font-size:14px;padding:4px 9px}.hud{gap:5px}}
+#quest{top:auto!important;bottom:calc(env(safe-area-inset-bottom) + 44px)!important;left:50%!important;transform:translateX(-50%);max-width:94vw!important;width:max-content}
+#ticker{top:auto!important;bottom:calc(env(safe-area-inset-bottom) + 8px)!important}
 </style>
 </head>
 <body>
@@ -422,7 +427,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.6.4-b';
+window.__BUILD='1.6.4-c';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -3442,9 +3447,15 @@ function farmPick(e){
 /* ================= LOOP ================= */
 let W=1,H=1,view='farm';
 const camT=new THREE.Vector3(),camPos=new THREE.Vector3(0,30,18);
-function resize(){W=innerWidth;H=innerHeight;renderer.setSize(W,H);camera.aspect=W/H;camera.updateProjectionMatrix();}
+function resize(){W=innerWidth;H=innerHeight;renderer.setSize(W,H);camera.aspect=W/H;camera.updateProjectionMatrix();camFit=null;}
+var camFit=null;
+function fitCam(){const hb=document.getElementById('hud'),top=(hb?hb.getBoundingClientRect().bottom:60)+8,bot=H-128,c=new THREE.PerspectiveCamera(40,W/H,.5,300),v=new THREE.Vector3();
+ const P=[[-7.3,0,12.4],[7.3,0,12.4],[-7.3,0,-12.4],[7.3,0,-12.4],[0,0,-14],[5.6,6.2,-11.8],[-6,3.1,-11.8],[-1.2,3.9,-13.6],[4.6,4.4,-7.6]];
+ let best=null;for(let h=18;h<=80&&!best;h+=.5)for(let tz=-8;tz<=6;tz+=.25){c.position.set(0,h,tz+h*.58);c.lookAt(0,0,tz);c.updateMatrixWorld();
+  let ok=true;for(const p of P){v.set(p[0],p[1],p[2]).project(c);const x=(v.x+1)/2*W,y=(1-v.y)/2*H;if(x<4||x>W-4||y<top||y>bot){ok=false;break;}}if(ok){best=[h,tz];break;}}
+ camFit=best||[44,-.6];return camFit;}
 addEventListener('resize',resize);resize();
-function camGoal(){const a=W/H;if(view==='farm'){const h=a<.5?42.5:a<.62?37:34.5;return [new THREE.Vector3(camOff.x,0,(a<.5?-.6:a<.62?-.8:-1)+camOff.z),h];}const h=a<.7?20:13;return [new THREE.Vector3(AX,0,.8),h];}
+function camGoal(){const a=W/H;if(view==='farm'){const F=camFit||fitCam();return [new THREE.Vector3(0,0,F[1]),F[0]];}const h=a<.7?20:13;return [new THREE.Vector3(AX,0,.8),h];}
 const v3=new THREE.Vector3();
 function scr(p,yo){v3.set(p.x,p.y+yo,p.z).project(camera);return [(v3.x+1)/2*W,(1-v3.y)/2*H,v3.z<1];}
 let last=performance.now(),T=0,hudT=0;
