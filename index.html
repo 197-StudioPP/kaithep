@@ -421,7 +421,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.6.0-b';
+window.__BUILD='1.6.1-b';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -3392,7 +3392,22 @@ function autoFarm(){const f=S.fm;if(!f||!(hasDef('col')||hasDef('smart')))return
 setInterval(()=>{try{autoFarm();}catch(e){}},2000);
 /* ================= INPUT ================= */
 const ray=new THREE.Raycaster(),mv=new THREE.Vector2();
-renderer.domElement.addEventListener('pointerdown',e=>{
+/* 🗺️ ลากเลื่อนแผนที่ + หนีบซูม */
+var camOff={x:0,z:0},camZ=.7,PT=new Map(),pDrag=null,pinch0=null;
+function camClamp(){camOff.x=Math.max(-7,Math.min(7,camOff.x));camOff.z=Math.max(-5,Math.min(5,camOff.z));camZ=Math.max(.42,Math.min(1,camZ));}
+renderer.domElement.addEventListener('pointerdown',e=>{if(view!=='farm')return;PT.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(PT.size===1)pDrag={x:e.clientX,y:e.clientY,ox:camOff.x,oz:camOff.z,mv:0,t:performance.now(),e};else{pDrag&&(pDrag.mv=99);const [a,b]=[...PT.values()];pinch0={d:Math.hypot(a.x-b.x,a.y-b.y),z:camZ};}
+ try{renderer.domElement.setPointerCapture(e.pointerId);}catch(_){}});
+renderer.domElement.addEventListener('pointermove',e=>{if(!PT.has(e.pointerId))return;PT.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(PT.size>=2&&pinch0){const [a,b]=[...PT.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch0.d>10){camZ=pinch0.z*pinch0.d/d;camClamp();}return;}
+ if(!pDrag)return;const dx=e.clientX-pDrag.x,dy=e.clientY-pDrag.y;pDrag.mv=Math.max(pDrag.mv,Math.hypot(dx,dy));
+ if(pDrag.mv>10){const h=camGoal()[1],k=h/Math.max(1,H);camOff.x=pDrag.ox-dx*k*.85;camOff.z=pDrag.oz-dy*k*1.2;camClamp();}});
+const pEnd=e=>{if(!PT.has(e.pointerId))return;PT.delete(e.pointerId);if(PT.size<2)pinch0=null;
+ if(PT.size===0&&pDrag){const d=pDrag;pDrag=null;if(d.mv<=10)farmPick(d.e);}};
+renderer.domElement.addEventListener('pointerup',pEnd);renderer.domElement.addEventListener('pointercancel',e=>{PT.delete(e.pointerId);if(!PT.size){pDrag=null;pinch0=null;}});
+renderer.domElement.addEventListener('wheel',e=>{if(view!=='farm')return;camZ*=e.deltaY>0?1.08:.93;camClamp();},{passive:true});
+function camFocus(x,z){const g=camGoal(),b=g[0];camOff.x+=x-(b.x);camOff.z+=z-(b.z);camClamp();}
+function farmPick(e){
  if(view!=='farm')return;
  kpClose();
  mv.set(e.clientX/W*2-1,-(e.clientY/H)*2+1);ray.setFromCamera(mv,camera);
@@ -3412,14 +3427,14 @@ renderer.domElement.addEventListener('pointerdown',e=>{
   if(o.userData.pick==='coop'){if(!unl('nest')&&!S.gacha&&!(S.hold&&S.hold.length))continue;tapCoop();return;}
  }
  if(openSheet)showSheet(null);
-});
+}
 
 /* ================= LOOP ================= */
 let W=1,H=1,view='farm';
 const camT=new THREE.Vector3(),camPos=new THREE.Vector3(0,30,18);
 function resize(){W=innerWidth;H=innerHeight;renderer.setSize(W,H);camera.aspect=W/H;camera.updateProjectionMatrix();}
 addEventListener('resize',resize);resize();
-function camGoal(){const a=W/H;if(view==='farm'){const h=a<.7?40:a<1.1?30:22;return [new THREE.Vector3(1,0,a<.7?1.2:.6),h];}const h=a<.7?20:13;return [new THREE.Vector3(AX,0,.8),h];}
+function camGoal(){const a=W/H;if(view==='farm'){const h=(a<.7?40:a<1.1?30:22)*camZ;return [new THREE.Vector3(1+camOff.x,0,(a<.7?1.2:.6)+camOff.z),h];}const h=a<.7?20:13;return [new THREE.Vector3(AX,0,.8),h];}
 const v3=new THREE.Vector3();
 function scr(p,yo){v3.set(p.x,p.y+yo,p.z).project(camera);return [(v3.x+1)/2*W,(1-v3.y)/2*H,v3.z<1];}
 let last=performance.now(),T=0,hudT=0;
