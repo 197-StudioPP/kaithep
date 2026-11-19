@@ -436,7 +436,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.7.3-a';
+window.__BUILD='1.7.3-b';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -2537,7 +2537,7 @@ function visitFarm(id){if(id===S.gid){showSheet(null);setView('farm');return;}co
   <div class="vfarm"><div class="vgrass">${F.length?F.map(x=>{const k=L2C(x.c);return k?`<div class="vck">${chickSVG(k.id,58,x.sh)}<small>${esc(x.nm)}${x.en?' +'+x.en:''}</small></div>`:'';}).join(''):(r.g&&L2C(r.g.c)?`<div class="vck">${chickSVG(L2C(r.g.c).id,70,r.g.sh)}</div>`:'<div class="sub">ไม่มีข้อมูลไก่</div>')}</div>
   <div class="vnest">🌾 พืชสุกค้างในไร่: <b>🥚${r.cloud?fmt(r.rp|0):'?'}</b>${r.pr?` • 🛡️ ป้องกัน ${pct(r.pr)}`:''}</div></div>
   ${canRaid?`<div class="sub">🥷 ขโมยได้ ~🥚${stealN(r)} • ⚠️ ${pct(catchP(r))} โดนจับ เสียค่าปรับ 🪙${RAID_FINE}</div>`:(r.cloud&&cd>0?`<div class="sub">⏳ ขโมยซ้ำได้ใน ${fmtDur(cd/1000)}</div>`:!r.cloud?'<div class="sub">ผู้เล่นนี้ไม่ได้ล็อกอิน — ขโมยพืช/ชิงไก่ไม่ได้</div>':!isCloud?'<div class="sub">🔐 ล็อกอินก่อนถึงจะขโมยพืชได้</div>':r.cloud&&!(r.rp>0)?'<div class="sub">🌾 ไม่มีพืชสุกค้างให้ขโมย</div>':'')}`,
-  [canRaid?{t:'🥷 แอบขโมยพืช!',c:'r',f:()=>raidFarm(r)}:null,{t:'🏟️ ท้าชนทีม',c:'b',f:()=>ghostPick(r.id)},{t:'กลับหมู่บ้าน',c:'g',f:()=>showSheet('vil')}].filter(Boolean));}
+  [canRaid?{t:'🥷 แอบขโมยพืช!',c:'r',f:()=>raidFarm(r)}:null,{t:'🏟️ ท้าชนทีม',c:'b',f:()=>pvChoose(r.id)},{t:'กลับหมู่บ้าน',c:'g',f:()=>showSheet('vil')}].filter(Boolean));}
 function catchP(r){return Math.min(.6,.1+(+r.pr||0)*.6);}
 function stealN(r){return Math.min(STEAL_MAX,Math.max(1,Math.floor((r.rp|0)*STEAL_PCT*(1-Math.min(.9,+r.pr||0)))));}
 async function raidFarm(r){if(!cgDb||!cgUser)return;S.fm.rt[r.uid]=Date.now();save();const caught=R()<catchP(r),n=stealN(r);
@@ -2695,16 +2695,30 @@ function takeEgg(){const e=myEggs()[0];if(!e)return null;if(e.b!=null)S.bag.spli
 function giveEgg(t){S.bag=S.bag||[];S.bag.push(Math.max(0,Math.min(4,t|0)));}
 function eggOk(r){return !!(r&&r.cloud&&isCloud&&cgUser&&!((+r.shu||0)>Date.now())&&(r.lg|0)>0&&(r.eg|0)>0&&myEggs().length&&pvLeft().g>0);}
 function betChips(max,sel,attr){const L=[0,50,100,200,300].filter(v=>v<=max);if(max>0&&!L.includes(max))L.push(max);return `<div class="ckf" style="justify-content:center;flex-wrap:wrap">${L.map(v=>`<button class="${v===sel?'on':''}" ${attr}="${v}">${v?'🥚'+fmt(v):'ไม่เดิมพัน'}</button>`).join('')}</div>`;}
+function pvChoose(gid){const r=CG[gid]||BD[gid];if(!r)return;if(!tbMine().length){toast('ยังไม่มีทีม — จัดทีมที่ 🏠 เล้าไก่ก่อน');return;}
+ S.pvT=S.pvT||{};const cd=(S.pvT[r.id]||0)+PV_CD*60000-Date.now();if(cd>0){toast(`⏳ ท้า ${r.n} ซ้ำได้ใน ${tLeft(Date.now()+cd)}`);return;}
+ const MX=pvStake(r),EG=eggOk(r),pz=goldX(r.g?ghostPrize(r.g):30),shd=(+r.shu||0)>Date.now(),now=Date.now();
+ const why=!r.cloud?'เพื่อนไม่ได้ล็อกอิน':!isCloud?'เราต้องล็อกอินก่อน':shd?'เพื่อนใช้ 🛡️ การ์ดกันชนอยู่':'';
+ const whyE=why||(MX<=0?((S.etk|0)<=0?'เราไม่มีเบี้ยไข่':pvLeft().e<=0?'วันนี้เราเสียครบเพดานแล้ว':'วันนี้เพื่อนเสียครบเพดานแล้ว'):'');
+ const whyG=why||(!myEggs().length?'เราไม่มีไข่ในกล่อง/บนแท่น':!(r.eg|0)?'เพื่อนไม่มีไข่':pvLeft().g<=0?'วันนี้เราเสียไข่ครบแล้ว':!(r.lg|0)?'วันนี้เพื่อนเสียไข่ครบแล้ว':'');
+ const card=(k,ic,t,d,dis)=>`<button class="card big-card ${dis?'dis':''}" data-pc="${k}" style="width:100%;text-align:left;font:inherit;margin-bottom:6px"><div class="ic">${ic}</div><div class="mid"><div class="nm">${t}</div><div class="sub">${dis?'🚫 '+dis:d}</div></div></button>`;
+ showModal(`<div class="em">🎯</div><h2>ท้า ${esc(r.n)} — จะเอาอะไรจากเขา?</h2><div class="sub">แพ้ก็เสียสิ่งเดียวกันให้เขา • ไก่ไม่หายทุกแบบ</div><div style="margin-top:8px">
+  ${card('none','🤝','ชนกันเล่น',`ชนะได้ 🪙${fmt(pz)} • แพ้ไม่เสียอะไร`,'')}
+  ${card('etk','🥚',`เบี้ยไข่${MX?` (สูงสุด ${fmt(MX)})`:''}`,`ชนะได้ 🥚 จากเขา + 🪙${fmt(pz)} • แพ้เสีย 🥚 เท่ากัน`,whyE)}
+  ${card('egg','🐣',`ไข่ 1 ฟอง${EG?` (ของเขา: ไข่${TIERS[r.et|0].n})`:''}`,EG?`ชนะได้ไข่${TIERS[r.et|0].n} • แพ้เสียไข่${TIERS[myEggs()[0].t].n}ของเรา`:'',whyG)}
+  </div><div class="sub">🛟 เสียได้วันละไม่เกิน 🥚${PV_DAY_E} / 🐣 ${PV_DAY_G} ฟอง</div>`,[{t:'ยกเลิก'}]);
+ document.querySelectorAll('[data-pc]').forEach(b=>b.onclick=()=>{const k=b.dataset.pc;if(b.classList.contains('dis')){toast('เลือกอันนี้ไม่ได้ตอนนี้');return;}
+  if(k==='none')ghostPick(gid,0);else if(k==='egg')ghostPick(gid,'egg');else ghostPick(gid,Math.min(MX,S.pvBet||100)||MX);});}
 function ghostPick(gid,bet){const r=CG[gid]||BD[gid];if(!r)return;if(!tbMine().length){toast('ยังไม่มีทีม — จัดทีมก่อน');return;}
  S.pvT=S.pvT||{};const cd=(S.pvT[r.id]||0)+PV_CD*60000-Date.now();if(cd>0){toast(`⏳ ท้าทีมนี้ซ้ำได้ใน ${tLeft(Date.now()+cd)}`);return;}
- const tm=tbGhostTeam(r),sd=cbSide(tm,''),me=cbSide(t4Spec(),''),MX=pvStake(r),EG=eggOk(r),isE=bet==='egg'&&EG,W=isE?0:Math.min(MX,bet!=null&&bet!=='egg'?bet:(S.pvBet!=null?S.pvBet:100)),pz=goldX(r.g?ghostPrize(r.g):30),shd=(+r.shu||0)>Date.now();
+ const tm=tbGhostTeam(r),sd=cbSide(tm,''),me=cbSide(t4Spec(),''),MX=pvStake(r),EG=eggOk(r),isE=bet==='egg'&&EG,W=isE?0:Math.min(MX,bet!=null&&bet!=='egg'?bet:0),pz=goldX(r.g?ghostPrize(r.g):30),shd=(+r.shu||0)>Date.now();
  showModal(`<div class="em">🏟️</div><h2>ซุ้มไก่ชน: ท้าทีม ${r.p?'🏅 ':''}${esc(r.n)}</h2>
   <div style="display:flex;justify-content:center;gap:2px;margin:6px 0">${tm.map(u=>`<span title="${esc(u.name)}">${chickSVG(u.ch,46,u.sh)}</span>`).join('')}</div>
   <div class="sub">ทีมเขา ❤️${sd.max} 🛡️${sd.ar} ⚔️${sd.atk}<br>ทีมเรา ❤️${me.max} 🛡️${me.ar} ⚔️${me.atk}</div>
-  ${MX||EG?`<div class="sub" style="margin:6px 0 0"><b>🎲 เลือกเดิมพัน</b></div>${betChips(MX,isE?-1:W,'data-bet').replace('</div>',EG?`<button class="${isE?'on':''}" data-bet="egg">🐣 ไข่ 1 ฟอง</button></div>`:'</div>')}`:''}
+  ${!isE&&W>0?`<div class="sub" style="margin:6px 0 0"><b>🥚 จำนวนเบี้ยไข่</b></div>${betChips(MX,W,'data-bet').replace('<button class="" data-bet="0">ไม่เดิมพัน</button>','')}`:''}
   <div class="note" style="text-align:left">🏆 <b>ชนะ:</b> 🪙${fmt(pz)}${isE?` + <b>ไข่${TIERS[r.et|0].n} 1 ฟอง</b> จากเขา`:W?` + <b>🥚${fmt(W)}</b> จากเขา`:''}<br>😵 <b>แพ้:</b> ${isE?`เสีย <b>ไข่${TIERS[myEggs()[0].t].n} 1 ฟอง</b> (ฟองที่ถูกสุดของเรา)`:W?`เสีย <b>🥚${fmt(W)}</b> ให้เขา`:'ไม่เสียอะไร'} • ไก่ไม่หาย<br><small>🛟 เสียจากการชนได้วันละไม่เกิน 🥚${PV_DAY_E} / 🐣 ไข่ ${PV_DAY_G} ฟอง (วันนี้เหลือ 🥚${pvLeft().e} / 🐣${pvLeft().g})</small>
   ${shd?'<br>🛡️ เขาใช้ <b>การ์ดกันชน</b> อยู่ — เดิมพันเบี้ยไข่ไม่ได้':!r.cloud?'<br>🛖 เขาไม่ได้ล็อกอิน — ไม่มีเดิมพัน':!isCloud?'<br>🔐 ล็อกอินก่อนถึงจะเดิมพันได้':''}</div>
-  <div class="sub">👆 กดจังหวะเอง • ทีมเขาสู้ตามที่เจ้าของจัดไว้</div>`,[{t:`⚔️ ลุย!${isE?' (🐣 ไข่ 1 ฟอง)':W?' (🥚'+fmt(W)+')':''}`,c:'r',f:()=>startGhost(r,isE?'egg':W)},{t:'ยกเลิก'}]);
+  <div class="sub">👆 กดจังหวะเอง • ทีมเขาสู้ตามที่เจ้าของจัดไว้</div>`,[{t:`⚔️ ลุย!${isE?' (🐣 ไข่ 1 ฟอง)':W?' (🥚'+fmt(W)+')':''}`,c:'r',f:()=>startGhost(r,isE?'egg':W)},{t:'← เปลี่ยนเดิมพัน',f:()=>pvChoose(gid)}]);
  document.querySelectorAll('[data-bet]').forEach(b=>b.onclick=()=>{if(b.dataset.bet==='egg'){ghostPick(gid,'egg');return;}S.pvBet=+b.dataset.bet;save();ghostPick(gid,S.pvBet);});}
 function bdSend(full){const me=bdMine();if(!net||!net.ready)return;toHost({t:'bd',list:full?Object.values(BD):[me],full:full?1:0});}
 const fmtAgo=ms=>{const s=ms/1000;if(s<90)return 'เมื่อกี้';if(s<3600)return Math.floor(s/60)+' นาทีที่แล้ว';if(s<86400)return Math.floor(s/3600)+' ชม.ที่แล้ว';return Math.floor(s/86400)+' วันที่แล้ว';};
@@ -2722,7 +2736,7 @@ function openBoard(refresh){bdMine();if(!refresh)cgFetch();const now=Date.now(),
    ${r.g?`<div class="sub">🛡️ ตัวแทน: <b>${esc(r.g.nm)}</b> Lv.${r.g.lv}${r.g.en?` <b class="enb">+${r.g.en}</b>`:''}${!me?` <button class="btn r" data-gh="${r.id}" style="padding:2px 9px;font-size:12.5px">🏟️ ท้าชน${pvStake(r)?' 🥚'+pvStake(r):''}</button>`:''}</div>`:''}
    <div class="bdch">${CHARS.map(c=>r.c.includes(C2L(c.id))?`<span>${r.s.includes(C2L(c.id))?'✨':''}${c.e}</span>`:'<span class="no">❔</span>').join('')}</div></div></div>`;});
  h+='</div><div class="note">⚔️ ท้า = สู้กับ AI ตัวแทนของเขา (ได้แม้เขาออฟไลน์) • ตั้งตัวแทนของเราได้ที่ข้อมูลไก่ 🛡️<br>🟢 ออนไลน์ = ส่งข้อมูลมาภายใน 1 นาที</div>';
- const bind=()=>document.querySelectorAll('[data-gh]').forEach(b=>b.onclick=()=>{const cl=$('#mbox .row button:last-child');if(cl)cl.click();ghostPick(b.dataset.gh);});
+ const bind=()=>document.querySelectorAll('[data-gh]').forEach(b=>b.onclick=()=>pvChoose(b.dataset.gh));
  if(refresh&&$('#bdl')){const tmp=document.createElement('div');tmp.innerHTML=h;const nb=tmp.querySelector('#bdl');const sc=$('#bdl').scrollTop;$('#bdl').replaceWith(nb);nb.scrollTop=sc;bind();return;}
  modal(h,[{t:'📢 ใบประกาศ',f:()=>openFeed()},{t:'ปิด',c:'g'}]);bind();}
 
@@ -3296,12 +3310,12 @@ function pvpHub(refresh){if(!refresh){try{cgFetch();}catch(e){}try{bdMine();}cat
  const on=r=>r.ls>now-75000;S.pvT=S.pvT||{};
  const row=r=>{const tm=tbGhostTeam(r),sd=cbSide(tm,''),W=pvStake(r),cd=(S.pvT[r.id]||0)+PV_CD*60000-now,sh=(+r.shu||0)>now;
   return `<div class="card" style="margin-bottom:6px;align-items:center"><div class="mid"><div class="nm">${on(r)?'🟢':'⚪'} ${esc(r.n)} <small>❤️${sd.max} ⚔️${sd.atk}</small></div><div style="display:flex;gap:1px">${tm.map(u=>`<span>${chickSVG(u.ch,30,u.sh)}</span>`).join('')}</div></div>
-  ${cd>0?`<button class="btn" disabled style="font-size:12px">⏳${tLeft(now+cd)}</button>`:`<button class="btn r" data-pvh="${esc(r.id)}" style="white-space:nowrap">⚔️ ท้า${W?`<br><small>🥚${W}</small>`:sh?'<br><small>🛡️</small>':''}</button>`}</div>`;};
+  ${cd>0?`<button class="btn" disabled style="font-size:12px">⏳${tLeft(now+cd)}</button>`:`<button class="btn r" data-pvh="${esc(r.id)}" style="white-space:nowrap">⚔️ ท้า${sh?'<br><small>🛡️</small>':''}</button>`}</div>`;};
  showModal(`<div id="pvh"></div><div class="em">🏟️</div><h2>ซุ้มไก่ชน</h2><div class="sub">ทีมเรา ❤️${me.max} ⚔️${me.atk} • ชนะได้ 🥚 จากเขา แพ้เสียเท่ากัน • ไก่ไม่หาย</div>
   <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:6px 0"><button class="btn ${shOn()?'':'r'}" id="pvSh">${shOn()?`🛡️ กันชนอยู่ ${tLeft(S.pvSh)}`:`🛡️ การ์ดกันชน 🪙${fmt(SHIELD_P)}`}</button></div>
   <div style="max-height:52vh;overflow:auto;text-align:left">${L.length?L.map(row).join(''):'<div class="sub">ยังไม่เจอผู้เล่นอื่น — รอสักครู่ หรือเข้า 🌐 ล็อบบี้ให้เจอคนอื่นก่อน</div>'}</div>`,[{t:'ปิด',c:'g'}]);
  $('#pvSh').onclick=()=>{buyShield();setTimeout(()=>{if($('#pvh'))pvpHub(true);},50);};
- document.querySelectorAll('[data-pvh]').forEach(b=>b.onclick=()=>{const id=b.dataset.pvh,cl=[...document.querySelectorAll('#mbox .row button')].pop();if(cl)cl.click();setTimeout(()=>ghostPick(id),60);});}
+ document.querySelectorAll('[data-pvh]').forEach(b=>b.onclick=()=>pvChoose(b.dataset.pvh));}
 function buyShield(){if(shOn()){toast(`🛡️ การ์ดกันชนเหลือ ${tLeft(S.pvSh)}`);return;}if(S.coins<SHIELD_P){toast(`🪙 เดือยเงินไม่พอ (ต้องใช้ ${fmt(SHIELD_P)})`);return;}
  S.coins-=SHIELD_P;S.pvSh=Date.now()+SHIELD_H*3600e3;save();try{ghostUpload(true);}catch(e){}fanfare();toast(`🛡️ ใช้การ์ดกันชน ${SHIELD_H} ชม. — ไม่มีใครเอาเบี้ยไข่เราไปได้`);if(openSheet==='fight')renderFight();}
 /* ---------- 🌐 ออนไลน์: แลกทีม → ทั้งสองเครื่องจำลองออโต้ด้วย seed เดียวกัน ---------- */
