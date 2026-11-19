@@ -424,6 +424,34 @@ body.shake{animation:bsh .5s}
 @keyframes cutL{0%{transform:translateX(-100%)}15%{transform:translateX(0)}80%{transform:translateX(0);opacity:1}100%{transform:translateX(20%);opacity:0}}@keyframes cutR{0%{transform:translateX(100%)}15%{transform:translateX(0)}80%{transform:translateX(0);opacity:1}100%{transform:translateX(-20%);opacity:0}}
 .rkl{display:flex;justify-content:space-between;gap:2px;margin:4px 0;background:#fff;border-radius:12px;padding:6px 4px}.rkl span{display:flex;flex-direction:column;align-items:center;font-size:24px;line-height:1.1;flex:1}.rkl small{font-size:9px;font-weight:700;white-space:nowrap}.rkl .lk{filter:grayscale(1);opacity:.4}.rkl .cur{transform:scale(1.25);text-shadow:0 0 8px #ffd23f}.rkg{margin-bottom:5px}.rkg.ok{background:#f0ffe8}.rkg .nm small{opacity:.7}
 .rkup{font-size:90px;line-height:1.1;animation:rkup .8s ease-out}@keyframes rkup{0%{transform:scale(.2) rotate(-30deg)}60%{transform:scale(1.3) rotate(8deg)}100%{transform:scale(1)}}
+.cbstg{display:flex;align-items:center;justify-content:space-between;gap:4px;min-height:150px;padding:4px 2px;background:radial-gradient(ellipse at 50% 70%,rgba(255,240,200,.35),transparent 70%)}
+.cbstg .vs{font-weight:900;font-size:20px;color:#fff;-webkit-text-stroke:1.5px #3b2a1a;flex:none}
+.cbstg .sd{display:grid;grid-template-columns:repeat(2,76px);gap:4px 4px;justify-items:center;flex:none}.cbstg .sd.n1{grid-template-columns:90px}.cbstg .sd.n1 .pic{transform:scale(1.35)}
+.cbstg .un{position:relative;width:76px;height:76px;display:flex;align-items:flex-end;justify-content:center}
+.cbstg .un .pic{transition:filter .2s;filter:drop-shadow(0 3px 0 rgba(0,0,0,.25))}.cbstg .sd.op .un .pic svg{transform:scaleX(-1)}
+.cbstg .un .fx{position:absolute;inset:0;pointer-events:none;z-index:2}
+.cbstg .sd.stun .un .fx::before{content:'💫';position:absolute;left:50%;top:-6px;font-size:20px;animation:stunsp 1s linear infinite}
+@keyframes stunsp{from{transform:translateX(-50%) rotate(0)}to{transform:translateX(-50%) rotate(360deg)}}
+.cbstg .sd.dot .un .fx::after{content:'🩸';position:absolute;right:2px;top:14px;font-size:13px;animation:drip 1.2s infinite}@keyframes drip{0%{transform:translateY(0);opacity:1}100%{transform:translateY(14px);opacity:0}}
+.cbstg .sd.shield .un .pic{filter:drop-shadow(0 0 6px #3d9bff) drop-shadow(0 0 2px #3d9bff)}.cbstg .sd.rage .un .pic{filter:drop-shadow(0 0 6px #ff3b1f)}.cbstg .sd.shield.rage .un .pic{filter:drop-shadow(0 0 5px #3d9bff) drop-shadow(0 0 7px #ff3b1f)}
+.cbstg .sd.deb .un::before{content:'🌀';position:absolute;left:0;top:6px;font-size:13px;opacity:.85;animation:stunsp 2s linear infinite;z-index:2}
+.cbstg .sd.low .un .pic{animation:lowb 1s infinite}@keyframes lowb{50%{filter:drop-shadow(0 0 6px #ff0000) saturate(.6)}}
+.cbstg .sd.me .un.atk{animation:atkR .42s}.cbstg .sd.op .un.atk{animation:atkL .42s}
+@keyframes atkR{40%{transform:translateX(60px) scale(1.18) rotate(8deg)}}@keyframes atkL{40%{transform:translateX(-60px) scale(1.18) rotate(-8deg)}}
+.cbstg .un.hurt{animation:hurt .42s}.cbstg .un.hurt .pic{filter:brightness(1.8) sepia(1) hue-rotate(-50deg) saturate(5)}
+.cbstg .un.hurt2{animation:hurt2 .55s}.cbstg .un.hurt2 .pic{filter:brightness(2) sepia(1) hue-rotate(-50deg) saturate(6)}
+@keyframes hurt{25%{transform:translateX(-7px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}@keyframes hurt2{20%{transform:translateX(-12px) rotate(-12deg) scale(.9)}50%{transform:translateX(10px) rotate(10deg)}80%{transform:translateX(-5px)}}
+.cbstg .un.dodge{animation:dodge .45s}@keyframes dodge{40%{transform:translateY(-22px) rotate(-10deg)}}
+.cbstg .un.wob{animation:wob .8s}.cbstg .un.wob .pic{filter:grayscale(.6)}@keyframes wob{20%{transform:rotate(-14deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-9deg)}80%{transform:rotate(6deg)}}
+.cbstg .un.zap .pic{animation:zap .6s}@keyframes zap{0%,40%,80%{filter:brightness(3) drop-shadow(0 0 8px #ffe600)}20%,60%{filter:none}}
+.cbstg .un.heal .pic{filter:drop-shadow(0 0 8px #3ddc5a) brightness(1.2)}
+.cbstg .un.cast{animation:cast .9s}.cbstg .un.cast .pic{filter:drop-shadow(0 0 10px #ffe066) brightness(1.2)}.cbstg .un.castu{animation:castu .9s;z-index:3}.cbstg .un.castu .pic{filter:drop-shadow(0 0 14px #c86bff) brightness(1.3)}
+@keyframes cast{30%{transform:translateY(-18px) scale(1.15)}60%{transform:translateY(-8px) scale(1.1)}}@keyframes castu{30%{transform:translateY(-22px) scale(1.5)}70%{transform:translateY(-10px) scale(1.35)}}
+.cbstg .sd.ko .un{animation:ko .7s forwards}@keyframes ko{to{transform:rotate(90deg) translateX(14px);filter:grayscale(1);opacity:.6}}
+.cbstg .ufl{position:absolute;left:50%;top:0;pointer-events:none;z-index:4}.uft{position:absolute;left:0;transform:translateX(-50%);white-space:nowrap;font-weight:900;font-size:17px;color:#fff;-webkit-text-stroke:1.2px #b3261e;animation:uft 1.1s forwards}
+.uft.big{font-size:26px;color:#ffe066;-webkit-text-stroke:1.5px #b3261e}.uft.sk{-webkit-text-stroke:1.2px #1e5aa8;font-size:14px}.uft.hl{-webkit-text-stroke:1.2px #1f7a35;font-size:15px}.uft.m{-webkit-text-stroke:1px #555;font-size:13px}.uft.dm{font-size:14px}
+@keyframes uft{0%{transform:translate(-50%,0) scale(.5);opacity:0}20%{transform:translate(-50%,-14px) scale(1.2);opacity:1}100%{transform:translate(-50%,-44px) scale(1);opacity:0}}
+.cbmid{gap:6px!important;justify-content:space-evenly!important}
 .pwb{font-size:11px;border-radius:8px;padding:0 6px;margin-left:4px;white-space:nowrap}.pwb.g{background:#d9ffc8}.pwb.y{background:#fff0a8}.pwb.r{background:#ffc9bf}
 .cpinfo{background:#fff3c4;border:2px solid #e2c36a;border-radius:12px;padding:6px 10px;margin:0 0 8px;font-size:13px;text-align:center;line-height:1.35}.cpinfo small{color:#7a5a2a}
 .wl.job{background:#e8f6d8;border-color:#4c8a2a}.wl.team{background:#ffe0d6;border-color:#b23a2a}
@@ -482,7 +510,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.9.1-a';
+window.__BUILD='1.9.2-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -3297,7 +3325,15 @@ function cbRes(st,ai,kind,ev,rng){const a=st.S[ai],d=st.S[1-ai],n=nxAgg(a);ev.ki
 /* ตาเดียวแบบออโต้ (ใช้จำลองสมดุล + ออนไลน์) */
 /* ---------- จอสู้ ---------- */
 let TBV=null;
-function cbTeamRow(s,i){return `<div class="cbrow">${s.units.map(u=>`<span class="cbu" title="${esc(u.name)}">${chickSVG(u.ch,i?38:34,u.sh)}</span>`).join('')}</div>`;}
+function cbStageH(me,op){const U=(s,vi)=>`<div class="sd ${vi?'me':'op'} n${s.units.length}" id="cbsd${vi}">${s.units.map((u,i)=>`<div class="un" data-i="${i}"><div class="fx"></div><div class="pic">${chickSVG(u.ch,72,u.sh)}</div><div class="ufl"></div></div>`).join('')}</div>`;
+ return `<div class="cbstg" id="cbstg">${U(me,1)}<div class="vs">VS</div>${U(op,0)}</div>`;}
+function cbUnit(vi,i){const sd=$('#cbsd'+vi);if(!sd)return null;const L=sd.querySelectorAll('.un');return L.length?L[((i%L.length)+L.length)%L.length]:null;}
+function cbUA(el,c,ms){if(!el||!TBV||TBV.skip)return;el.classList.remove(c);void el.offsetWidth;el.classList.add(c);setTimeout(()=>el.classList.remove(c),ms||450);}
+function cbUF(el,t,c){if(!el||!TBV||TBV.skip)return;const f=el.querySelector('.ufl');if(!f)return;const d=document.createElement('span');d.className='uft '+(c||'');d.innerHTML=t;f.appendChild(d);setTimeout(()=>d.remove(),1100);}
+function cbActor(s,ev){const f=k=>Math.max(0,s.units.findIndex(u=>u.ch===s.slots[k]));if(ev.ult)return f(3);if(ev.sk!=null)return f(ev.sk);return (Math.max(1,s.own)-1)%Math.max(1,s.units.length);}
+function cbStatus(){if(!TBV)return;[0,1].forEach(vi=>{const s=TBV.st.S[vi===1?TBV.my:1-TBV.my],e=$('#cbsd'+vi);if(!e)return;const neg=s.tb.some(b=>Object.keys(b).some(k=>k!=='t'&&b[k]<0));
+ e.classList.toggle('stun',!!s.stun);e.classList.toggle('dot',s.dot.length>0);e.classList.toggle('shield',sm(s,'ar')>0);e.classList.toggle('rage',sm(s,'atk')>0||s.hot>0);e.classList.toggle('deb',neg);e.classList.toggle('low',s.max!==999999&&s.hp<s.max*.3);});}
+function cbTeamRow(s,i){return '';return `<div class="cbrow">${s.units.map(u=>`<span class="cbu" title="${esc(u.name)}">${chickSVG(u.ch,i?38:34,u.sh)}</span>`).join('')}</div>`;}
 function cbPanel(s,i){return `<div class="cbp ${i?'me':'op'}" id="cbp${i}">${i?'':cbTeamRow(s,0)}<div class="cbn"><b>${esc(s.name)}</b> <small id="cbsa${i}"></small><span class="cbst" id="cbst${i}"></span></div>
  <div class="cbhp"><i id="cbh${i}"></i><span id="cbht${i}"></span></div><div class="cbfl" id="cbf${i}"></div>${i?cbTeamRow(s,1):''}</div>`;}
 function cbRun(ctx){if(TBV||B)return;const mine=ctx.mine||t4Spec();if(!mine.length){toast('ยังไม่มีไก่โต — ฟักไข่ก่อนนะ');return;}
@@ -3307,7 +3343,7 @@ function cbRun(ctx){if(TBV||B)return;const mine=ctx.mine||t4Spec();if(!mine.leng
  showSheet(null);if(typeof hideInvite==='function')hideInvite();$('#mm').classList.add('hide');setView('tb');
  const v=$('#cbv');v.classList.remove('hide');
  v.innerHTML=`<div class="cbtop"><b>${ctx.title||'⚔️'}</b><span id="cbturn"></span><button class="btn" id="cbauto">${TBV.lock?'🤖 ออโต้':'🤖 ออโต้: '+(TBV.auto?'เปิด':'ปิด')}</button><button class="btn" id="cbspd">⏩ x${TBV.spd}</button>${TBV.lock?'<button class="btn" id="cbskip">⏭️</button>':''}</div>
- ${cbPanel(opS,0)}<div class="cbmid"><div class="cbmsg" id="cbmsg"></div><div class="cbtags" id="cbtags"></div><div class="cbbar" id="cbbar"><i class="gz" id="cbgz"><i class="pz" id="cbpz"></i></i><b class="ar" id="cbar">▲</b></div>
+ ${cbPanel(opS,0)}<div class="cbmid">${cbStageH(TBV.st.S[TBV.my],TBV.st.S[1-TBV.my])}<div class="cbmsg" id="cbmsg"></div><div class="cbtags" id="cbtags"></div><div class="cbbar" id="cbbar"><i class="gz" id="cbgz"><i class="pz" id="cbpz"></i></i><b class="ar" id="cbar">▲</b></div>
  <div class="cbbtns"><button class="cbhit" id="cbhit">ชน</button><button class="cbult" id="cbult"><b id="cbultp">0%</b><small>อันติเมต</small></button></div></div>${cbPanel(meS,1)}`;
  $('#cbauto').onclick=()=>{if(TBV.lock)return;TBV.auto=!TBV.auto;S.cbAuto=TBV.auto;$('#cbauto').textContent='🤖 ออโต้: '+(TBV.auto?'เปิด':'ปิด');if(TBV.auto&&TBV.tapRes)TBV.tapRes(null);};
  $('#cbspd').onclick=()=>{TBV.spd=TBV.spd>=4?1:TBV.spd*2;S.tbSpd=TBV.spd;$('#cbspd').textContent='⏩ x'+TBV.spd;};
@@ -3326,15 +3362,16 @@ function cbDefMods(s){return {gw:sm(s,'gw'),slow:sm(s,'slow')+(s.has.sleepy?.15:
 function cbCut(sd,k,mine,dly){if(!TBV||TBV.skip)return;const id=sd.slots[k];if(!id||!CK[id])return;const u=sd.units.find(x=>x.ch===id)||{ch:id};
  const go=()=>{const v=$('#cbv');if(!v||!TBV)return;v.querySelectorAll('.cbcut').forEach(x=>x.remove());const d=document.createElement('div');d.className='cbcut'+(mine?'':' op')+(k===3?' ul':'');
   d.innerHTML=`<span class="cpic">${chickSVG(id,78,u.sh)}</span><div><span class="si">${SLOT_I[k]}</span> <b>${CK[id].s[k][0]}</b><small>${esc(u.name||(chOf(id)||{}).n||'')} • ${CK[id].s[k][1]}</small></div>`;v.appendChild(d);setTimeout(()=>d.remove(),1150);};
+cbUA(cbUnit(mine?1:0,Math.max(0,sd.units.findIndex(x=>x.ch===id))),k===3?'castu':'cast',900);
  dly?setTimeout(go,dly):go();}
 function cbPop(t,cls){const v=$('#cbv');if(!v||!TBV||TBV.skip)return;const d=document.createElement('div');d.className='cbpop '+(cls||'');d.innerHTML=t;v.appendChild(d);setTimeout(()=>d.remove(),900);}
-function cbLunge(vi){const p=$('#cbp'+vi);if(!p||TBV.skip)return;const r=p.querySelector('.cbrow');if(r){r.classList.remove('lg');void r.offsetWidth;r.classList.add('lg');}}
+function cbLunge(vi,i){if(!TBV||TBV.skip)return;cbUA(cbUnit(vi,i==null?0:i),'atk',420);}
 function cbFlash(){const v=$('#cbv');if(!v||TBV.skip)return;v.classList.remove('fls');void v.offsetWidth;v.classList.add('fls');}
 const cbW=ms=>TBV&&TBV.skip?Promise.resolve():new Promise(r=>setTimeout(r,ms/(TBV?TBV.spd:1)));
 function cbUI(){if(!TBV)return;const st=TBV.st;[0,1].forEach(vi=>{const s=st.S[vi===1?TBV.my:1-TBV.my],h=$('#cbh'+vi);if(!h)return;const bo=s.max===999999,p=bo?Math.max(0,100-st.turn/(st.maxT||40)*100):s.hp/s.max*100;h.style.width=p+'%';h.className=bo?'md':p<30?'lo':p<60?'md':'';$('#cbht'+vi).textContent=bo?`💥 ดาเมจ ${fmt(s.max-s.hp)} • เหลือ ${Math.max(0,Math.ceil(((st.maxT||40)-st.turn)/2))} ตา`:`${s.hp}/${s.max}`;
   $('#cbsa'+vi).textContent=`🛡️${Math.round(aAr(s))} ⚔️${Math.round(aAtk(s))}`;const neg=s.tb.some(b=>Object.keys(b).some(k=>k!=='t'&&b[k]<0));
   $('#cbst'+vi).innerHTML=(sm(s,'atk')>0?'💪':'')+(sm(s,'ar')>0?'🛡️':'')+(neg?'🌀':'')+(s.dot.length?'🩸':'')+(s.stun?'💫':'')+(s.hot?`🔥${s.hot}`:'')+(s.nx.length?'✨':'')+(s.food&&!s.fed?'🍲':'');});
- const m=st.S[TBV.my];
+ cbStatus();const m=st.S[TBV.my];
  const u=$('#cbult');$('#cbultp').textContent=Math.round(m.ult)+'%';u.style.setProperty('--u',m.ult+'%');u.classList.toggle('rdy',ultOk(m));u.classList.toggle('on',!!TBV.pend.ult);
  $('#cbturn').textContent=`รอบ ${Math.floor(st.turn/2)+1}`;}
 function cbFloat(vi,txt,cls){const f=$('#cbf'+vi);if(!f||TBV.skip)return;const d=document.createElement('span');d.className='cbft '+(cls||'');d.innerHTML=txt;f.appendChild(d);setTimeout(()=>d.remove(),1200);}
@@ -3346,8 +3383,8 @@ function cbTap(z,tmo){return new Promise(res=>{TBV.tapRes=res;const t0=performan
  if(x==='to')return 'm';if(x==null||x==='re')return x;const c=(z.l+z.r)/2,inG=x>=z.l&&x<=z.r;return inG&&(z.all||Math.abs(x-c)<=z.pw)?'p':inG?'g':'m';});}
 async function cbLoop(){const T=TBV;
  while(TBV===T&&T.st.win==null){const st=T.st,ai=st.turn%2,a=st.S[ai],isMe=ai===T.my,human=isMe&&!T.auto,tv=isMe?0:1,av=1-tv;cbUI();
-  const ev=cbBegin(st,ai,T.rng);if(ev.dot)cbFloat(av,'🩸 -'+ev.dot,'dm');if(ev.myst)cbFloat(av,'🔮 '+ev.myst,'sk');
-  if(st.win!=null)break;if(ev.stun){cbFloat(av,'💫 มึน! ข้ามตา','m');cbUI();await cbW(700);continue;}
+  const ev=cbBegin(st,ai,T.rng);if(ev.dot){cbFloat(av,'🩸 -'+ev.dot,'dm');document.querySelectorAll('#cbsd'+av+' .un').forEach(u=>{cbUA(u,'hurt',400);cbUF(u,'🩸','dm');});}if(ev.myst)cbFloat(av,'🔮 '+ev.myst,'sk');
+  if(st.win!=null)break;if(ev.stun){cbFloat(av,'💫 มึน! ข้ามตา','m');document.querySelectorAll('#cbsd'+av+' .un').forEach(u=>{cbUA(u,'wob',900);cbUF(u,'💫','sk');});cbUI();await cbW(900);continue;}
   let kind;
   if(human){T.pend={sk:0,ult:0};cbMsg('👆 กด <b>ชน</b> ตอนลูกศรอยู่ในช่องเขียว!');
    if(a.sk>=100&&ev.sk==null){const e1=cbPre(st,ai,{ai},true,false);if(e1.sk!=null){ev.sk=e1.sk;ev.skn=e1.skn;ev.skd=e1.skd;ev.ske=e1.ske;T.pend.sk=1;cbCut(a,e1.sk,1);cbFloat(av,`${SLOT_I[e1.sk]} ${e1.skn}!`,'sk');snd(900,.08,'triangle',.05,1.5);}}
@@ -3362,20 +3399,30 @@ async function cbLoop(){const T=TBV;
     const z=cbBar(dm);await cbW(ev.sk!=null||ev.ult?750:250);let dk=await cbTap(z,z.per*1.6);T.defing=0;if(!TBV)return;if(dk==null)dk=rollKind(T.rng,{p:.06,g:.4});ev.def=dk;$('#cbhit').textContent='ชน';}
    else{if(!T.skip){$('#cbgz').style.width='0';$('#cbtags').innerHTML='';cbMsg(isMe?'🤖 ออโต้กำลังตี...':'😤 ศัตรูกำลังตี...');}await cbW(isMe?350:450);}}
   if(ev.def==null&&!(T.ctx.boss&&isMe))ev.def=rollKind(T.rng,!isMe||!T.ctx.acc?{p:.06,g:.4}:{p:T.ctx.acc.p*.5,g:T.ctx.acc.g*.6});
-  cbLunge(av);if(!T.skip)await cbW(110);
+  const AI=cbActor(a,ev),TI=Math.floor(Math.random()*Math.max(1,st.S[1-ai].units.length));cbLunge(av,AI);if(!T.skip)await cbW(170);
   cbRes(st,ai,kind,ev,T.rng);
+  {const tu=cbUnit(tv,TI),au=cbUnit(av,AI),allT=()=>document.querySelectorAll('#cbsd'+tv+' .un');
+   if(ev.retry)cbUF(au,'🪽 ตีใหม่!','sk');
+   else if(ev.dmg){if(ev.ult)allT().forEach(u=>{cbUA(u,'hurt2',550);cbUF(u,'-'+ev.dmg,'big');});else{cbUA(tu,kind==='p'?'hurt2':'hurt',kind==='p'?550:420);cbUF(tu,'-'+ev.dmg,kind==='p'?'big':'');}}
+   else{cbUA(tu,'dodge',450);cbUF(tu,'หลบ!','m');}
+   if(kind!=='m'&&ev.def==='p')cbUF(tu,'✨🛡️','sk');else if(kind!=='m'&&ev.def==='g')cbUF(tu,'🛡️','hl');
+   if(ev.counter){setTimeout(()=>{cbUA(tu,'atk',420);setTimeout(()=>{cbUA(au,'hurt',420);cbUF(au,'-'+ev.counter,'');},180);},250);}
+   if(ev.stunned)allT().forEach(u=>{cbUA(u,'wob',800);cbUF(u,'💫 มึน!','sk');});
+   if(ev.drain)cbUF(au,'🧛 +'+ev.drain,'hl');if(ev.extra)cbUF(au,'✨ '+ev.extra,'sk');
+   if(ev.bolt)allT().forEach(u=>{cbUA(u,'zap',600);cbUF(u,'⚡ -'+ev.bolt,'big');});
+   (ev.heal||[]).forEach(([si,h])=>{const v=si===T.my?1:0;document.querySelectorAll('#cbsd'+v+' .un').forEach(u=>cbUA(u,'heal',700));cbUF(cbUnit(v,0),'🍲 +'+h,'hl');});}
   if(ev.ult&&!T.skip){const v=$('#cbv');v.classList.add('shk');setTimeout(()=>v.classList.remove('shk'),450);}
   cbFloat(av,ev.retry?'🪽 พลาด — ได้ตีใหม่!':kind==='p'?'💥 PERFECT!':kind==='g'?'👍 โดน!':'💨 พลาด!',ev.retry?'sk':kind);
   if(kind!=='m'&&!ev.retry){if(ev.def==='p')cbFloat(tv,ev.counter?'✨ กันเป๊ะ! สวนกลับ':'✨ กันเป๊ะ!','sk');else if(ev.def==='g')cbFloat(tv,'🛡️ กันได้','hl');}
   if(ev.counter){cbFloat(av,'⚔️ สวน -'+ev.counter,'dm');cbLunge(tv);if(!T.skip)snd(520,.08,'square',.05,1.4);if(tv===1)cbPop('🛡️ สวนกลับ!','ctr');}
   if(ev.combo){cbPop(ev.combo>=3?`🔥 FEVER ×${ev.combo}`:`COMBO ×${ev.combo}`,ev.combo>=3?'fev':'cmb');if(!T.skip)snd(700+ev.combo*120,.09,'triangle',.06,1.6);}
   if(kind==='p'&&!ev.retry)cbFlash();
-  if(ev.dmg){cbFloat(tv,'-'+ev.dmg,kind==='p'||ev.ult?'dm big':'dm');const p=$('#cbp'+tv);if(p&&!T.skip){p.classList.remove('hit');void p.offsetWidth;p.classList.add('hit');snd(170+Math.random()*80,.07,'sawtooth',.05,.6);}}
+  if(ev.dmg){const p=$('#cbp'+tv);if(p&&!T.skip){p.classList.remove('hit');void p.offsetWidth;p.classList.add('hit');snd(170+Math.random()*80,.07,'sawtooth',.05,.6);}}
   if(ev.drain)cbFloat(av,'🧛 +'+ev.drain,'hl');if(ev.stunned)cbFloat(tv,'💫 มึน!','sk');if(ev.extra)cbFloat(av,'✨ '+ev.extra,'sk');if(ev.bolt)cbFloat(tv,'⚡ ฟ้าผ่า -'+ev.bolt,'ul');
   (ev.heal||[]).forEach(([si,h])=>cbFloat(si===T.my?1:0,'🍲 +'+h,'hl'));
   cbUI();await cbW(ev.ult?750:420);}
  if(TBV===T)cbFinish();}
-function cbFinish(){const T=TBV,ctx=T.ctx,win=T.st.win===T.my;T.skip=true;if(ctx.boss){}else if(win)S.w=(S.w|0)+1;else S.l=(S.l|0)+1;save();
+function cbFinish(){const T=TBV,ctx=T.ctx,win=T.st.win===T.my;if(!ctx.boss){const l=$('#cbsd'+(win?0:1));if(l)l.classList.add('ko');}T.skip=true;if(ctx.boss){}else if(win)S.w=(S.w|0)+1;else S.l=(S.l|0)+1;save();
  Promise.resolve(ctx.onEnd?ctx.onEnd(win,T.st):null).then(extra=>{if(ctx.boss){fanfare();bigText('ครบ '+WB_TURNS+' ตา! 👹');}else if(win){fanfare();bigText('ชนะ! 🏆');}else{sadT();bigText('แพ้... 😵');}
   setTimeout(()=>{big.classList.add('hide');modal(`<div class="em">${ctx.boss?'👹':win?'🏆':'😵'}</div><h2>${ctx.boss?'จบการท้าบอส!':win?'ชนะแล้ว!':'แพ้...'}</h2><p>${extra||''}</p><div class="sub">จบใน ${Math.ceil(T.st.turn/2)} รอบ</div>`,
    (ctx.again?[{t:'🔁 อีกรอบ',c:'r',f:()=>{tbExit();ctx.again();}}]:[]).concat([{t:'กลับ',c:'g',f:()=>{tbExit();if(ctx.back)ctx.back();}}]));},900);});}
