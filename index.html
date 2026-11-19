@@ -444,7 +444,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.7.8-a';
+window.__BUILD='1.7.8-b';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -3671,7 +3671,7 @@ if(S.gacha&&S.tut>=0){setTimeout(reopenHeld,700);}
 if(S.tut===0){S.tut=-1;S.auto=true;S.qall=0;S.v151tw=1;S.v151q=1;S.v152q=1;save();setTimeout(()=>helpOpen(1),400);}
 
 /* ================= 📜 ภารกิจสอนเล่น ================= */
-var UNL={field:0,list:5,vil:5,chat:12,prod:8,nest:9999,trough:9999,kitchen:9999,market:9999,sign:9999,sale:9999};
+var UNL={field:0,list:0,vil:0,chat:0,prod:0,nest:9999,trough:9999,kitchen:9999,market:9999,sign:9999,sale:0};
 var UNL_NAME={nest:'🧺 รังไข่หน้าเล้า',trough:'🥣 รางอาหาร',field:'🌽 ไร่ข้าวโพด',list:'🐔 แท็บไก่ฉัน',kitchen:'🍳 โรงครัว',market:'🏪 แผงตลาด',sign:'📋 ป้ายใบสั่งซื้อ',vil:'🏘️ หมู่บ้าน + ลานประลอง',chat:'💬 แชท',sale:'🌱 ซื้อแปลงปลูก',prod:'🏗️ ก่อสร้าง'};
 function unl(k){if(OFF[k])return false;if(S.qall)return true;if(S.qi==null)return false;return S.qi>=(UNL[k]|0);}
 var QUESTS=[
