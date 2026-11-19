@@ -510,14 +510,14 @@ body.shake{animation:bsh .5s}
 </head>
 <body>
 <script>
-(function(){const L=[];function show(m){L.push(m);if(L.length>6)L.shift();let d=document.getElementById('errbox');
+(function(){const L=[];window.__errs=L;function show(m){L.push(m);if(L.length>6)L.shift();let d=document.getElementById('errbox');
  if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;background:#2b0d0d;color:#ffd6d6;border:3px solid #ff5252;border-radius:12px;padding:8px 10px;font:12px/1.4 monospace;max-height:45vh;overflow:auto;white-space:pre-wrap;word-break:break-all';
   (document.body||document.documentElement).appendChild(d);}
  d.innerHTML='<b style="color:#fff;font:bold 14px sans-serif">⚠️ เกมเจอ error — แคปจอนี้ส่งให้ผู้พัฒนา</b> <button onclick="navigator.clipboard&&navigator.clipboard.writeText(this.parentNode.innerText)" style="float:right">คัดลอก</button><button onclick="this.parentNode.remove()" style="float:right;margin-right:6px">ปิด</button>\n'+L.map(x=>x.replace(/</g,'&lt;')).join('\n---\n')+'\nรุ่น '+window.__BUILD+' • '+navigator.userAgent;}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.9.5-b';
+window.__BUILD='1.9.6-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -1337,7 +1337,7 @@ function spinMulti(n){if(SP||G)return;n=Math.min(n,multiN());if(n<1){toast(S.bag
  const out=[],kept=[];got.sort((a,b)=>b-a).forEach(t=>{const k=S.bag.lastIndexOf(t);if(t<3&&S.items.length<capacity(S.lvl)){if(k>=0)S.bag.splice(k,1);out.push(hatchMake(t));}else kept.push(t);});
  save();syncMeshes();const best=Math.max(...got);if(best>=3||out.some(o=>o.isNew||o.it.sh))fanfare();else cluck();
  const n2=multiN(),dn=dupList().length,big=kept.filter(t=>t>=3).length;
- showModal(`<div class="em">🎰</div><h2>สุ่ม ×${n} ได้ไก่ ${out.length} ตัว!</h2>${hatchGrid(out)}
+ showModal(`<div class="em">🎰</div><h2>สุ่ม ×${n} ${out.length?`ได้ไก่ ${out.length} ตัว!`:'ได้ไข่!'}</h2>${hatchGrid(out)}
   ${kept.length?`<div class="note">${big?`🌟 ได้ไข่${kept.filter(t=>t>=3).map(t=>TIERS[t].n).join(', ')}! ไปวางบน 🪺 แท่นฟักเพื่อลุ้น<br>`:''}${kept.length-big?`🏠 เล้าเต็ม — ไข่ ${kept.length-big} ฟองเก็บในกล่องก่อน`:''}</div>`:''}
   <div class="sub">🏠 เล้า ${S.items.length}/${capacity(S.lvl)} • 🥚 เหลือ ${fmt(S.etk|0)}</div>`,
   [n2>=1?{t:`🎰 สุ่มอีก ×${n2} 🥚${fmt(GACHA_ETK*n2)}`,c:'r',f:()=>spinMulti(n2)}:null,dn?{t:`💰 ขายตัวซ้ำ ★1 (${dn})`,c:'b',f:dupSellAsk}:null,{t:'เสร็จ',c:'g'}].filter(Boolean));}
@@ -1580,11 +1580,11 @@ function openMenu(){const on=v=>v?'on':'';const dexN=CHARS.filter(c=>(S.dex||{})
  <div class="cfs">🔊 เสียงและภาพ</div>
  <div class="cfc">${tg('snd','🔊','เสียง','')}${tg('vib','📳','การสั่น','')}${tg('lite','🪶','โหมดภาพเบา','ปิดเงา ลดความคม ช่วยเครื่องรุ่นเก่า (เกมจะรีโหลด)')}</div>
  <div class="cfs">📖 ข้อมูล</div>
- <div class="cfc">${row('help','❓','วิธีเล่น','')}${row('dex','📖',`สมุดสะสมไก่ ${dexN}/${CHARS.length}`,'')}</div>
+ <div class="cfc">${row('bug','🐞','แจ้งบั๊ก','คัดลอกข้อมูลเกม ส่งให้ผู้พัฒนา')}${row('help','❓','วิธีเล่น','')}${row('dex','📖',`สมุดสะสมไก่ ${dexN}/${CHARS.length}`,'')}</div>
  <div class="cfn" style="text-align:center">🏆 ชนะ ${S.w|0} • 🗼 สูงสุดชั้น ${S.towerBest|0} • 📅 เข้าเกมติดกัน ${(S.daily&&S.daily.streak)|0} วัน</div></div>`,[{t:'✅ เสร็จ',c:'g'}]);
  const nk=$('#stNick');nk.onchange=()=>{const v=nk.value.trim().slice(0,16);if(v&&v!==S.nick){S.nick=v;save();try{toHost({t:'nick',n:v});window.__profiles.rename(window.__PID,v);}catch(e){}toast('✏️ เปลี่ยนชื่อเป็น '+esc(v));}};
  document.querySelectorAll('[data-cfg]').forEach(b=>b.onclick=()=>{const k=b.dataset.cfg;CFG[k]=!CFG[k];saveCfg();if(k==='lite'){save();location.reload();return;}b.classList.toggle('on',CFG[k]);});
- document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const g=b.dataset.go;$('#modal').classList.add('hide');if(g==='backup')openBackup();else if(g==='switch'){save();if(net)leaveRoom(true);window.__profiles.switchTo();}else if(g==='help')helpOpen();else if(g==='dex')openDex();});}
+ document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const g=b.dataset.go;$('#modal').classList.add('hide');if(g==='backup')openBackup();else if(g==='switch'){save();if(net)leaveRoom(true);window.__profiles.switchTo();}else if(g==='help')helpOpen();else if(g==='bug')bugReport();else if(g==='dex')openDex();});}
 function openSettings(){openMenu();}
 function openHelp(){modal(`<div class="em">🗺️</div><h2>แผนที่ฟาร์ม</h2><div style="text-align:left;font-size:14px;line-height:1.6">
  ทุกอย่างทำที่ "สถานที่" ของมัน<br>🏠 <b>แตะตัวอาคาร/ป้าย</b> = ใช้งาน (เก็บของ, เปิดเมนู)<br>👆 <b>ปุ่มกลมบนพื้น</b> = กดรัวๆ เร่งเวลา (ใช้ ⚡ แรง ฟื้นเองทุกนาที)<br><br>
@@ -1592,6 +1592,19 @@ function openHelp(){modal(`<div class="em">🗺️</div><h2>แผนที่�
  🏠 <b>เล้า + รังไข่</b> เก็บไข่ / ขน / มูล • รับไก่ที่รอเข้าเล้า<br>🥣 <b>รางอาหาร</b> เติมอาหาร (ใช้ 🌽)<br>🌽 <b>ไร่</b> แตะทีเดียว เก็บเกี่ยว+ปลูกทุกแปลง<br>🍳 <b>โรงครัว</b> ทำอาหาร / เก็บของที่เสร็จ<br>🏪 <b>แผงตลาด</b> ขาย / ซื้อวัตถุดิบ<br>📋 <b>ป้ายใบสั่งซื้อ</b> ส่งของรับเงินก้อน<br><br>
  🗺️ <b>ลากนิ้วเลื่อนฟาร์ม</b> แตะ 🏠 เล้า (ไก่ฉัน) • 🏗️ โรงช่าง • ⚔️ ลานประลอง • 🗼 ทาวเวอร์ • 🏟️ ซุ้มไก่ชน • 🏘️ ประตูหมู่บ้าน • 💬 กระดานแชท<br>
  📜 ทำ <b>ภารกิจ</b> มุมซ้ายบน เพื่อปลดล็อกสถานที่ใหม่ทีละอย่าง</div>`,[{t:'← กลับ',f:openMenu},{t:'ปิด',c:'g'}]);}
+function bugReport(){let t='';try{const A=adults(),tc=[0,0,0,0,0];A.forEach(i=>tc[i.tier|0]++);
+ t=[`🐞 ไก่เทพ ${window.__BUILD} • ${new Date().toLocaleString('th-TH')}`,`จอ ${innerWidth}x${innerHeight} • ${navigator.userAgent.replace(/\s+/g,' ').slice(0,140)}`,
+  `ผู้เล่น ${S.nick||'-'} • ${isCloud?'ล็อกอิน':'ในเครื่อง'} • view ${view} • sheet ${openSheet||'-'}`,
+  `🪙${S.coins|0} 🥚${S.etk|0} 🥇${S.gold|0} • เครื่องฟัก Lv${S.lvl} เล้า Lv${S.cl||1}`,
+  `ไก่ ${A.length}/${capacity(S.lvl)} (★1-5: ${tc.join('/')}) • ทีม ${JSON.stringify(S.t4)} • งาน ${(S.job||[]).filter(Boolean).length}`,
+  `กล่องไข่ ${JSON.stringify(S.bag)} • แท่น ${S.pads} ${JSON.stringify((S.slots||[]).map(x=>x?[x.tier,Math.round(x.p*100)]:0))} • พัก ${(S.gacha?1:0)+((S.hold||[]).length)}`,
+  `ชนะ ${S.w|0} แพ้ ${S.l|0} • ทาวเวอร์ ${S.tower||1} (สูงสุด ${S.towerBest|0}) • ยศ ${S.rk|0} • เควสต์ ${S.qi} ${S.qall?'all':''} tut ${S.tut}`,
+  `error ล่าสุด: ${(window.__errs||[]).slice(-3).join(' || ').replace(/\s+/g,' ').slice(0,600)||'-'}`].join('\n');}catch(e){t='report error '+e;}
+ showModal(`<div class="em">🐞</div><h2>แจ้งบั๊ก</h2><div class="sub">1) พิมพ์สั้นๆ ว่าเจออะไร ทำอะไรอยู่ 2) กดคัดลอก 3) ส่งให้ผู้พัฒนา พร้อมแคปจอ</div>
+  <textarea id="bugTxt" style="width:100%;height:70px;font:inherit;font-size:13px;border:2px solid #e2cfa5;border-radius:10px;padding:6px;box-sizing:border-box" placeholder="เช่น กดเล้าแล้วไม่ขึ้นอะไร..."></textarea>
+  <pre id="bugInfo" style="text-align:left;white-space:pre-wrap;word-break:break-all;font-size:10.5px;background:#fff;border-radius:10px;padding:6px;max-height:28vh;overflow:auto;margin:6px 0">${esc(t)}</pre>`,
+  [{t:'📋 คัดลอกทั้งหมด',c:'r',f:()=>{const all=($('#bugTxt')?$('#bugTxt').value+'\n\n':'')+t;const done=()=>toast('📋 คัดลอกแล้ว ไปวางส่งให้ผู้พัฒนาได้เลย');
+   try{navigator.clipboard.writeText(all).then(done,()=>{prompt('คัดลอกข้อความนี้',all);});}catch(e){prompt('คัดลอกข้อความนี้',all);}}},{t:'ปิด'}]);}
 function openBackup(){
  let code='';try{code='KT1:'+btoa(unescape(encodeURIComponent(JSON.stringify(S))));}catch(e){}
  modal(`<div class="em">💾</div><h2>สำรอง / กู้เซฟ</h2><p style="font-size:13px">ข้อมูลเกมเก็บในเบราว์เซอร์นี้เท่านั้น คัดลอกรหัสด้านล่างเก็บไว้ (เช่น ส่งเข้าไลน์ตัวเอง) เพื่อย้ายเครื่องหรือกันข้อมูลหาย</p>
@@ -2559,7 +2572,7 @@ if(seasonReset){save();setTimeout(()=>modal(`<div class="em">🔄</div><h2>ซ�
  🎁 <b>ของขวัญเริ่มซีซั่น</b><br>🥚 ไข่หายาก 1 ฟอง (ได้หลังจบบทสอน)<br>🪙 160 เดือยเงิน${S.pio?'<br>🏅 ป้ายผู้บุกเบิกของคุณยังอยู่':''}<br><br>
  📜 ทำ <b>ภารกิจ</b> มุมซ้ายบนไปเรื่อยๆ จะปลดล็อกสถานที่ใหม่ทีละอย่าง — ใครไปถึงสุดก่อน?</div>`,
  [{t:'📜 ดูของใหม่',f:()=>openPatch()},{t:'เริ่มกันเลย! 🐓',c:'g'}]),1200);}
-(function pn(){if(seasonReset||S.patch===PATCH||S.tut>=0)return;setTimeout(function w(){if($('#modal').classList.contains('hide')&&$('#afk').classList.contains('hide')&&!G&&!B)openPatch();else setTimeout(w,2500);},3000);})();
+(function pn(){S.patch=PATCH;return;if(seasonReset||S.patch===PATCH||S.tut>=0)return;setTimeout(function w(){if($('#modal').classList.contains('hide')&&$('#afk').classList.contains('hide')&&!G&&!B)openPatch();else setTimeout(w,2500);},3000);})();
 
 /* ================= 🌾 ฟาร์มผลิต (patch 1.1.3) =================
    ห่วงโซ่: 🌽 ปลูกข้าวโพด → 🥣 ทำอาหารไก่ → 🐔 ไก่ออกไข่/ขน/มูล → 🍳 แปรรูป → 🏪 ขายที่ตลาดกลาง
@@ -2748,9 +2761,9 @@ function srcHint(miss){const k=miss[0];if(!k)return;const s=SRC[k];toast(`ขา
 
 try{fmInit();farmTick();genOrders();}catch(e){console.error('farm data repaired',e);const kp=S.fm&&Array.isArray(S.fm.plots)?S.fm.plots:null,kd=S.fm&&S.fm.df,kr=S.fm&&S.fm.rt,kc=S.fm&&S.fm.crop;S.fm=null;fmInit();if(kp)S.fm.plots=kp.filter(p=>p&&typeof p==='object');if(kd)S.fm.df=kd;if(kr)S.fm.rt=kr;if(kc)S.fm.crop=kc;try{genOrders();}catch(_){}}
 try{migrate130();}catch(e){console.error(e);}
-try{migrate150();}catch(e){console.error(e);}try{fixGrow151();}catch(e){}try{migrate151();qMig151();qMig152();}catch(e){console.error(e);}
+try{migrate150();}catch(e){console.error(e);}try{fixGrow151();}catch(e){}try{migrate151();}catch(e){console.error(e);}setTimeout(()=>{try{qMig151();qMig152();}catch(e){console.error(e);}},0);
 setInterval(()=>{try{if(S&&!S.v130)migrate130();if(S&&S.fm&&!S.v150)migrate150();if(S&&S.fm)fixGrow151();if(S&&!S.v151tw)migrate151();if(S&&!S.v151q)qMig151();if(S&&!S.v152q)qMig152();if(S&&S.fm&&S.fm.plots.length<6&&S.v150){while(S.fm.plots.length<6)S.fm.plots.push({s:'e'});save();}}catch(e){}},4000);
-try{if(!S.v131){S.v131=1;t4Ids();save();if(S.tut<0)setTimeout(()=>modal(`<div class="em">⚔️</div><h2>ระบบสู้ใหม่ 1.3.1</h2><div style="text-align:left;line-height:1.6">
+try{if(!S.v131){S.v131=1;setTimeout(()=>{try{t4Ids();save();}catch(e){}},0);if(S.tut<0)setTimeout(()=>modal(`<div class="em">⚔️</div><h2>ระบบสู้ใหม่ 1.3.1</h2><div style="text-align:left;line-height:1.6">
 🎯 <b>กดจังหวะ:</b> ลูกศรแดงวิ่งบนแท่ง กด <b>ชน</b> ตอนอยู่ช่องเขียว • กลางช่องเขียว = <b>PERFECT</b> แรง ×1.6<br>
 🛡️ <b>ทีม 4 ช่อง</b> เอก/โท/ตรี/จัตวา ลงสนามพร้อมกัน เลือด/เกราะ/โจมตีรวมกัน (จัดให้อัตโนมัติแล้ว)<br>
 ✨ <b>เกจสกิล</b> เต็มแล้วกดใช้สกิลตามช่อง • 🌟 <b>อันติเมต</b> แรง ×3 ใช้ได้ตอนเกจเต็มหรือใกล้ตาย<br>
