@@ -425,6 +425,14 @@ body.shake{animation:bsh .5s}
 .ckt.sel{border-color:#a36bff!important;box-shadow:0 0 0 3px #d9c2ff;background:#f6f0ff}
 .ckau{font:inherit;font-size:12.5px;font-weight:800;border:2px solid #3b2a1a;background:#ffd54f;border-radius:12px;padding:5px 8px;white-space:nowrap;box-shadow:0 2px 0 #3b2a1a}
 .cks{flex-wrap:wrap;max-width:46%}
+.cfp{text-align:left;margin:-4px -2px 0;max-height:66vh;overflow:auto;-webkit-overflow-scrolling:touch}.cfh{display:flex;align-items:baseline;justify-content:space-between;font-size:22px;font-weight:900;margin-bottom:6px}.cfh small{font-size:11px;color:#a08a66;font-weight:400}
+.cfs{font-size:13px;font-weight:800;color:#8a7a5a;margin:10px 4px 4px}.cfc{background:#fff;border:3px solid #e2cfa5;border-radius:16px;overflow:hidden}
+.cfr{display:flex;align-items:center;gap:10px;width:100%;font:inherit;background:none;border:0;border-bottom:2px solid #f2e6cc;padding:10px 12px;text-align:left;cursor:pointer;color:inherit}.cfc>.cfr:last-child{border-bottom:0}
+.cfi{font-size:22px;width:28px;text-align:center;flex:none}.cft{flex:1;display:flex;flex-direction:column;min-width:0}.cft b{font-size:15px}.cft small{font-size:12px;color:#8a7a5a}
+.cft input{font:inherit;font-size:15px;border:2px solid #e2cfa5;border-radius:10px;padding:4px 8px;margin-top:3px;width:100%;box-sizing:border-box}
+.cfa{font-size:22px;color:#c9b48a}.cfa.r{color:#b23a2a}.cfn{font-size:12px;color:#8a7a5a;padding:6px 12px 8px}
+.cfw{flex:none;width:44px;height:26px;border-radius:14px;background:#d8ccb4;position:relative;transition:.2s}.cfw::after{content:'';position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px #0003;transition:.2s}
+.cfr.on .cfw{background:#5bbf3a}.cfr.on .cfw::after{left:21px}
 </style>
 </head>
 <body>
@@ -436,7 +444,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.7.6-b';
+window.__BUILD='1.7.7-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -467,7 +475,7 @@ window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
   <div class="chip" id="eggChip">🧺 <span id="eggt">-</span></div>
   <div class="chip hide" id="cardChip" title="การ์ดบล็อก">🃏 <span></span></div>
   <div class="chip btnchip hide" id="netChip">🌐 <span></span></div>
-  <div class="chip btnchip" id="dqChip" style="margin-left:auto">🎯</div><div class="chip btnchip" id="meChip">☰ <span></span></div>
+  <div class="chip btnchip" id="dqChip" style="margin-left:auto">🎯</div><div class="chip btnchip" id="meChip">⚙️<span></span></div>
   <div class="hide"><span id="rateBtn"></span><span id="wl"></span></div>
 </div>
 <div id="toasts"></div>
@@ -1438,12 +1446,23 @@ function openPatch(back){modal(`<div class="em">📜</div><h2>แพตช์ ${
  ♾️ <b>ไม่จำกัด</b> สุ่มไข่และท้าได้ไม่จำกัดครั้ง<br>
  <small>ของเดิมยังอยู่ครบ: ออโต้ • 2 สกิล • เสริมพลัง • ชิงไก่ • ใบประกาศ</small></div>`,
  [{t:back?'← กลับ':'ลุยเลย! 🐓',c:'g',f:back?openMenu:null}]);S.patch=PATCH;save();}
-function openMenu(){modal(`<div style="position:absolute;right:12px;top:8px;font-size:11px;color:#a08a66">รุ่น ${window.__BUILD}</div><div class="em">${isCloud?'☁️':'👤'}</div><h2>${S.pio?'🏅 ':''}${esc(S.nick)}</h2>${isCloud?`<div class="sub">${cloudLocked?'⚠️ หยุดซิงก์ (เปิดในเครื่องอื่น)':cloudRef?`✅ ซิงก์คลาวด์แล้ว${cloudLast?' • ล่าสุด '+new Date(cloudLast).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}):''}`:'⏳ กำลังเชื่อมต่อคลาวด์...'}</div>`:'<div class="sub">📱 เซฟในเครื่องนี้เท่านั้น — เข้าสู่ระบบเพื่อเล่นได้ทุกเครื่อง และเดิมพันเบี้ยไข่กับเพื่อนได้</div>'}<p><small>🏆 ชนะชน ${S.pw|0} • 🗼 หอคอยสูงสุดชั้น ${S.towerBest|0} • 📅 เข้าเกมติดกัน ${(S.daily&&S.daily.streak)|0} วัน</small></p>`,
- [{t:`📖 สมุดสะสมไก่ ${CHARS.filter(c=>(S.dex||{})[c.id]).length}/${CHARS.length}`,c:'g',f:openDex},{t:'⚙️ ตั้งค่า',c:'b',f:openSettings},{t:'❓ วิธีเล่น',c:'g',f:()=>helpOpen()},{t:'💾 สำรอง/กู้เซฟ',f:openBackup},{t:'🔄 เปลี่ยนผู้เล่น',c:'r',f:()=>{save();if(net)leaveRoom(true);window.__profiles.switchTo();}},{t:'ปิด'}]);}
-function openSettings(){const on=v=>v?'✅ เปิด':'⬜ ปิด';
- modal(`<div class="em">⚙️</div><h2>ตั้งค่า</h2><p><small>โหมดภาพเบา: ลดความคมและปิดเงา ช่วยให้มือถือรุ่นเก่าลื่นขึ้น (เกมจะรีโหลด)</small></p>`,
- [{t:`🔊 เสียง: ${on(CFG.snd)}`,f:()=>{CFG.snd=!CFG.snd;saveCfg();openSettings();}},{t:`📳 การสั่น: ${on(CFG.vib)}`,f:()=>{CFG.vib=!CFG.vib;saveCfg();openSettings();}},
-  {t:`🪶 โหมดภาพเบา: ${on(CFG.lite)}`,f:()=>{CFG.lite=!CFG.lite;saveCfg();save();location.reload();}},{t:'← กลับ',f:openMenu}]);}
+function openMenu(){const on=v=>v?'on':'';const dexN=CHARS.filter(c=>(S.dex||{})[c.id]).length;
+ const tg=(k,i,t,d)=>`<button class="cfr ${on(CFG[k])}" data-cfg="${k}"><span class="cfi">${i}</span><span class="cft"><b>${t}</b>${d?`<small>${d}</small>`:''}</span><i class="cfw"></i></button>`;
+ const row=(id,i,t,d,c)=>`<button class="cfr" data-go="${id}"><span class="cfi">${i}</span><span class="cft"><b>${t}</b>${d?`<small>${d}</small>`:''}</span><span class="cfa ${c||''}">›</span></button>`;
+ showModal(`<div class="cfp"><div class="cfh"><span>⚙️ ตั้งค่า</span><small>รุ่น ${window.__BUILD}</small></div>
+ <div class="cfs">👤 บัญชี</div>
+ <div class="cfc"><div class="cfr" style="cursor:default"><span class="cfi">${isCloud?'☁️':'📱'}</span><span class="cft"><b>ชื่อในเกม</b><input id="stNick" maxlength="16" value="${esc(S.nick)}"></span></div>
+  <div class="cfn">${isCloud?(cloudLocked?'⚠️ หยุดซิงก์ (เปิดในเครื่องอื่นอยู่)':cloudRef?`✅ ซิงก์คลาวด์แล้ว${cloudLast?' • '+new Date(cloudLast).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}):''}`:'⏳ กำลังเชื่อมต่อคลาวด์...'):'📱 เซฟในเครื่องนี้เท่านั้น — เข้าสู่ระบบเพื่อเล่นได้ทุกเครื่องและเดิมพันกับเพื่อน'}</div>
+  ${row('backup','💾','สำรอง / กู้เซฟ','ย้ายเซฟไปเครื่องอื่นด้วยรหัส')}${row('switch','🔄',isCloud?'เปลี่ยนผู้เล่น / ออกจากระบบ':'เข้าสู่ระบบ / เปลี่ยนผู้เล่น','','r')}</div>
+ <div class="cfs">🔊 เสียงและภาพ</div>
+ <div class="cfc">${tg('snd','🔊','เสียง','')}${tg('vib','📳','การสั่น','')}${tg('lite','🪶','โหมดภาพเบา','ปิดเงา ลดความคม ช่วยเครื่องรุ่นเก่า (เกมจะรีโหลด)')}</div>
+ <div class="cfs">📖 ข้อมูล</div>
+ <div class="cfc">${row('help','❓','วิธีเล่น','')}${row('dex','📖',`สมุดสะสมไก่ ${dexN}/${CHARS.length}`,'')}</div>
+ <div class="cfn" style="text-align:center">🏆 ชนะ ${S.w|0} • 🗼 สูงสุดชั้น ${S.towerBest|0} • 📅 เข้าเกมติดกัน ${(S.daily&&S.daily.streak)|0} วัน</div></div>`,[{t:'✅ เสร็จ',c:'g'}]);
+ const nk=$('#stNick');nk.onchange=()=>{const v=nk.value.trim().slice(0,16);if(v&&v!==S.nick){S.nick=v;save();try{toHost({t:'nick',n:v});window.__profiles.rename(window.__PID,v);}catch(e){}toast('✏️ เปลี่ยนชื่อเป็น '+esc(v));}};
+ document.querySelectorAll('[data-cfg]').forEach(b=>b.onclick=()=>{const k=b.dataset.cfg;CFG[k]=!CFG[k];saveCfg();if(k==='lite'){save();location.reload();return;}b.classList.toggle('on',CFG[k]);});
+ document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const g=b.dataset.go;if(g==='backup')openBackup();else if(g==='switch'){save();if(net)leaveRoom(true);window.__profiles.switchTo();}else if(g==='help')helpOpen();else if(g==='dex')openDex();});}
+function openSettings(){openMenu();}
 function openHelp(){modal(`<div class="em">🗺️</div><h2>แผนที่ฟาร์ม</h2><div style="text-align:left;font-size:14px;line-height:1.6">
  ทุกอย่างทำที่ "สถานที่" ของมัน<br>🏠 <b>แตะตัวอาคาร/ป้าย</b> = ใช้งาน (เก็บของ, เปิดเมนู)<br>👆 <b>ปุ่มกลมบนพื้น</b> = กดรัวๆ เร่งเวลา (ใช้ ⚡ แรง ฟื้นเองทุกนาที)<br><br>
  🏭 <b>เครื่องปั๊มเดือยเงิน</b> แตะเก็บเดือยเงิน • 👆 ปั๊มเร่ง<br>🎰 <b>ตู้สุ่มไข่</b> หยอดเดือยเงินลุ้นไข่<br>🧺 <b>กล่องไข่</b> ดูไข่ / เลือกวาง / ⚡ เร่งฟัก<br>🪺 <b>แท่นฟัก</b> วางไข่ • แตะเร่ง • แตะลุ้นตอนพร้อม<br>
@@ -2918,7 +2937,7 @@ function renderLobby(){
    </div>`;});
   h+=`<details style="margin-top:6px"><summary class="sub" style="cursor:pointer;padding:6px 0">🏠 ห้องอื่น / ห้องส่วนตัว / ชวนเพื่อน</summary>${roomTools()}</details>`;
  }
- h+=`<div class="card"><div class="ic">🪪</div><div class="mid"><div class="sub">ชื่อของคุณ</div><input id="lbNick" maxlength="16" value="${esc(S.nick)}" style="font:inherit;font-size:16px;width:100%;border:2px solid #e2cfa5;border-radius:10px;padding:5px 8px;margin-top:3px"></div></div>
+ h+=`
  <div class="note">⚔️ <b>ชนออนไลน์:</b> ไก่ไม่ตาย! ชนะ = ได้ไก่ของอีกฝ่ายมา • แพ้ = ไก่ไปอยู่กับเขา (ท้าชิงคืนได้)<br>⬆️ ชนะสะสม EXP แล้วไก่เลเวลอัพ (HP/ATK เพิ่ม • เลเวลยิ่งสูงยิ่งต้องชนะเยอะ) • 🐜 ไก่อ่อนกว่าล้มไก่แกร่งได้ = เงินโบนัส! และมีโอกาส ${Math.round(SKILL_CHANCE*100)}% ได้สกิลใหม่ เช่น 🌀 ป่วนบัพ 🦝 ขโมยบัพ 🧿 กันป่วน<br>🃏 <b>โดนท้าแล้วต้องชน!</b> หนีได้ด้วยการ์ดบล็อกเท่านั้น (คุณมี ${S.cards}/${CARD_MAX} ใบ)<br>⚖️ ท้าได้เฉพาะไก่เลเวลห่างกันไม่เกิน ${LVGAP} • 🔰 มือใหม่ได้รับการคุ้มครอง 15 นาทีหลังฝึกเสร็จ${isNewbie()?' (<b>คุณยังได้รับการคุ้มครองอยู่</b>)':''}<br>🗼 หอคอย: แพ้ไม่ตาย แต่กลับไปจุดเซฟ</div>`;
  const det=el.querySelector('details');const wasOpen=det&&det.open;
  el.innerHTML=h;if(wasOpen&&el.querySelector('details'))el.querySelector('details').open=true;
@@ -3344,7 +3363,6 @@ function renderFight(){if(F.step&&F.step!=='mode'){renderFightOld();return;}cons
  h+=`<h4 style="margin:10px 0 4px">🥊 เลือกบ่อแล้วสู้เลย <small>(กดจังหวะเอง)</small></h4>`+PITS.map((p,i)=>`<div class="card big-card ${S.coins<p.fee?'dis':''}" data-tbpit="${i}"><div class="ic">${p.i}</div><div class="mid"><div class="nm">${p.n} ${['😊 ง่าย','😐 สูสี','😈 ยาก'][i]}</div><div class="sub">ค่าเข้า 🪙${p.fee} • ชนะได้ 🪙${tbPrize(i)} • แพ้ไม่เสียไก่</div></div></div>`).join('');
  if((S.w|0)>0)h+=`<h4 style="margin:10px 0 4px">👹 บอสประจำสัปดาห์</h4>`+wbCard();
  h+=`<div class="card big-card ${net&&net.ready?'':'dis'}" data-tb="online"><div class="ic">🌐</div><div class="mid"><div class="nm">ชนออนไลน์ (ออโต้ วัดการจัดทีม)</div><div class="sub">${net&&net.ready?`ค่าเข้า 🪙 + เดิมพัน 🥚 สูงสุด ${PV_MAX} • ไก่ไม่หาย`:'ต้องเข้าล็อบบี้ก่อน'}</div></div></div>`;
- h+=`<div class="card"><div class="ic">🪪</div><div class="mid"><div class="sub">ชื่อของคุณในโหมดออนไลน์</div><input id="nick" maxlength="16" value="${esc(S.nick)}" style="font:inherit;font-size:16px;width:100%;border:2px solid #e2cfa5;border-radius:10px;padding:4px 8px"></div></div>`;
  $('#fightB').innerHTML=h;const nk=$('#nick');if(nk)nk.onchange=()=>{const v=nk.value.trim().slice(0,16);if(v){S.nick=v;save();toHost({t:'nick',n:v});window.__profiles.rename(window.__PID,v);toast('เปลี่ยนชื่อเป็น '+esc(v));}};
  $('#fightB').querySelectorAll('[data-tbpit]').forEach(e=>e.onclick=()=>tbPit(+e.dataset.tbpit));
  $('#fightB').querySelectorAll('[data-tb]').forEach(e=>e.onclick=()=>{const k=e.dataset.tb;if(k==='team')t4Editor();else if(k==='boss')wbFight();else if(k==='tower')towerScreen();else if(k==='pvp'){showSheet(null);pvpHub();}else if(k==='shield')buyShield();else if(k==='online'){if(!(net&&net.ready)){toast('เข้าล็อบบี้ก่อนนะ 🌐');showSheet('lobby');return;}F.mode='online';F.step='pit';renderFightOld();}});}
