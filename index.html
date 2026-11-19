@@ -514,7 +514,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.9.4-b';
+window.__BUILD='1.9.4-c';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -934,7 +934,7 @@ const capacity=l=>4+l*2;
    MKT_REC        : ราคาฟื้นต่อวินาที (1/900 = ฟื้นจาก 0→100% ใน 15 นาที)
    XP_NEED(lv)    : ต้องชนะกี่ครั้งถึงอัพเลเวลไก่ (เดิมชนะ 1 = อัพ 1)
    UD_*           : โบนัสล้มยักษ์ เมื่อไก่อ่อนกว่าชนะไก่แกร่งกว่าในออนไลน์ */
-const UP_BASE=120,UP_EXP=2.5,MKT_DROP=.9,MKT_MIN=.35,MKT_REC=1/900,UD_STEP=.35,UD_MAX=2.5;
+const UP_BASE=120,UP_EXP=2.2,MKT_DROP=.9,MKT_MIN=.35,MKT_REC=1/900,UD_STEP=.35,UD_MAX=2.5;
 const XP_NEED=l=>l;
 /* ===== ฟาร์มเดือยเงิน → สุ่มไข่ → ฟัก (patch 0.1) =====
    coinPer/coinCycle : เครื่องปั๊มเดือยเงิน ได้ coinPer เดือยเงิน ทุก coinCycle วิ
@@ -1736,16 +1736,15 @@ function renderUp(){
  <span>🏠 ช่องในฟาร์ม</span><span>${capacity(l)}</span><span class="up">→ ${capacity(l+1)}</span>
  <span>🪺 แท่นไข่สูงสุด</span><span>${padMax(l)}</span><span class="up">→ ${padMax(l+1)}</span>
  <span>🧺 กล่องไข่</span><span>${eggCap(l)}</span><span class="up">→ ${eggCap(l+1)}</span>
- <span>🎰 ราคาสุ่มไข่</span><span>🪙${EGG_PRICE(l)}</span><span class="up" style="color:#b3412b">→ 🪙${EGG_PRICE(l+1)}</span>
  <span>🎯 ติดสกิลตอนฟัก</span><span>${hatchSkillChance(l)}%</span><span class="up">→ ${hatchSkillChance(l+1)}%</span></div>
- <button class="btn g" id="doUp" style="width:100%;font-size:18px;padding:10px" ${S.coins<c?'disabled':''}>⬆️ อัพเกรด 🪙${fmt(c)}</button>`;}
+ <button class="btn ${S.coins<c?'':'g'}" id="doUp" style="width:100%;font-size:18px;padding:10px">⬆️ อัพเกรด 🪙${fmt(c)}${S.coins<c?`<br><small>🪙 ขาดอีก ${fmt(c-S.coins)}</small>`:''}</button>`;}
  h+=`<h4>📊 เรทสุ่มไก่ ${max?'':'(ตอนนี้ → หลังอัพ)'}</h4>${rateTable(l,max?0:l+1)}<div class="note">💡 ยิ่งอัพ เดือยเงินยิ่งเยอะ ดวงยิ่งดี ไข่ยิ่งฟักไว (แต่ค่าสุ่มไข่ก็ขึ้นนิดหน่อย)</div>`;
  const pp=padPrice(S.pads),pm=padMax(l);
  h=`<div class="card"><div class="ic">🪺</div><div class="mid"><div class="nm">แท่นวางไข่: ${S.pads}/${pm}</div><div class="sub">ฟักได้พร้อมกันหลายฟอง • อัพเล้าเพื่อซื้อแท่นได้มากขึ้น</div></div><button class="btn g" id="buyPad" ${S.pads>=pm||S.coins<pp?'disabled':''}>${S.pads>=pm?'เต็มแล้ว':'ซื้อ 🪙'+pp}</button></div>`+`<div class="card"><div class="ic">🃏</div><div class="mid"><div class="nm">การ์ดบล็อก: มี ${S.cards}/${CARD_MAX} ใบ</div><div class="sub">ใช้หนีคำท้าชน 1 ครั้ง (ไม่มีการ์ด = ต้องชน!) • ถือได้สูงสุด ${CARD_MAX} ใบ • ได้ฟรีจากบอสหอคอยทุก 5 ชั้น</div></div><button class="btn b" id="buyCard" ${S.coins<CARD_PRICE||S.cards>=CARD_MAX?'disabled':''}>${S.cards>=CARD_MAX?'เต็ม ('+CARD_MAX+')':'ซื้อ 🪙'+CARD_PRICE}</button></div>`+h;
  $('#upB').innerHTML=h;
  const bp=$('#buyPad');if(bp)bp.onclick=()=>{const c2=padPrice(S.pads);if(S.pads>=padMax(S.lvl)||S.coins<c2)return;S.coins-=c2;S.pads++;syncPads();save();fanfare();toast(`🪺 ได้แท่นไข่ใหม่! (${S.pads} แท่น)`);renderUp();};
  const bc=$('#buyCard');if(bc)bc.onclick=()=>{if(S.coins<CARD_PRICE||S.cards>=CARD_MAX)return;S.coins-=CARD_PRICE;S.cards++;save();snd(1200,.12,'triangle',.06,1.2);toast(`🃏 ได้การ์ดบล็อก! (มี ${S.cards} ใบ)`);renderUp();};
- const b=$('#doUp');if(b)b.onclick=()=>{if(S.coins<c)return;S.coins-=c;S.lvl++;fanfare();feathers(incub.position.x,1,incub.position.z,0xffd76a,20);toast(`🎉 เครื่องฟักไข่ Lv.${S.lvl}! ดวงดีขึ้นแล้ว`);renderUp();save();};
+ const b=$('#doUp');if(b)b.onclick=()=>{if(S.coins<c){toast(`🪙 เดือยเงินไม่พอ ขาดอีก ${fmt(c-S.coins)} • ไก่ว่างในเล้าออกไข่ให้ทุกชั่วโมงนะ`);return;}S.coins-=c;S.lvl++;fanfare();feathers(incub.position.x,1,incub.position.z,0xffd76a,20);toast(`🎉 เครื่องฟักไข่ Lv.${S.lvl}! ดวงดีขึ้นแล้ว`);renderUp();save();};
 }
 
 /* ================= BATTLE ================= */
@@ -3893,7 +3892,7 @@ function loop(now){
     const pl=$('#abP');if(pl)pl.onclick=placeAll;const hb=$('#abH');if(hb)hb.onclick=reopenHeld;const m=$('#abM');if(m)m.onclick=tapMachine;const ac=$('#abC');if(ac)ac.onclick=collectBank;const ae=$('#abE');if(ae)ae.onclick=()=>collectRd();const as=$('#abS');if(as)as.onclick=spinEgg;const ar=$('#abR');if(ar)ar.onclick=openRush;}
    ab.classList.toggle('hide',!h);}
   if(openSheet==='list'){const sig=[...S.items].sort((a,b)=>b.st-a.st||b.tier-a.tier||(b.lv||1)-(a.lv||1)).map(i=>i.id+':'+i.st+':'+(i.lv||1)+':'+(i.en|0)).join(',')+'|'+JSON.stringify(S.t4||[])+JSON.stringify(S.job||[])+'|'+listF;if(sig!==listSig)renderList();else S.items.forEach(it=>{const e=document.getElementById('pb'+it.id);if(e)e.style.width=(it.p*100)+'%';});}
-  if(openSheet==='up'){const b=$('#doUp');if(b)b.disabled=S.coins<upCost(S.lvl);}
+  if(openSheet==='up'){const b=$('#doUp'),ok=S.coins>=upCost(S.lvl);if(b&&b.classList.contains('g')!==ok)renderUp();}
  }
  if(view==='farm'&&!B)declut();
  renderer.render(scene,camera);
