@@ -464,7 +464,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.8.3-a';
+window.__BUILD='1.8.3-b';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -2734,9 +2734,10 @@ function glCheck(){let n=0,def=0,mx=S.glSeen||0;Object.values(BD).forEach(r=>(r.
 var PV_MAX=300,PV_PCT=.1,PV_CD=30,SHIELD_P=1500,SHIELD_H=24;
 const shOn=()=>(+S.pvSh||0)>Date.now();
 function pvStake(r){if(!r||!r.cloud||!isCloud||!cgUser)return 0;if((+r.shu||0)>Date.now())return 0;return Math.max(0,Math.min(PV_MAX,Math.floor((r.ek|0)*PV_PCT),S.etk|0,r.lc!=null?r.lc|0:PV_MAX,pvLeft().e));}
-var PV_DAY_E=500,PV_DAY_G=2;
-function pvL(){const d=new Date().toDateString();if(!S.pvL||S.pvL.d!==d)S.pvL={d,e:0,g:0};return S.pvL;}
-function pvLeft(){const l=pvL();return {e:Math.max(0,PV_DAY_E-l.e),g:Math.max(0,PV_DAY_G-l.g)};}
+var PV_DAY_E=500,PV_DAY_G=2,PV_DAY_C=8;
+function pvL(){const d=new Date().toDateString();if(!S.pvL||S.pvL.d!==d)S.pvL={d,e:0,g:0,c:0};return S.pvL;}
+function pvPz(r){return pvLeft().c>0?goldX(r.g?ghostPrize(r.g):30):0;}
+function pvLeft(){const l=pvL();return {e:Math.max(0,PV_DAY_E-l.e),g:Math.max(0,PV_DAY_G-l.g),c:Math.max(0,PV_DAY_C-(l.c|0))};}
 function myEggs(){const L=[];(S.bag||[]).forEach((t,i)=>L.push({t:t|0,b:i}));(S.slots||[]).forEach((x,i)=>{if(x&&x.p<1)L.push({t:x.tier|0,p:i});});return L.sort((a,b)=>a.t-b.t);}
 function takeEgg(){const e=myEggs()[0];if(!e)return null;if(e.b!=null)S.bag.splice(e.b,1);else S.slots[e.p]=null;return e.t;}
 function giveEgg(t){S.bag=S.bag||[];S.bag.push(Math.max(0,Math.min(4,t|0)));}
@@ -2744,26 +2745,26 @@ function eggOk(r){return !!(r&&r.cloud&&isCloud&&cgUser&&!((+r.shu||0)>Date.now(
 function betChips(max,sel,attr){const L=[0,50,100,200,300].filter(v=>v<=max);if(max>0&&!L.includes(max))L.push(max);return `<div class="ckf" style="justify-content:center;flex-wrap:wrap">${L.map(v=>`<button class="${v===sel?'on':''}" ${attr}="${v}">${v?'🥚'+fmt(v):'ไม่เดิมพัน'}</button>`).join('')}</div>`;}
 function pvChoose(gid){const r=CG[gid]||BD[gid];if(!r)return;if(!tbMine().length){toast('ยังไม่มีทีม — จัดทีมที่ 🏠 เล้าไก่ก่อน');return;}
  S.pvT=S.pvT||{};const cd=(S.pvT[r.id]||0)+PV_CD*60000-Date.now();if(cd>0){toast(`⏳ ท้า ${r.n} ซ้ำได้ใน ${tLeft(Date.now()+cd)}`);return;}
- const MX=pvStake(r),EG=eggOk(r),pz=goldX(r.g?ghostPrize(r.g):30),shd=(+r.shu||0)>Date.now(),now=Date.now();
+ const MX=pvStake(r),EG=eggOk(r),pz=pvPz(r),shd=(+r.shu||0)>Date.now(),now=Date.now(),cL=pvLeft().c;
  const why=!r.cloud?'เพื่อนไม่ได้ล็อกอิน':!isCloud?'เราต้องล็อกอินก่อน':shd?'เพื่อนใช้ 🛡️ การ์ดกันชนอยู่':'';
  const whyE=why||(MX<=0?((S.etk|0)<=0?'เราไม่มีเบี้ยไข่':pvLeft().e<=0?'วันนี้เราเสียครบเพดานแล้ว':'วันนี้เพื่อนเสียครบเพดานแล้ว'):'');
  const whyG=why||(!myEggs().length?'เราไม่มีไข่ในกล่อง/บนแท่น':!(r.eg|0)?'เพื่อนไม่มีไข่':pvLeft().g<=0?'วันนี้เราเสียไข่ครบแล้ว':!(r.lg|0)?'วันนี้เพื่อนเสียไข่ครบแล้ว':'');
  const card=(k,ic,t,d,dis)=>`<button class="card big-card ${dis?'dis':''}" data-pc="${k}" style="width:100%;text-align:left;font:inherit;margin-bottom:6px"><div class="ic">${ic}</div><div class="mid"><div class="nm">${t}</div><div class="sub">${dis?'🚫 '+dis:d}</div></div></button>`;
  showModal(`<div class="em">🎯</div><h2>ท้า ${esc(r.n)} — จะเอาอะไรจากเขา?</h2><div class="sub">แพ้ก็เสียสิ่งเดียวกันให้เขา • ไก่ไม่หายทุกแบบ</div><div style="margin-top:8px">
-  ${card('none','🤝','ชนกันเล่น',`ชนะได้ 🪙${fmt(pz)} • แพ้ไม่เสียอะไร`,'')}
-  ${card('etk','🥚',`เบี้ยไข่${MX?` (สูงสุด ${fmt(MX)})`:''}`,`ชนะได้ 🥚 จากเขา + 🪙${fmt(pz)} • แพ้เสีย 🥚 เท่ากัน`,whyE)}
+  ${card('none','🤝','ชนกันเล่น',pz?`ชนะได้ 🪙${fmt(pz)} • แพ้ไม่เสียอะไร`:`ได้แค่ค่าประสบการณ์ไก่ (🪙 ครบโควตาวันนี้แล้ว) • แพ้ไม่เสียอะไร`,'')}
+  ${card('etk','🥚',`เบี้ยไข่${MX?` (สูงสุด ${fmt(MX)})`:''}`,`ชนะได้ 🥚 จากเขา${pz?` + 🪙${fmt(pz)}`:''} • แพ้เสีย 🥚 เท่ากัน`,whyE)}
   ${card('egg','🐣',`ไข่ 1 ฟอง${EG?` (ของเขา: ไข่${TIERS[r.et|0].n})`:''}`,EG?`ชนะได้ไข่${TIERS[r.et|0].n} • แพ้เสียไข่${TIERS[myEggs()[0].t].n}ของเรา`:'',whyG)}
-  </div><div class="sub">🛟 เสียได้วันละไม่เกิน 🥚${PV_DAY_E} / 🐣 ${PV_DAY_G} ฟอง</div>`,[{t:'ยกเลิก'}]);
+  </div><div class="sub">🪙 รางวัลชนะวันนี้เหลือ <b>${cL}/${PV_DAY_C}</b> ครั้ง • 🛟 เสียได้วันละไม่เกิน 🥚${PV_DAY_E} / 🐣 ${PV_DAY_G} ฟอง</div>`,[{t:'ยกเลิก'}]);
  document.querySelectorAll('[data-pc]').forEach(b=>b.onclick=()=>{const k=b.dataset.pc;if(b.classList.contains('dis')){toast('เลือกอันนี้ไม่ได้ตอนนี้');return;}
   if(k==='none')ghostPick(gid,0);else if(k==='egg')ghostPick(gid,'egg');else ghostPick(gid,Math.min(MX,S.pvBet||100)||MX);});}
 function ghostPick(gid,bet){const r=CG[gid]||BD[gid];if(!r)return;if(!tbMine().length){toast('ยังไม่มีทีม — จัดทีมก่อน');return;}
  S.pvT=S.pvT||{};const cd=(S.pvT[r.id]||0)+PV_CD*60000-Date.now();if(cd>0){toast(`⏳ ท้าทีมนี้ซ้ำได้ใน ${tLeft(Date.now()+cd)}`);return;}
- const tm=tbGhostTeam(r),sd=cbSide(tm,''),me=cbSide(t4Spec(),''),MX=pvStake(r),EG=eggOk(r),isE=bet==='egg'&&EG,W=isE?0:Math.min(MX,bet!=null&&bet!=='egg'?bet:0),pz=goldX(r.g?ghostPrize(r.g):30),shd=(+r.shu||0)>Date.now();
+ const tm=tbGhostTeam(r),sd=cbSide(tm,''),me=cbSide(t4Spec(),''),MX=pvStake(r),EG=eggOk(r),isE=bet==='egg'&&EG,W=isE?0:Math.min(MX,bet!=null&&bet!=='egg'?bet:0),pz=pvPz(r),shd=(+r.shu||0)>Date.now();
  showModal(`<div class="em">🏟️</div><h2>ซุ้มไก่ชน: ท้าทีม ${r.p?'🏅 ':''}${esc(r.n)}</h2>
   <div style="display:flex;justify-content:center;gap:2px;margin:6px 0">${tm.map(u=>`<span title="${esc(u.name)}">${chickSVG(u.ch,46,u.sh)}</span>`).join('')}</div>
   <div class="sub">ทีมเขา ❤️${sd.max} 🛡️${sd.ar} ⚔️${sd.atk}<br>ทีมเรา ❤️${me.max} 🛡️${me.ar} ⚔️${me.atk}</div>
   ${!isE&&W>0?`<div class="sub" style="margin:6px 0 0"><b>🥚 จำนวนเบี้ยไข่</b></div>${betChips(MX,W,'data-bet').replace('<button class="" data-bet="0">ไม่เดิมพัน</button>','')}`:''}
-  <div class="note" style="text-align:left">🏆 <b>ชนะ:</b> 🪙${fmt(pz)}${isE?` + <b>ไข่${TIERS[r.et|0].n} 1 ฟอง</b> จากเขา`:W?` + <b>🥚${fmt(W)}</b> จากเขา`:''}<br>😵 <b>แพ้:</b> ${isE?`เสีย <b>ไข่${TIERS[myEggs()[0].t].n} 1 ฟอง</b> (ฟองที่ถูกสุดของเรา)`:W?`เสีย <b>🥚${fmt(W)}</b> ให้เขา`:'ไม่เสียอะไร'} • ไก่ไม่หาย<br><small>🛟 เสียจากการชนได้วันละไม่เกิน 🥚${PV_DAY_E} / 🐣 ไข่ ${PV_DAY_G} ฟอง (วันนี้เหลือ 🥚${pvLeft().e} / 🐣${pvLeft().g})</small>
+  <div class="note" style="text-align:left">🏆 <b>ชนะ:</b> ${pz?`🪙${fmt(pz)}`:'⭐ ค่าประสบการณ์'}${isE?` + <b>ไข่${TIERS[r.et|0].n} 1 ฟอง</b> จากเขา`:W?` + <b>🥚${fmt(W)}</b> จากเขา`:''}<br>😵 <b>แพ้:</b> ${isE?`เสีย <b>ไข่${TIERS[myEggs()[0].t].n} 1 ฟอง</b> (ฟองที่ถูกสุดของเรา)`:W?`เสีย <b>🥚${fmt(W)}</b> ให้เขา`:'ไม่เสียอะไร'} • ไก่ไม่หาย<br><small>🛟 เสียจากการชนได้วันละไม่เกิน 🥚${PV_DAY_E} / 🐣 ไข่ ${PV_DAY_G} ฟอง (วันนี้เหลือ 🥚${pvLeft().e} / 🐣${pvLeft().g})</small>
   ${shd?'<br>🛡️ เขาใช้ <b>การ์ดกันชน</b> อยู่ — เดิมพันเบี้ยไข่ไม่ได้':!r.cloud?'<br>🛖 เขาไม่ได้ล็อกอิน — ไม่มีเดิมพัน':!isCloud?'<br>🔐 ล็อกอินก่อนถึงจะเดิมพันได้':''}</div>
   <div class="sub">👆 กดจังหวะเอง • ทีมเขาสู้ตามที่เจ้าของจัดไว้</div>`,[{t:`⚔️ ลุย!${isE?' (🐣 ไข่ 1 ฟอง)':W?' (🥚'+fmt(W)+')':''}`,c:'r',f:()=>startGhost(r,isE?'egg':W)},{t:'← เปลี่ยนเดิมพัน',f:()=>pvChoose(gid)}]);
  document.querySelectorAll('[data-bet]').forEach(b=>b.onclick=()=>{if(b.dataset.bet==='egg'){ghostPick(gid,'egg');return;}S.pvBet=+b.dataset.bet;save();ghostPick(gid,S.pvBet);});}
@@ -3383,8 +3384,8 @@ function startGhost(r,W){if(B||TBV)return;const EGG=W==='egg';let mt=null;if(EGG
  cbRun({enemy:tbGhostTeam(r),ename:esc(r.n),title:`🏟️ ซุ้มไก่ชน vs ${esc(r.n)}`,back:()=>showSheet('vil'),
   onEnd:async win=>{S.gl=(S.gl||[]).concat({to:r.id,w:win?1:0,ts:Date.now()}).slice(-8);
    if(!win){const l=pvL();if(W){send({pg:1});l.e+=W;}if(EGG){send({pg:1,eg:mt,egg:1});l.g++;}save();bdSend(false);feedAdd({a:S.nick,b:r.n,w:0,m:'🏟️'});return `แพ้ทีมของ ${esc(r.n)}${W?` — เสีย 🥚${fmt(W)} ให้เขา`:EGG?` — เสียไข่${TIERS[mt].n} 1 ฟอง`:''}<br>ไก่ไม่เป็นไร 🩹`;}
-   const pz=goldX(r.g?ghostPrize(r.g):30);S.coins+=pz;if(W){S.etk=(S.etk|0)+W*2;send({pv:1});}if(EGG){giveEgg(mt);giveEgg(r.et|0);send({pv:1,egg:1});}tbMine().forEach(x=>winUp(x.it,true));
-   save();bdSend(false);feedAdd({a:S.nick,b:r.n,w:1,k:W?'🥚'+W:EGG?'ไข่':'',m:'🏟️'});return `ได้ 🪙${fmt(pz)}${W?` + 🥚${fmt(W)} จาก ${esc(r.n)}`:EGG?`<br>🥚 + <b>ไข่${TIERS[r.et|0].n}</b> 1 ฟองจาก ${esc(r.n)} (วางบนแท่นฟักให้เองเมื่อแท่นว่าง)`:''}`;}});}
+   const pz=pvPz(r);if(pz){S.coins+=pz;pvL().c++;}if(W){S.etk=(S.etk|0)+W*2;send({pv:1});}if(EGG){giveEgg(mt);giveEgg(r.et|0);send({pv:1,egg:1});}tbMine().forEach(x=>winUp(x.it,true));
+   save();bdSend(false);feedAdd({a:S.nick,b:r.n,w:1,k:W?'🥚'+W:EGG?'ไข่':'',m:'🏟️'});return `${pz?`ได้ 🪙${fmt(pz)}`:'ไก่ได้ค่าประสบการณ์ ⭐ (🪙 ครบโควตาวันนี้)'}${W?` + 🥚${fmt(W)} จาก ${esc(r.n)}`:EGG?`<br>🥚 + <b>ไข่${TIERS[r.et|0].n}</b> 1 ฟองจาก ${esc(r.n)} (วางบนแท่นฟักให้เองเมื่อแท่นว่าง)`:''}`;}});}
 function pvpUnl(){return !!(S&&S.items&&S.items.some(i=>i.st===2)&&(unl('vil')||(S.w|0)>0));}
 function pvpHub(refresh){if(!refresh){try{cgFetch();}catch(e){}try{bdMine();}catch(e){}}const now=Date.now();
  const AL={};Object.values(BD).forEach(r=>{if(r&&r.ss===SEASON&&r.id!==S.gid)AL[r.id]=r;});Object.values(CG).forEach(r=>{if(r&&r.id!==S.gid)AL[r.id]=r;});
