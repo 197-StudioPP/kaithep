@@ -444,7 +444,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.7.8-b';
+window.__BUILD='1.8.0-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -2547,10 +2547,11 @@ function renderVillage(){const el=$('#vilB');if(!el)return;if(typeof cgFetch==='
  const top=F.slice(0,Math.ceil(F.length/2)),bot=F.slice(Math.ceil(F.length/2));
  el.innerHTML=`<div class="vmap"><div class="vrow">${top.map(card).join('')}</div>
   <div class="plaza"><div class="pzt">⛲ ลานกลางหมู่บ้าน</div><div class="pzb">
+   <button class="pzi" data-vp="market"><span>🏪</span><b>ตลาดเพื่อน</b><small>ซื้อขายไก่ • ไข่</small></button>
    <button class="pzi" data-vp="board"><span>📋</span><b>ป้ายประกาศ</b><small>ผู้เล่น • ประกาศ • อันดับ</small></button></div></div>
   <div class="vrow">${bot.map(card).join('')}</div></div>
   <div class="note">🏠 = ล็อกอิน (เข้าดู/ขโมยพืช/ชิงไก่ได้) • 🛖 = เล่นในเครื่อง • 🌾🥷 = พืชสุกค้าง แอบขโมยได้</div>`;
- el.onclick=e=>{const v=e.target.closest('[data-vf],[data-vp]');if(!v)return;if(v.dataset.vp==='arena')showSheet('fight');else if(v.dataset.vp==='board')openBoardHub();else visitFarm(v.dataset.vf);};}
+ el.onclick=e=>{const v=e.target.closest('[data-vf],[data-vp]');if(!v)return;if(v.dataset.vp==='arena')showSheet('fight');else if(v.dataset.vp==='market')mkOpen();else if(v.dataset.vp==='board')openBoardHub();else visitFarm(v.dataset.vf);};}
 function openBoardHub(){modal(`<div class="em">📋</div><h2>ป้ายประกาศหมู่บ้าน</h2>`,[{t:'🤖 ป้ายผู้เล่น / ท้าผู้คุ้มกัน',c:'g',f:openBoard},{t:'📢 ใบประกาศ',f:()=>openFeed()},{t:'🏆 อันดับฟาร์ม',c:'b',f:openRank},{t:'ปิด'}]);}
 function openRank(){const F=vilFarms().slice().sort((a,b)=>(b.fl||1)-(a.fl||1)||b.w-a.w).slice(0,20);
  modal(`<div class="em">🏆</div><h2>อันดับฟาร์ม</h2><div class="bdl">${F.map((r,i)=>`<div class="bdr ${r.id===S.gid?'me':''}"><div class="bdpic" style="font-size:24px">${['🥇','🥈','🥉'][i]||'#'+(i+1)}</div><div class="mid"><div class="nm">${r.p?'🏅 ':''}${esc(r.n)}</div><div class="sub">🌾 ฟาร์ม Lv.${r.fl||1} • 🏆 ชนะ ${r.w} • 🐔 สะสม ${r.c.length}/${CHARS.length}</div></div></div>`).join('')}</div>`,[{t:'ปิด',c:'g'}]);}
@@ -3509,6 +3510,46 @@ function wbFight(){const b=wbState();if(b.tn>=WB_TRY){toast('วันนี้�
   mod:(st,mS,oS)=>{st.maxT=WB_TURNS*2;oS.max=oS.hp=999999;oS.ar=Math.round(60+me.ar*.3);oS.atk=Math.max(20,Math.round(me.max*.16*100/(100+me.ar)*2));oS.name=`${B0.e} ${B0.n}`;},
   onEnd:(win,st)=>{const o=st.S.find(x=>x.max===999999),d=o?o.max-o.hp:0;b.dmg+=d;b.best=Math.max(b.best,d);tbMine().forEach(x=>winUp(x.it,true));save();setTimeout(wbGrant,300);
    const nx=WB_MS[b.got];return `ทำดาเมจ <b>${fmt(d)}</b> (สูงสุด ${fmt(b.best)})<br>ดาเมจรวมสัปดาห์นี้ <b>${fmt(b.dmg)}</b>${nx&&b.dmg<nx[0]?`<br>อีก ${fmt(nx[0]-b.dmg)} ได้ ${wbRwTxt(nx[1])}`:''}`;}});}
+
+/* ================= 🏪 ตลาดเพื่อน 1.8.0 (ฝากขายไก่/ไข่ ได้ 🪙) ================= */
+var MK_MAX=5,MK_FEE=.05,MK_EGGP=[120,300,700,1800,5000],mkTab='buy',mkList=[],mkMine=[],mkBusy=false;
+function mkOk(){return !!(isCloud&&cgDb&&cgUser);}
+function mkSug(x){return x.k==='egg'?MK_EGGP[x.t|0]:Math.round(sellPrice({tier:x.c.tier,lv:x.c.lv,en:x.c.en,ch:x.c.ch,st:2,buff:x.c.buff})*1.5);}
+function mkIcon(x,sz){return x.k==='egg'?`<span style="font-size:${sz*.7}px">🥚</span>`:chickSVG(x.c.ch,sz,x.c.sh);}
+function mkName(x){return x.k==='egg'?`ไข่${TIERS[x.t|0].n}`:`${esc(x.c.name)} ${'★'.repeat((x.c.tier|0)+1)} Lv.${x.c.lv||1}${x.c.en?' +'+x.c.en:''}`;}
+async function mkLoad(){if(!mkOk())return;try{const q=await cgDb.collection('market').orderBy('ts','desc').limit(60).get();const all=q.docs.map(d=>({id:d.id,...d.data()}));
+ mkList=all.filter(x=>!x.sold&&x.seller!==cgUser.uid);const m=await cgDb.collection('market').where('seller','==',cgUser.uid).get();mkMine=m.docs.map(d=>({id:d.id,...d.data()}));await mkCollect();}catch(e){console.warn('market',e);}}
+async function mkCollect(){let got=0,n=0;for(const x of mkMine.filter(x=>x.sold)){try{await cgDb.collection('market').doc(x.id).delete();const v=Math.floor((x.price|0)*(1-MK_FEE));S.coins+=v;got+=v;n++;}catch(e){}}
+ if(n){mkMine=mkMine.filter(x=>!x.sold);save();fanfare();toast(`🏪 ขายของในตลาดได้ ${n} ชิ้น +🪙${fmt(got)}`);}}
+setInterval(()=>{if(mkOk()&&!B&&!TBV)cgDb.collection('market').where('seller','==',cgUser.uid).get().then(m=>{mkMine=m.docs.map(d=>({id:d.id,...d.data()}));mkCollect();}).catch(()=>{});},90000);
+function mkOpen(tab){if(tab)mkTab=tab;if(!mkOk()){showModal(`<div class="em">🏪</div><h2>ตลาดเพื่อน</h2><div class="sub">🔐 ต้องเข้าสู่ระบบก่อน ถึงจะซื้อขายกับเพื่อนได้<br>(⚙️ ตั้งค่า → เข้าสู่ระบบ)</div>`,[{t:'ปิด',c:'g'}]);return;}
+ mkRender();if(!mkBusy){mkBusy=true;mkLoad().then(()=>{mkBusy=false;if($('#mkp'))mkRender();});}}
+function mkRender(){const tabs=[['buy','🛒 ซื้อ'],['sell','💰 ฝากขาย'],['mine',`📦 ของฉัน ${mkMine.length}/${MK_MAX}`]];let h='';
+ if(mkTab==='buy')h=mkList.length?mkList.map(x=>`<div class="card" style="margin-bottom:6px;align-items:center"><div class="ic" style="width:46px;height:46px;display:flex;align-items:center;justify-content:center">${mkIcon(x,44)}</div><div class="mid"><div class="nm">${mkName(x)}</div><div class="sub">โดย ${esc(x.sn||'?')}</div></div><button class="btn ${S.coins>=x.price?'r':''}" data-mb="${esc(x.id)}" style="white-space:nowrap">🪙${fmt(x.price)}</button></div>`).join(''):`<div class="sub">${mkBusy?'⏳ กำลังโหลด...':'ยังไม่มีใครวางขาย — ลองฝากขายของเราดูสิ!'}</div>`;
+ else if(mkTab==='mine')h=mkMine.length?mkMine.map(x=>`<div class="card" style="margin-bottom:6px;align-items:center"><div class="ic" style="width:46px;height:46px;display:flex;align-items:center;justify-content:center">${mkIcon(x,44)}</div><div class="mid"><div class="nm">${mkName(x)}</div><div class="sub">${x.sold?`✅ ขายแล้วให้ ${esc(x.bn||'?')} — เงินกำลังเข้า`:`🪙${fmt(x.price)} • รอคนซื้อ`}</div></div>${x.sold?'':`<button class="btn" data-mc="${esc(x.id)}">ยกเลิก</button>`}</div>`).join(''):'<div class="sub">ยังไม่ได้ฝากขายอะไร</div>';
+ else{const tm=new Set(t4Ids().filter(x=>x!=null)),C=adults().filter(i=>!tm.has(i.id)&&!isWorker(i.id)&&!i.beta),E=myEggs();
+  h=`<div class="sub" style="text-align:left">เลือกของที่จะฝากขาย (ไก่ในทีม/ทำงานอยู่ขายไม่ได้) • ค่าธรรมเนียม ${Math.round(MK_FEE*100)}%</div><div class="ckg" style="margin-top:6px">${C.map(i=>`<button class="ckt t${i.tier}" data-ms="c${i.id}">${chickSVG(i.ch,46,i.sh)}<b>${esc(i.name)}</b><small>${'★'.repeat(i.tier+1)} Lv.${i.lv||1}</small></button>`).join('')}${E.map((e,k)=>`<button class="ckt" data-ms="e${k}"><span style="font-size:36px">🥚</span><b>ไข่${TIERS[e.t].n}</b><small>${e.p!=null?'บนแท่นฟัก':'ในกล่อง'}</small></button>`).join('')}</div>${C.length||E.length?'':'<div class="sub">ยังไม่มีของที่ขายได้</div>'}`;}
+ showModal(`<div id="mkp"></div><div class="em">🏪</div><h2>ตลาดเพื่อน</h2><div class="ckf" style="justify-content:center">${tabs.map(([k,t])=>`<button class="${mkTab===k?'on':''}" data-mt="${k}">${t}</button>`).join('')}</div><div style="max-height:52vh;overflow:auto;text-align:left">${h}</div><div class="sub">มี 🪙${fmt(S.coins)}</div>`,[{t:'ปิด',c:'g'}]);
+ document.querySelectorAll('[data-mt]').forEach(b=>b.onclick=()=>{mkTab=b.dataset.mt;mkRender();});
+ document.querySelectorAll('[data-mb]').forEach(b=>b.onclick=()=>mkBuy(b.dataset.mb));
+ document.querySelectorAll('[data-mc]').forEach(b=>b.onclick=()=>mkCancel(b.dataset.mc));
+ document.querySelectorAll('[data-ms]').forEach(b=>b.onclick=()=>mkSellAsk(b.dataset.ms));}
+function mkSellAsk(key){if(mkMine.length>=MK_MAX){toast(`ฝากขายได้พร้อมกัน ${MK_MAX} ชิ้น`);return;}let x;
+ if(key[0]==='c'){const it=S.items.find(i=>i.id===+key.slice(1));if(!it)return;x={k:'chick',c:{u:it.u,name:it.name,tier:it.tier,buff:it.buff||null,lv:it.lv||1,sk:it.sk||[],win:it.win||0,ch:it.ch,sh:it.sh?1:0,en:it.en|0},id:it.id};}
+ else{const e=myEggs()[+key.slice(1)];if(!e)return;x={k:'egg',t:e.t,e};}
+ const sg=mkSug(x);showModal(`<div class="em">💰</div><h2>ฝากขาย ${mkName(x)}</h2><div style="margin:8px auto;width:70px">${mkIcon(x,70)}</div><div class="sub">ตั้งราคา (🪙) • ราคาแนะนำ 🪙${fmt(sg)}</div><input id="mkPr" type="number" inputmode="numeric" min="1" max="99999" value="${sg}" style="font:inherit;font-size:22px;width:60%;text-align:center;border:3px solid #e2cfa5;border-radius:12px;padding:6px"><div class="sub">ขายได้แล้วเงินเข้าเอง (หัก ${Math.round(MK_FEE*100)}%) • ยกเลิกได้ ของคืน</div>`,
+  [{t:'💰 วางขาย',c:'r',f:()=>mkSell(x,Math.max(1,Math.min(99999,parseInt($('#mkPr').value)||sg)))},{t:'← กลับ',f:()=>mkOpen('sell')}]);}
+async function mkSell(x,price){const doc={seller:cgUser.uid,sn:S.nick,k:x.k,price,ts:Date.now(),sold:false};
+ if(x.k==='chick'){const it=S.items.find(i=>i.id===x.id);if(!it)return;doc.c=x.c;}else doc.t=x.t|0;
+ try{const ref=await cgDb.collection('market').add(JSON.parse(JSON.stringify(doc)));
+  if(x.k==='chick'){S.items=S.items.filter(i=>i.id!==x.id);syncMeshes();}else{const e=x.e;if(e.b!=null)S.bag.splice(S.bag.indexOf(e.t),1);else S.slots[e.p]=null;}
+  save();mkMine.push({id:ref.id,...doc});toast('🏪 วางขายแล้ว!');mkOpen('mine');}catch(e){toast('วางขายไม่สำเร็จ — เช็กอินเทอร์เน็ต / กฎ Firebase');mkOpen('sell');}}
+async function mkCancel(id){const ref=cgDb.collection('market').doc(id);try{let it=null;await cgDb.runTransaction(tx=>tx.get(ref).then(d=>{if(!d.exists||d.data().sold)throw 'sold';it=d.data();tx.delete(ref);}));
+  if(it.k==='chick')captureChicken({c:it.c,n:S.nick,pid:window.__PID});else giveEgg(it.t);mkMine=mkMine.filter(x=>x.id!==id);save();syncMeshes();toast('↩️ ยกเลิกแล้ว ของคืนเรียบร้อย');}catch(e){toast(e==='sold'?'ขายไปแล้ว! เงินกำลังเข้า':'ยกเลิกไม่สำเร็จ');}mkOpen('mine');}
+async function mkBuy(id){const x=mkList.find(z=>z.id===id);if(!x)return;if(S.coins<x.price){toast(`🪙 ไม่พอ (ต้องใช้ ${fmt(x.price)})`);return;}if(x.k==='chick'&&S.items.length>=capacity(S.lvl)+3){toast('เล้าเต็ม!');return;}
+ const ref=cgDb.collection('market').doc(id);try{await cgDb.runTransaction(tx=>tx.get(ref).then(d=>{if(!d.exists||d.data().sold)throw 'gone';tx.update(ref,{sold:true,buyer:cgUser.uid,bn:S.nick,bt:Date.now()});}));
+  S.coins-=x.price;if(x.k==='chick'){const r=captureChicken({c:x.c,n:x.sn,pid:''});const nc=S.items[S.items.length-1];if(nc)nc.og=null;}else giveEgg(x.t);
+  mkList=mkList.filter(z=>z.id!==id);save();syncMeshes();fanfare();toast(`🛒 ซื้อ ${x.k==='egg'?'ไข่':x.c.name} แล้ว!`);}catch(e){toast(e==='gone'?'มีคนซื้อตัดหน้าไปแล้ว 😅':'ซื้อไม่สำเร็จ');mkList=mkList.filter(z=>z.id!==id);}mkRender();}
 /* ================= INPUT ================= */
 const ray=new THREE.Raycaster(),mv=new THREE.Vector2();
 /* 🗺️ ลากเลื่อนแผนที่ + หนีบซูม */
