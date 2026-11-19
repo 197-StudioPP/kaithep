@@ -539,6 +539,8 @@ body.shake{animation:bsh .5s}
 .cbtags i.dis{background:#e9c8ff!important;border-color:#7a2fa8!important;animation:tgp .5s}
 .t4s.sl0{border-color:#c0392b;background:#fff1ee}.t4s.sl1{border-color:#2f7d22;background:#effbe8}.t4s.sl2{border-color:#7a2fa8;background:#f6edff}.t4s.sl3{border-color:#c79a00;background:#fffbe6}.t4s .skb{width:90px;margin:2px auto 6px}
 .cbx{text-align:left;background:#f6edff;border:2px dashed #7a2fa8;border-radius:12px;padding:6px 8px;margin:6px 0;font-size:12.5px}.cbx .on{color:#3d1660;margin-top:3px}.cbx .nr{opacity:.75;margin-top:3px;font-size:12px}
+.lgbar{display:block;width:100%;font:inherit;font-size:13px;background:linear-gradient(90deg,#fff1b8,#ffe07a);border:2px solid #c79a00;border-radius:12px;padding:6px 8px;margin:4px 0;cursor:pointer;text-align:left}.lgbar small{float:right;opacity:.7}
+.lgr{display:flex;gap:8px;align-items:center;padding:6px 8px;border-radius:10px;background:#fff;margin-bottom:4px;border:2px solid #eee}.lgr b{flex:1}.lgr.me{border-color:#c79a00;background:#fff6d6}
 .pwb{font-size:11px;border-radius:8px;padding:0 6px;margin-left:4px;white-space:nowrap}.pwb.g{background:#d9ffc8}.pwb.y{background:#fff0a8}.pwb.r{background:#ffc9bf}
 .cpinfo{background:#fff3c4;border:2px solid #e2c36a;border-radius:12px;padding:6px 10px;margin:0 0 8px;font-size:13px;text-align:center;line-height:1.35}.cpinfo small{color:#7a5a2a}
 .wl.job{background:#e8f6d8;border-color:#4c8a2a}.wl.team{background:#ffe0d6;border-color:#b23a2a}
@@ -599,7 +601,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='2.0.1-a';
+window.__BUILD='2.1.0-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -2913,20 +2915,37 @@ function bdSan(r){if(!r||typeof r!=='object')return null;const id=String(r.id||'
  let g=null;if(r.g&&typeof r.g==='object'){const c=az(r.g.c).slice(0,1),k=L2C(c);if(k)g={c,t:k.t,lv:cInt(r.g.lv,1,10),en:cInt(r.g.en,0,5),sk:String(r.g.sk||'').split(',').filter(x=>SKILLS.some(z=>z.id===x)).slice(0,3),bf:BUFFS.some(b=>b.id===r.g.bf)?r.g.bf:'',sh:r.g.sh?1:0,nm:clip(String(r.g.nm||k.n),20)};}
  const h=Array.isArray(r.h)&&r.h.length===3?r.h.map(v=>cInt(v,0,100)):[34,33,33];
  const gl=Array.isArray(r.gl)?r.gl.slice(-8).filter(x=>x&&/^[a-z0-9]{6,20}$/.test(String(x.to))).map(x=>({to:String(x.to),w:x.w?1:0,ts:Math.min(now+60000,+x.ts||0)})):[];
- return {g,h,gl,id,n:clip(String(r.n||'?'),16),pt:cInt(r.pt,0,1e8),ls:Math.min(now+60000,Math.max(0,+r.ls||0)),c:[...new Set(az(r.c))].join('').slice(0,CHARS.length),s:[...new Set(az(r.s))].join('').slice(0,CHARS.length),b:az(r.b).slice(0,1),bl:cInt(r.bl,1,99),w:cInt(r.w,0,1e6),tf:cInt(r.tf,0,9999),p:r.p?1:0,ss:cInt(r.ss,0,99),fl:cInt(r.fl||1,1,99),rp:cInt(r.rp,0,99999),pr:Math.min(.95,Math.max(0,+r.pr||0))};}
+ return {g,h,gl,id,n:clip(String(r.n||'?'),16),pt:cInt(r.pt,0,1e8),ls:Math.min(now+60000,Math.max(0,+r.ls||0)),c:[...new Set(az(r.c))].join('').slice(0,CHARS.length),s:[...new Set(az(r.s))].join('').slice(0,CHARS.length),b:az(r.b).slice(0,1),bl:cInt(r.bl,1,99),w:cInt(r.w,0,1e6),tf:cInt(r.tf,0,9999),p:r.p?1:0,ss:cInt(r.ss,0,99),lp:cInt(r.lp,0,99999),lw:cInt(r.lw,0,999999),fl:cInt(r.fl||1,1,99),rp:cInt(r.rp,0,99999),pr:Math.min(.95,Math.max(0,+r.pr||0))};}
 function bdMine(){const best=S.items.filter(i=>i.st===2).sort((a,b)=>b.tier-a.tier||(b.en|0)-(a.en|0)||(b.lv||1)-(a.lv||1))[0];const rep=S.items.find(i=>i.id===S.rep&&i.st===2)||best;const ht=S.hab.reduce((a,b)=>a+b,0)||1;
  const r={id:S.gid,n:S.nick,pt:Math.floor(S.pt||0),ls:Date.now(),c:CHARS.filter(c=>(S.dex||{})[c.id]).map(c=>C2L(c.id)).join(''),s:CHARS.filter(c=>(S.dexS||{})[c.id]).map(c=>C2L(c.id)).join(''),
-  b:best?C2L(best.ch):'',bl:best?best.lv||1:1,w:(S.w|0),tf:S.towerBest|0,p:S.pio?1:0,ss:SEASON,fl:(S.fm&&S.fm.lv)||1,rp:ripeEtk(),pr:Math.round(thiefProt()*100)/100,
+  b:best?C2L(best.ch):'',bl:best?best.lv||1:1,w:(S.w|0),lp:lg().p,lw:lg().wk,tf:S.towerBest|0,p:S.pio?1:0,ss:SEASON,fl:(S.fm&&S.fm.lv)||1,rp:ripeEtk(),pr:Math.round(thiefProt()*100)/100,
   g:rep?{c:C2L(rep.ch),lv:rep.lv||1,en:rep.en|0,sk:(rep.sk||[]).join(','),bf:rep.buff||'',sh:rep.sh?1:0,nm:rep.name}:null,h:S.hab.map(v=>Math.round(v/ht*100)),gl:(S.gl||[]).slice(-8)};BD[r.id]=bdSan(r);bdSave();return BD[r.id];}
 function bdPrune(){const L=Object.values(BD).filter(r=>r&&r.ss===SEASON).sort((a,b)=>b.ls-a.ls).slice(0,150);BD={};L.forEach(r=>BD[r.id]=r);}
 function bdMerge(list){const ch=[];(Array.isArray(list)?list.slice(0,200):[]).forEach(r=>{const x=bdSan(r);if(!x||x.ss!==SEASON||x.id===S.gid)return;const o=BD[x.id];if(!o||x.ls>o.ls){BD[x.id]=x;ch.push(x);}});
  if(ch.length){bdPrune();bdSave();glCheck();if($('#bdl'))openBoard(true);}return ch;}
 /* ตัวแทน AI: เพื่อนท้าไก่ตัวแทนของเราได้แม้เราออฟไลน์ */
 const GHOST_DAY=1e9,ghostPrize=g=>Math.round(15+10*g.t+5*(g.en|0)+g.lv);
-function glCheck(){let n=0,def=0,mx=S.glSeen||0;Object.values(BD).forEach(r=>(r.gl||[]).forEach(x=>{if(x.to===S.gid&&x.ts>(S.glSeen||0)){n++;if(!x.w)def++;mx=Math.max(mx,x.ts);}}));
- if(!n)return;S.glSeen=mx;const pz=def*15;S.coins+=pz;save();
+function glCheck(){let n=0,def=0,mx=S.glSeen||0;const lost={};[...Object.values(BD),...Object.values(CG)].forEach(r=>(r.gl||[]).forEach(x=>{if(x.to===S.gid&&x.ts>(S.glSeen||0)){n++;if(!x.w)def++;else lost[r.id]={id:r.id,n:r.n,ts:x.ts};mx=Math.max(mx,x.ts);}}));
+ if(!n)return;S.glSeen=mx;const pz=def*15;S.coins+=pz;if(def)lg().p+=def;
+ const LL=Object.values(lost);if(LL.length){S.rv=(S.rv||[]).filter(v=>!lost[v.id]).concat(LL).slice(-6);setTimeout(()=>{if(B||TBV)return;showModal(`<div class="em">😤</div><h2>มีคนชนะเด็คกันของคุณ!</h2><p>${LL.map(v=>'<b>'+esc(v.n)+'</b>').join(', ')}</p><div class="sub">แก้แค้นได้ทันที ไม่ต้องรอคูลดาวน์ • ชนะได้ 🪙×1.5 + 🏆 ลีก +8</div>`,[{t:`⚔️ แก้แค้น ${esc(LL[0].n)}`,c:'r',f:()=>pvChoose(LL[0].id)},{t:'ไว้ทีหลัง'}]);},2500);}
+ save();
  setTimeout(()=>{toast(`🤖 ตัวแทนของคุณถูกท้า ${n} ครั้ง • ป้องกันได้ ${def} ครั้ง${pz?` +🪙${pz}`:''}`);chatSys(`🤖 ตัวแทนของคุณถูกท้า ${n} ครั้ง ชนะ ${def}`);},800);}
 var PV_MAX=300,PV_PCT=.1,PV_CD=30,SHIELD_P=1500,SHIELD_H=24;
+/* 🛡️ เด็คกัน + 😤 แก้แค้น + 🏆 ลีกเพื่อนรายสัปดาห์ */
+const lgWk=()=>Math.floor((Date.now()+3*864e5+7*3600e3)/6048e5);
+function lg(){const w=lgWk();S.lg=S.lg||{wk:w,p:0};if(S.lg.wk!==w){lgSettle();S.lg={wk:w,p:0};save();}return S.lg;}
+function lgAdd(n,why){const L=lg();L.p+=n;save();if(n>0)toast(`🏆 ลีก +${n} แต้ม${why?' • '+why:''}`);}
+function lgList(wk){const A={};[...Object.values(BD),...Object.values(CG)].forEach(r=>{if(r&&r.id!==S.gid&&r.lw===wk&&(r.lp|0)>0&&(!A[r.id]||r.lp>A[r.id].lp))A[r.id]={id:r.id,n:r.n,lp:r.lp|0};});
+ const me={id:S.gid,n:S.nick,lp:(S.lg&&S.lg.wk===wk?S.lg.p:0),me:1};return Object.values(A).concat([me]).sort((a,b)=>b.lp-a.lp||(b.me?1:0)-(a.me?1:0));}
+function lgRank(){const L=lgList(lg().wk);return L.findIndex(x=>x.me)+1;}
+function lgSettle(){const o=S.lg;if(!o||!(o.p>0))return;const L=lgList(o.wk),rk=L.findIndex(x=>x.me)+1,n=L.length;const g=rk===1&&n>1?5:rk<=3&&n>2?3:o.p>=5?1:0;
+ if(g){S.gold=(S.gold|0)+g;}S.lgLast={wk:o.wk,rk,n,p:o.p,g};setTimeout(()=>modal(`<div class="em">🏆</div><h2>จบลีกสัปดาห์!</h2><p>คุณได้อันดับ <b>#${rk}</b> จาก ${n} คน • ${o.p} แต้ม</p>${g?`<div class="note">🎁 รางวัล 🥇${g}</div>`:'<div class="sub">เก็บให้ได้ 5 แต้มขึ้นไปเพื่อรับรางวัลสัปดาห์หน้า</div>'}`,[{t:'ลุยสัปดาห์ใหม่! 🐓',c:'g'}]),1500);}
+function defIds(){const ok=new Set(adults().map(i=>i.id));return Array.isArray(S.t4d)&&S.t4d.some(id=>id!=null&&ok.has(id))?S.t4d.map(id=>id!=null&&ok.has(id)?id:null):null;}
+function defSpec(){const d=defIds();if(!d)return t4Spec();return d.map(id=>id==null?null:S.items.find(i=>i.id===id)).filter(Boolean).map(it=>({ch:it.ch,tier:it.tier|0,lv:it.lv||1,en:it.en|0,name:it.name,sh:it.sh?1:0}));}
+function defPanel(){const d=defIds(),sp=defSpec(),cs=combosOf(sp.map(u=>u.ch));
+ return `<div class="card big-card" style="background:#eef4ff"><div class="ic" style="display:flex;gap:1px;width:auto">${sp.map(u=>`<span style="width:28px">${chickSVG(u.ch,28,u.sh)}</span>`).join('')}</div><div class="mid"><div class="nm">🛡️ เด็คกัน ${d?'':'<small>(ใช้เด็คบุก)</small>'}</div><div class="sub">เพื่อนมาท้าตอนเราไม่อยู่ จะเจอเด็คนี้${cs.length?` • 🔗 ${cs.map(c=>c.n).join(', ')}`:''}</div>
+  <div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap"><button class="btn" data-dd="copy" style="font-size:12px;padding:4px 8px">📋 ใช้เด็คตอนนี้เป็นเด็คกัน</button><button class="btn" data-dd="swap" style="font-size:12px;padding:4px 8px" ${d?'':'disabled'}>🔄 สลับบุก↔กัน</button></div></div></div>`;}
+function defBind(root,after){root.querySelectorAll('[data-dd]').forEach(b=>b.onclick=e=>{e.stopPropagation();if(b.dataset.dd==='copy'){S.t4d=t4Ids().slice();toast('🛡️ ตั้งเด็คกันแล้ว');}else{const d=defIds();if(!d)return;const a=t4Ids().slice();S.t4=d.slice();S.t4d=a;toast('🔄 สลับแล้ว — แก้เด็คที่จัดทีม แล้วกดสลับกลับ');}save();try{ghostUpload(true);}catch(_){}after&&after();});}
 const shOn=()=>(+S.pvSh||0)>Date.now();
 function pvStake(r){if(!r||!r.cloud||!isCloud||!cgUser)return 0;if((+r.shu||0)>Date.now())return 0;return Math.max(0,Math.min(PV_MAX,Math.floor((r.ek|0)*PV_PCT),S.etk|0,r.lc!=null?r.lc|0:PV_MAX,pvLeft().e));}
 var PV_DAY_E=500,PV_DAY_G=2,PV_DAY_C=8;
@@ -2939,7 +2958,7 @@ function giveEgg(t){S.bag=S.bag||[];S.bag.push(Math.max(0,Math.min(4,t|0)));}
 function eggOk(r){return !!(r&&r.cloud&&isCloud&&cgUser&&!((+r.shu||0)>Date.now())&&(r.lg|0)>0&&(r.eg|0)>0&&myEggs().length&&pvLeft().g>0);}
 function betChips(max,sel,attr){const L=[0,50,100,200,300].filter(v=>v<=max);if(max>0&&!L.includes(max))L.push(max);return `<div class="ckf" style="justify-content:center;flex-wrap:wrap">${L.map(v=>`<button class="${v===sel?'on':''}" ${attr}="${v}">${v?'🥚'+fmt(v):'ไม่เดิมพัน'}</button>`).join('')}</div>`;}
 function pvChoose(gid){const r=CG[gid]||BD[gid];if(!r)return;if(!tbMine().length){toast('ยังไม่มีทีม — จัดทีมที่ 🏠 เล้าไก่ก่อน');return;}
- S.pvT=S.pvT||{};const cd=(S.pvT[r.id]||0)+PV_CD*60000-Date.now();if(cd>0){toast(`⏳ ท้า ${r.n} ซ้ำได้ใน ${tLeft(Date.now()+cd)}`);return;}
+ S.pvT=S.pvT||{};const isRv=(S.rv||[]).some(v=>v.id===r.id);const cd=isRv?0:(S.pvT[r.id]||0)+PV_CD*60000-Date.now();if(cd>0){toast(`⏳ ท้า ${r.n} ซ้ำได้ใน ${tLeft(Date.now()+cd)}`);return;}
  const MX=pvStake(r),EG=eggOk(r),pz=pvPz(r),shd=(+r.shu||0)>Date.now(),now=Date.now(),cL=pvLeft().c;
  const why=!r.cloud?'เพื่อนไม่ได้ล็อกอิน':!isCloud?'เราต้องล็อกอินก่อน':shd?'เพื่อนใช้ 🛡️ การ์ดกันชนอยู่':'';
  const whyE=why||(MX<=0?((S.etk|0)<=0?'เราไม่มีเบี้ยไข่':pvLeft().e<=0?'วันนี้เราเสียครบเพดานแล้ว':'วันนี้เพื่อนเสียครบเพดานแล้ว'):'');
@@ -2953,7 +2972,7 @@ function pvChoose(gid){const r=CG[gid]||BD[gid];if(!r)return;if(!tbMine().length
  document.querySelectorAll('[data-pc]').forEach(b=>b.onclick=()=>{const k=b.dataset.pc;if(b.classList.contains('dis')){toast('เลือกอันนี้ไม่ได้ตอนนี้');return;}
   if(k==='none')ghostPick(gid,0);else if(k==='egg')ghostPick(gid,'egg');else ghostPick(gid,Math.min(MX,S.pvBet||100)||MX);});}
 function ghostPick(gid,bet){const r=CG[gid]||BD[gid];if(!r)return;if(!tbMine().length){toast('ยังไม่มีทีม — จัดทีมก่อน');return;}
- S.pvT=S.pvT||{};const cd=(S.pvT[r.id]||0)+PV_CD*60000-Date.now();if(cd>0){toast(`⏳ ท้าทีมนี้ซ้ำได้ใน ${tLeft(Date.now()+cd)}`);return;}
+ S.pvT=S.pvT||{};const cd=(S.rv||[]).some(v=>v.id===r.id)?0:(S.pvT[r.id]||0)+PV_CD*60000-Date.now();if(cd>0){toast(`⏳ ท้าทีมนี้ซ้ำได้ใน ${tLeft(Date.now()+cd)}`);return;}
  const tm=tbGhostTeam(r),sd=cbSide(tm,''),me=cbSide(t4Spec(),''),MX=pvStake(r),EG=eggOk(r),isE=bet==='egg'&&EG,W=isE?0:Math.min(MX,bet!=null&&bet!=='egg'?bet:0),pz=pvPz(r),shd=(+r.shu||0)>Date.now();
  showModal(`<div class="em">🏟️</div><h2>ซุ้มไก่ชน: ท้าทีม ${r.p?'🏅 ':''}${esc(r.n)}</h2>
   <div style="display:flex;justify-content:center;gap:2px;margin:6px 0">${tm.map(u=>`<span title="${esc(u.name)}">${chickSVG(u.ch,46,u.sh)}</span>`).join('')}</div>
@@ -3022,7 +3041,7 @@ function cloudGhostInit(db,user){cgDb=db;cgUser=user;feedInit(db);
 function repOf(){return S.items.find(i=>i.id===S.rep&&i.st===2)||S.items.filter(i=>i.st===2).sort((a,b)=>b.tier-a.tier||(b.en|0)-(a.en|0)||(b.lv||1)-(a.lv||1))[0]||null;}
 function ghostUpload(force){if(!cgDb||!cgUser||cloudLocked)return;if(!force&&Date.now()-ghostT<55000)return;ghostT=Date.now();
  const r=bdMine(),rep=repOf(),farm=S.items.filter(i=>i.st===2).sort((a,b)=>b.tier-a.tier||(b.en|0)-(a.en|0)||(b.lv||1)-(a.lv||1)).slice(0,40).map(i=>({u:i.u,c:C2L(i.ch),lv:i.lv||1,en:i.en|0,sh:i.sh?1:0,nm:i.name,bf:i.buff||'',sk:(i.sk||[]).join(',')}));
- cgDb.collection('ghosts').doc(cgUser.uid).set(JSON.parse(JSON.stringify({...r,uid:cgUser.uid,gu:rep?rep.u:'',farm,tm:t4Spec(),ek:S.etk|0,shu:+S.pvSh||0,lc:pvLeft().e,lg:pvLeft().g,eg:myEggs().length,et:(myEggs()[0]||{t:0}).t,t:Date.now()}))).catch(()=>{});}
+ cgDb.collection('ghosts').doc(cgUser.uid).set(JSON.parse(JSON.stringify({...r,uid:cgUser.uid,gu:rep?rep.u:'',farm,tm:defSpec(),lp:lg().p,lw:lg().wk,ek:S.etk|0,shu:+S.pvSh||0,lc:pvLeft().e,lg:pvLeft().g,eg:myEggs().length,et:(myEggs()[0]||{t:0}).t,t:Date.now()}))).catch(()=>{});}
 function cgFetch(){if(!cgDb||Date.now()-cgT<20000)return;cgT=Date.now();
  cgDb.collection('ghosts').orderBy('t','desc').limit(60).get().then(q=>{const N={};q.docs.forEach(d=>{const x=d.data()||{};const r=bdSan(x);if(!r||r.ss!==SEASON||r.id===S.gid)return;r.uid=String(x.uid||d.id);r.gu=String(x.gu||'').slice(0,24);r.cloud=1;r.tm=Array.isArray(x.tm)?x.tm.slice(0,4).filter(u=>u&&typeof u==='object'):[];r.ek=cInt(x.ek,0,1e9);r.shu=Math.max(0,+x.shu||0);r.lc=x.lc==null?PV_DAY_E:cInt(x.lc,0,PV_DAY_E);r.lg=x.lg==null?0:cInt(x.lg,0,PV_DAY_G);r.eg=cInt(x.eg,0,99);r.et=cInt(x.et,0,4);
   r.farm=(Array.isArray(x.farm)?x.farm:[]).slice(0,40).map(f=>{const k=L2C(String(f&&f.c||'').replace(/[^a-n]/g,'').slice(0,1));if(!k||!f.u)return null;return {u:String(f.u).slice(0,24),c:C2L(k.id),t:k.t,lv:cInt(f.lv,1,10),en:cInt(f.en,0,5),sh:f.sh?1:0,nm:clip(String(f.nm||k.n),20),bf:BUFFS.some(b=>b.id===f.bf)?f.bf:'',sk:String(f.sk||'').split(',').filter(z=>SKILLS.some(q=>q.id===z)).slice(0,3)};}).filter(Boolean);N[r.id]=r;});CG=N;if($('#bdl'))openBoard(true);if($('#pvh'))pvpHub(true);}).catch(()=>{});}
@@ -3676,20 +3695,26 @@ function startGhost(r,W){if(B||TBV)return;const EGG=W==='egg';let mt=null;if(EGG
  const send=async o=>{try{if(cgDb&&cgUser&&r.uid)await cgDb.collection('raids').add({to:r.uid,from:cgUser.uid,fromName:S.nick,n:Math.min(25,Math.ceil(W/12)),e:W,ts:Date.now(),...o});}catch(e){}};
  cbRun({enemy:tbGhostTeam(r),ename:esc(r.n),title:`🏟️ ซุ้มไก่ชน vs ${esc(r.n)}`,back:()=>showSheet('vil'),
   onEnd:async win=>{S.gl=(S.gl||[]).concat({to:r.id,w:win?1:0,ts:Date.now()}).slice(-8);
-   if(!win){const l=pvL();if(W){send({pg:1});l.e+=W;}if(EGG){send({pg:1,eg:mt,egg:1});l.g++;}save();bdSend(false);feedAdd({a:S.nick,b:r.n,w:0,m:'🏟️'});return `แพ้ทีมของ ${esc(r.n)}${W?` — เสีย 🥚${fmt(W)} ให้เขา`:EGG?` — เสียไข่${TIERS[mt].n} 1 ฟอง`:''}<br>ไก่ไม่เป็นไร 🩹`;}
-   const pz=pvPz(r);if(pz){S.coins+=pz;pvL().c++;}if(W){S.etk=(S.etk|0)+W*2;send({pv:1});}if(EGG){giveEgg(mt);giveEgg(r.et|0);send({pv:1,egg:1});}tbMine().forEach(x=>winUp(x.it,true));
+   const rvH=(S.rv||[]).some(v=>v.id===r.id);
+   if(!win){lgAdd(1,'สู้ดี');const l=pvL();if(W){send({pg:1});l.e+=W;}if(EGG){send({pg:1,eg:mt,egg:1});l.g++;}save();bdSend(false);feedAdd({a:S.nick,b:r.n,w:0,m:'🏟️'});return `แพ้ทีมของ ${esc(r.n)}${W?` — เสีย 🥚${fmt(W)} ให้เขา`:EGG?` — เสียไข่${TIERS[mt].n} 1 ฟอง`:''}<br>ไก่ไม่เป็นไร 🩹`;}
+   let pz=pvPz(r);if(pz){if(rvH)pz=Math.round(pz*1.5);S.coins+=pz;pvL().c++;}lgAdd(rvH?8:3,rvH?'แก้แค้นสำเร็จ!':'ชนะ');if(rvH)S.rv=(S.rv||[]).filter(v=>v.id!==r.id);if(W){S.etk=(S.etk|0)+W*2;send({pv:1});}if(EGG){giveEgg(mt);giveEgg(r.et|0);send({pv:1,egg:1});}tbMine().forEach(x=>winUp(x.it,true));
    save();bdSend(false);feedAdd({a:S.nick,b:r.n,w:1,k:W?'🥚'+W:EGG?'ไข่':'',m:'🏟️'});return `${pz?`ได้ 🪙${fmt(pz)}`:'ไก่ได้ค่าประสบการณ์ ⭐ (🪙 ครบโควตาวันนี้)'}${W?` + 🥚${fmt(W)} จาก ${esc(r.n)}`:EGG?`<br>🥚 + <b>ไข่${TIERS[r.et|0].n}</b> 1 ฟองจาก ${esc(r.n)} (วางบนแท่นฟักให้เองเมื่อแท่นว่าง)`:''}`;}});}
+function lgOpen(){const L=lgList(lg().wk).slice(0,30);const md=['🥇','🥈','🥉'];
+ showModal(`<div class="em">🏆</div><h2>ลีกเพื่อนสัปดาห์นี้</h2><div class="sub">ชนะเพื่อน +3 • แก้แค้นสำเร็จ +8 • แพ้ +1 • เด็คกันชนะ +1 ต่อครั้ง<br>จบสัปดาห์ (คืนวันอาทิตย์): ที่ 1 ได้ 🥇5 • ท็อป 3 ได้ 🥇3 • 5 แต้มขึ้นไปได้ 🥇1</div>
+ <div style="text-align:left;max-height:50vh;overflow:auto;margin-top:6px">${L.map((x,i)=>`<div class="lgr ${x.me?'me':''}"><span>${md[i]||'#'+(i+1)}</span><b>${esc(x.n)}${x.me?' (คุณ)':''}</b><span>${x.lp} แต้ม</span></div>`).join('')}</div>${S.lgLast?`<div class="sub">สัปดาห์ก่อน: อันดับ #${S.lgLast.rk} • ${S.lgLast.p} แต้ม</div>`:''}`,[{t:'← ซุ้มไก่ชน',f:()=>pvpHub()},{t:'ปิด',c:'g'}]);}
 function pvpUnl(){return !!(S&&S.items&&S.items.some(i=>i.st===2)&&(unl('vil')||(S.w|0)>0));}
 function pvpHub(refresh){if(!refresh){try{cgFetch();}catch(e){}try{bdMine();}catch(e){}}const now=Date.now();
  const AL={};Object.values(BD).forEach(r=>{if(r&&r.ss===SEASON&&r.id!==S.gid)AL[r.id]=r;});Object.values(CG).forEach(r=>{if(r&&r.id!==S.gid)AL[r.id]=r;});
  const me=cbSide(t4Spec(),''),pw0=x=>{const d=cbSide(tbGhostTeam(x),'');return Math.abs((d.max+d.atk*2+d.ar)/Math.max(1,me.max+me.atk*2+me.ar)-1);},L=Object.values(AL).sort((a,b)=>(b.cloud?1:0)-(a.cloud?1:0)||pw0(a)-pw0(b)||b.ls-a.ls).slice(0,30);
  const on=r=>r.ls>now-75000;S.pvT=S.pvT||{};
- const pw=x=>x.max+x.atk*2+x.ar,mp=pw(me),row=r=>{const tm=tbGhostTeam(r),sd=cbSide(tm,''),W=pvStake(r),rt=pw(sd)/Math.max(1,mp),bd=rt<.85?'<b class="pwb g">🟢 อ่อนกว่า</b>':rt<=1.15?'<b class="pwb y">🟡 สูสี</b>':'<b class="pwb r">🔴 แรงกว่า</b>',cd=(S.pvT[r.id]||0)+PV_CD*60000-now,sh=(+r.shu||0)>now;
-  return `<div class="card" style="margin-bottom:6px;align-items:center"><div class="mid"><div class="nm">${on(r)?'🟢':'⚪'} ${esc(r.n)} ${bd}</div><div style="display:flex;gap:1px">${tm.map(u=>`<span>${chickSVG(u.ch,30,u.sh)}</span>`).join('')}</div></div>
+ const pw=x=>x.max+x.atk*2+x.ar,mp=pw(me),row=r=>{const rvB=RV.has(r.id)?'<b class="pwb r">😤 แก้แค้น!</b>':'';const tm=tbGhostTeam(r),sd=cbSide(tm,''),W=pvStake(r),rt=pw(sd)/Math.max(1,mp),bd=rt<.85?'<b class="pwb g">🟢 อ่อนกว่า</b>':rt<=1.15?'<b class="pwb y">🟡 สูสี</b>':'<b class="pwb r">🔴 แรงกว่า</b>',cd=(S.pvT[r.id]||0)+PV_CD*60000-now,sh=(+r.shu||0)>now;
+  return `<div class="card" style="margin-bottom:6px;align-items:center"><div class="mid"><div class="nm">${on(r)?'🟢':'⚪'} ${esc(r.n)} ${rvB}${bd}</div><div style="display:flex;gap:1px">${tm.map(u=>`<span>${chickSVG(u.ch,30,u.sh)}</span>`).join('')}</div></div>
   ${cd>0?`<button class="btn" disabled style="font-size:12px">⏳${tLeft(now+cd)}</button>`:`<button class="btn r" data-pvh="${esc(r.id)}" style="white-space:nowrap">⚔️ ท้า${sh?'<br><small>🛡️</small>':''}</button>`}</div>`;};
- showModal(`<div id="pvh"></div><div class="em">🏟️</div><h2>ซุ้มไก่ชน</h2><div class="sub">ทีมเรา ❤️${me.max} ⚔️${me.atk} • ชนะได้ 🥚 จากเขา แพ้เสียเท่ากัน • ไก่ไม่หาย</div>
+ const LG=lg(),rk=lgRank(),RV=new Set((S.rv||[]).map(v=>v.id));L.sort((a,b)=>(RV.has(b.id)?1:0)-(RV.has(a.id)?1:0));
+ showModal(`<div id="pvh"></div><div class="em">🏟️</div><h2>ซุ้มไก่ชน</h2><button class="lgbar" id="lgB">🏆 ลีกสัปดาห์นี้: <b>อันดับ #${rk}</b> • ${LG.p} แต้ม <small>ดูตาราง ›</small></button>${defPanel()}<div class="sub">ทีมเรา ❤️${me.max} ⚔️${me.atk} • ชนะได้ 🥚 จากเขา แพ้เสียเท่ากัน • ไก่ไม่หาย</div>
   <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:6px 0"><button class="btn ${shOn()?'':'r'}" id="pvSh">${shOn()?`🛡️ กันชนอยู่ ${tLeft(S.pvSh)}`:`🛡️ การ์ดกันชน 🪙${fmt(SHIELD_P)}`}</button></div>
   <div style="max-height:52vh;overflow:auto;text-align:left">${L.length?L.map(row).join(''):'<div class="sub">ยังไม่เจอผู้เล่นอื่น — รอสักครู่ หรือเข้า 🌐 ล็อบบี้ให้เจอคนอื่นก่อน</div>'}</div>`,[{t:'ปิด',c:'g'}]);
+ $('#lgB').onclick=()=>lgOpen();defBind($('#mbox'),()=>pvpHub(true));
  $('#pvSh').onclick=()=>{buyShield();setTimeout(()=>{if($('#pvh'))pvpHub(true);},50);};
  document.querySelectorAll('[data-pvh]').forEach(b=>b.onclick=()=>pvChoose(b.dataset.pvh));}
 function buyShield(){if(shOn()){toast(`🛡️ การ์ดกันชนเหลือ ${tLeft(S.pvSh)}`);return;}if(S.coins<SHIELD_P){toast(`🪙 เดือยเงินไม่พอ (ต้องใช้ ${fmt(SHIELD_P)})`);return;}
