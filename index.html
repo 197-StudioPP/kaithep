@@ -433,6 +433,25 @@ body.shake{animation:bsh .5s}
 .cfa{font-size:22px;color:#c9b48a}.cfa.r{color:#b23a2a}.cfn{font-size:12px;color:#8a7a5a;padding:6px 12px 8px}
 .cfw{flex:none;width:44px;height:26px;border-radius:14px;background:#d8ccb4;position:relative;transition:.2s}.cfw::after{content:'';position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px #0003;transition:.2s}
 .cfr.on .cfw{background:#5bbf3a}.cfr.on .cfw::after{left:21px}
+.mkwrap{margin:-18px -18px 0;text-align:left}
+.mkhead{position:relative;background:linear-gradient(180deg,#ffb84d,#ff8a3d);padding:16px 14px 12px;border-bottom:3px solid #3b2a1a;border-radius:21px 21px 0 0;display:flex;align-items:center;justify-content:space-between;overflow:hidden}
+.mkaw{position:absolute;left:0;right:0;top:0;height:12px;background:repeating-linear-gradient(90deg,#e0403a 0 22px,#fff6e0 22px 44px);border-bottom:2px solid #3b2a1a}
+.mkt1{font-size:22px;font-weight:900;color:#fff;text-shadow:0 2px 0 #3b2a1a;margin-top:6px}.mkcoin{background:#fff6e0;border:2px solid #3b2a1a;border-radius:14px;padding:3px 10px;font-weight:800;margin-top:6px}
+.mktabs{display:flex;gap:4px;padding:10px 10px 0}.mktabs button{flex:1;font:inherit;font-size:13px;font-weight:800;border:2px solid #c9b48a;background:#fff;border-radius:12px 12px 0 0;padding:6px 2px;color:#7a6346;display:flex;flex-direction:column;align-items:center;gap:1px;border-bottom:0}
+.mktabs button span{font-size:18px}.mktabs button.on{background:#fff6e0;border-color:#3b2a1a;color:#3b2a1a;transform:translateY(2px)}
+.mkbody{border-top:2px solid #3b2a1a;background:#fff6e0;padding:10px;max-height:56vh;overflow:auto}
+.mkg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.mkt{background:#fff;border:3px solid #e2cfa5;border-radius:16px;padding:6px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.mkt.t2{border-color:#5aa0e0}.mkt.t3{border-color:#9b59b6}.mkt.t4{border-color:#e0a020;box-shadow:0 0 0 2px #ffe58a}.mkt.egg{border-color:#e8c27a}
+.mkpic{position:relative;width:100%;height:80px;border-radius:12px;background:radial-gradient(circle at 50% 70%,#fff3cf,#f6ecd4);display:flex;align-items:center;justify-content:center}
+.mkegg{font-size:48px;filter:drop-shadow(0 3px 0 #0002)}.mkegg.t2{filter:drop-shadow(0 0 6px #5aa0e0)}.mkegg.t3{filter:drop-shadow(0 0 8px #9b59b6)}.mkegg.t4{filter:drop-shadow(0 0 10px #ffc400)}
+.mken{position:absolute;top:4px;right:6px;font-style:normal;font-weight:900;font-size:12px;background:#a36bff;color:#fff;border-radius:8px;padding:0 5px}
+.mkn{font-size:14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mkm{font-size:12px;color:#8a7a5a}
+.mks{letter-spacing:-1px}.mks.t0{color:#9a9a9a}.mks.t1{color:#4caf50}.mks.t2{color:#3b82d6}.mks.t3{color:#9b59b6}.mks.t4{color:#e0a020}
+.mksel{font-size:11.5px;color:#8a7a5a;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mkst{font-size:11.5px;color:#b07a20;font-weight:700}.mkst.ok{color:#2a8a2a}
+.mkbuy{width:100%;font:inherit;font-size:14px;font-weight:900;border:2px solid #3b2a1a;background:#ffd54f;border-radius:12px;padding:5px 4px;box-shadow:0 3px 0 #3b2a1a;margin-top:3px;text-align:center;display:block}.mkbuy.no{background:#eee3cc;color:#8a7a5a;box-shadow:none;border-color:#c9b48a}
+.mkx{font:inherit;font-weight:900;border:2px solid #b23a2a;background:#ffe0d6;color:#b23a2a;border-radius:12px;width:34px;margin-top:3px}
+.mkempty{text-align:center;padding:30px 10px;font-size:16px;font-weight:700;color:#7a6346}.mkempty small{font-weight:400;font-size:13px}.mknote{font-size:12px;color:#8a7a5a;text-align:center;margin-top:8px}
 </style>
 </head>
 <body>
@@ -444,7 +463,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.8.0-a';
+window.__BUILD='1.8.0-b';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -3524,12 +3543,17 @@ async function mkCollect(){let got=0,n=0;for(const x of mkMine.filter(x=>x.sold)
 setInterval(()=>{if(mkOk()&&!B&&!TBV)cgDb.collection('market').where('seller','==',cgUser.uid).get().then(m=>{mkMine=m.docs.map(d=>({id:d.id,...d.data()}));mkCollect();}).catch(()=>{});},90000);
 function mkOpen(tab){if(tab)mkTab=tab;if(!mkOk()){showModal(`<div class="em">🏪</div><h2>ตลาดเพื่อน</h2><div class="sub">🔐 ต้องเข้าสู่ระบบก่อน ถึงจะซื้อขายกับเพื่อนได้<br>(⚙️ ตั้งค่า → เข้าสู่ระบบ)</div>`,[{t:'ปิด',c:'g'}]);return;}
  mkRender();if(!mkBusy){mkBusy=true;mkLoad().then(()=>{mkBusy=false;if($('#mkp'))mkRender();});}}
-function mkRender(){const tabs=[['buy','🛒 ซื้อ'],['sell','💰 ฝากขาย'],['mine',`📦 ของฉัน ${mkMine.length}/${MK_MAX}`]];let h='';
- if(mkTab==='buy')h=mkList.length?mkList.map(x=>`<div class="card" style="margin-bottom:6px;align-items:center"><div class="ic" style="width:46px;height:46px;display:flex;align-items:center;justify-content:center">${mkIcon(x,44)}</div><div class="mid"><div class="nm">${mkName(x)}</div><div class="sub">โดย ${esc(x.sn||'?')}</div></div><button class="btn ${S.coins>=x.price?'r':''}" data-mb="${esc(x.id)}" style="white-space:nowrap">🪙${fmt(x.price)}</button></div>`).join(''):`<div class="sub">${mkBusy?'⏳ กำลังโหลด...':'ยังไม่มีใครวางขาย — ลองฝากขายของเราดูสิ!'}</div>`;
- else if(mkTab==='mine')h=mkMine.length?mkMine.map(x=>`<div class="card" style="margin-bottom:6px;align-items:center"><div class="ic" style="width:46px;height:46px;display:flex;align-items:center;justify-content:center">${mkIcon(x,44)}</div><div class="mid"><div class="nm">${mkName(x)}</div><div class="sub">${x.sold?`✅ ขายแล้วให้ ${esc(x.bn||'?')} — เงินกำลังเข้า`:`🪙${fmt(x.price)} • รอคนซื้อ`}</div></div>${x.sold?'':`<button class="btn" data-mc="${esc(x.id)}">ยกเลิก</button>`}</div>`).join(''):'<div class="sub">ยังไม่ได้ฝากขายอะไร</div>';
+function mkRender(){const tabs=[['buy','🛒','ซื้อ'],['sell','💰','ฝากขาย'],['mine','📦',`ของฉัน ${mkMine.length}/${MK_MAX}`]];let h='';
+ const stars=t=>`<span class="mks t${t|0}">${'★'.repeat((t|0)+1)}</span>`;
+ const tile=(x,foot)=>`<div class="mkt ${x.k==='egg'?'egg':'t'+(x.c.tier|0)}"><div class="mkpic">${x.k==='egg'?`<span class="mkegg t${x.t|0}">🥚</span>`:chickSVG(x.c.ch,74,x.c.sh)}${x.k!=='egg'&&x.c.en?`<i class="mken">+${x.c.en}</i>`:''}</div>
+  <b class="mkn">${x.k==='egg'?'ไข่'+TIERS[x.t|0].n:esc(x.c.name)}</b><div class="mkm">${stars(x.k==='egg'?x.t:x.c.tier)}${x.k==='egg'?'':` Lv.${x.c.lv||1}`}</div>${foot}</div>`;
+ if(mkTab==='buy')h=mkList.length?`<div class="mkg">${mkList.map(x=>tile(x,`<small class="mksel">👤 ${esc(x.sn||'?')}</small><button class="mkbuy ${S.coins>=x.price?'':'no'}" data-mb="${esc(x.id)}">🪙 ${fmt(x.price)}</button>`)).join('')}</div>`:`<div class="mkempty">${mkBusy?'⏳ กำลังโหลดของในตลาด...':'🍃 ตลาดยังว่างอยู่<br><small>ลองเป็นคนแรกที่ฝากขายสิ!</small>'}</div>`;
+ else if(mkTab==='mine')h=mkMine.length?`<div class="mkg">${mkMine.map(x=>tile(x,x.sold?`<small class="mkst ok">✅ ขายให้ ${esc(x.bn||'?')} แล้ว</small><span class="mkbuy no">เงินกำลังเข้า</span>`:`<small class="mkst">⏳ รอคนซื้อ</small><div style="display:flex;gap:4px;width:100%"><span class="mkbuy no" style="flex:1">🪙 ${fmt(x.price)}</span><button class="mkx" data-mc="${esc(x.id)}">✕</button></div>`)).join('')}</div>`:'<div class="mkempty">📦 ยังไม่ได้ฝากขายอะไร<br><small>ไปที่แท็บ 💰 ฝากขาย</small></div>';
  else{const tm=new Set(t4Ids().filter(x=>x!=null)),C=adults().filter(i=>!tm.has(i.id)&&!isWorker(i.id)&&!i.beta),E=myEggs();
-  h=`<div class="sub" style="text-align:left">เลือกของที่จะฝากขาย (ไก่ในทีม/ทำงานอยู่ขายไม่ได้) • ค่าธรรมเนียม ${Math.round(MK_FEE*100)}%</div><div class="ckg" style="margin-top:6px">${C.map(i=>`<button class="ckt t${i.tier}" data-ms="c${i.id}">${chickSVG(i.ch,46,i.sh)}<b>${esc(i.name)}</b><small>${'★'.repeat(i.tier+1)} Lv.${i.lv||1}</small></button>`).join('')}${E.map((e,k)=>`<button class="ckt" data-ms="e${k}"><span style="font-size:36px">🥚</span><b>ไข่${TIERS[e.t].n}</b><small>${e.p!=null?'บนแท่นฟัก':'ในกล่อง'}</small></button>`).join('')}</div>${C.length||E.length?'':'<div class="sub">ยังไม่มีของที่ขายได้</div>'}`;}
- showModal(`<div id="mkp"></div><div class="em">🏪</div><h2>ตลาดเพื่อน</h2><div class="ckf" style="justify-content:center">${tabs.map(([k,t])=>`<button class="${mkTab===k?'on':''}" data-mt="${k}">${t}</button>`).join('')}</div><div style="max-height:52vh;overflow:auto;text-align:left">${h}</div><div class="sub">มี 🪙${fmt(S.coins)}</div>`,[{t:'ปิด',c:'g'}]);
+  h=(C.length||E.length?`<div class="mkg">${C.map(i=>tile({k:'chick',c:i},`<button class="mkbuy" data-ms="c${i.id}">💰 ขายตัวนี้</button>`)).join('')}${E.map((e,k)=>tile({k:'egg',t:e.t},`<small class="mksel">${e.p!=null?'🪺 บนแท่นฟัก':'📦 ในกล่อง'}</small><button class="mkbuy" data-ms="e${k}">💰 ขายไข่นี้</button>`)).join('')}</div>`:'<div class="mkempty">🐔 ยังไม่มีของที่ขายได้<br><small>ไก่ในทีม/ทำงานอยู่ขายไม่ได้</small></div>')+`<div class="mknote">💡 ขายได้แล้วเงินเข้าเอง • หักค่าธรรมเนียม ${Math.round(MK_FEE*100)}%</div>`;}
+ showModal(`<div id="mkp" class="mkwrap"><div class="mkhead"><div class="mkaw"></div><div class="mkt1">🏪 ตลาดเพื่อน</div><div class="mkcoin">🪙 ${fmt(S.coins)}</div></div>
+  <div class="mktabs">${tabs.map(([k,i,t])=>`<button class="${mkTab===k?'on':''}" data-mt="${k}"><span>${i}</span>${t}</button>`).join('')}</div>
+  <div class="mkbody">${h}</div></div>`,[{t:'ปิด',c:'g'}]);
  document.querySelectorAll('[data-mt]').forEach(b=>b.onclick=()=>{mkTab=b.dataset.mt;mkRender();});
  document.querySelectorAll('[data-mb]').forEach(b=>b.onclick=()=>mkBuy(b.dataset.mb));
  document.querySelectorAll('[data-mc]').forEach(b=>b.onclick=()=>mkCancel(b.dataset.mc));
