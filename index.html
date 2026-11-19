@@ -456,6 +456,7 @@ body.shake{animation:bsh .5s}
 .mgrid .me.t1{border-color:#4f9a3c;background:#eaffde}.mgrid .me.t2{border-color:#3a7bd5;background:#e3efff}.mgrid .me.t3{border-color:#8e44ad;background:#f3e3ff;box-shadow:0 0 10px #c77dff}.mgrid .me.t4{border-color:#e0a800;background:#fff6cc;box-shadow:0 0 14px #ffcc22}@keyframes mpop{from{transform:scale(0) rotate(-20deg)}}
 .hgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0;max-height:46vh;overflow:auto}.hc{position:relative;display:flex;flex-direction:column;align-items:center;background:#fff;border:3px solid #ccc;border-radius:12px;padding:3px 2px;animation:mpop .35s backwards}.hc b{font-size:10.5px;line-height:1.1;text-align:center}.hc small{font-size:10px;color:#7a6346}
 .hc.t1{border-color:#4f9a3c;background:#eaffde}.hc.t2{border-color:#3a7bd5;background:#e3efff}.hc.t3{border-color:#8e44ad;background:#f3e3ff}.hc.t4{border-color:#e0a800;background:#fff6cc}.hc .nw{position:absolute;top:-6px;right:-4px;font-style:normal;font-size:10px;font-weight:800;background:#e53b2a;color:#fff;border-radius:8px;padding:0 5px;z-index:1}.hc .nw.sh{left:-4px;right:auto;background:#ffd23f;color:#3b2a1a}
+.rcy{margin-top:10px;background:#eef9e6;border:2px dashed #6aa84f;border-radius:12px;padding:6px 8px;text-align:left}.rcr{display:flex;align-items:center;gap:5px;margin-top:5px}.rcr span{flex:1;font-size:13px;display:flex;align-items:center;gap:4px}.rcr .btn{font-size:12px;padding:5px 8px}
 .pwb{font-size:11px;border-radius:8px;padding:0 6px;margin-left:4px;white-space:nowrap}.pwb.g{background:#d9ffc8}.pwb.y{background:#fff0a8}.pwb.r{background:#ffc9bf}
 .cpinfo{background:#fff3c4;border:2px solid #e2c36a;border-radius:12px;padding:6px 10px;margin:0 0 8px;font-size:13px;text-align:center;line-height:1.35}.cpinfo small{color:#7a5a2a}
 .wl.job{background:#e8f6d8;border-color:#4c8a2a}.wl.team{background:#ffe0d6;border-color:#b23a2a}
@@ -516,7 +517,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.9.4-f';
+window.__BUILD='1.9.5-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -1289,6 +1290,10 @@ function dupList(){const busy=new Set([...t4Ids(),...(S.job||[]).filter(Boolean)
 function dupSellAsk(){const L=dupList();if(!L.length){toast('ไม่มีตัวซ้ำ ★1 ให้ขาย');return;}const tot=L.reduce((a,i)=>a+sellPrice(i),0);
  showModal(`<div class="em">💰</div><h2>ขายตัวซ้ำ ★1 ${L.length} ตัว?</h2><div class="hgrid">${L.map(i=>`<span class="hc t0">${chickSVG(i.ch,40,i.sh)}<small>Lv.${i.lv||1}</small></span>`).join('')}</div><div class="sub">เก็บตัวที่ดีที่สุดของแต่ละพันธุ์ไว้ให้แล้ว • ตัวในทีม/ทำงาน/ตีบวก/ประกาย ไม่ขาย<br>💡 ตัวซ้ำเอาไปตีบวกตัวพันธุ์เดียวกันได้ด้วยนะ</div><div class="note">ได้ 🪙${fmt(tot)}</div>`,
   [{t:`💰 ขายเลย ได้ 🪙${fmt(tot)}`,c:'r',f:()=>{let g=0;const ids=new Set(L.map(i=>i.id));S.items.filter(i=>ids.has(i.id)).forEach(i=>g+=sellGain(i));S.items=S.items.filter(i=>!ids.has(i.id));save();syncMeshes();snd(1300,.08,'triangle',.06,1.2);toast(`💰 ขายตัวซ้ำ ${L.length} ตัว ได้ 🪙${fmt(g)}`);if(S.bag.some(t=>t<3))setTimeout(()=>openEggBox(),300);}},{t:'ยกเลิก'}]);}
+var RCY_N=5,EGG_SELL=[30,60,150];
+function eggRecycle(t){let n=0;for(let i=S.bag.length-1;i>=0&&n<RCY_N;i--)if(S.bag[i]===t){S.bag.splice(i,1);n++;}if(n<RCY_N){for(let i=0;i<n;i++)S.bag.push(t);return;}
+ S.bag.push(t+1);save();fanfare();toast(`♻️ รีไซเคิลไข่${TIERS[t].n} ${RCY_N} ฟอง → ได้ ${EGG_DOT[t+1]} ไข่${TIERS[t+1].n} 1 ฟอง!`);openEggBox();}
+function eggSellAll(t){const n=S.bag.filter(x=>x===t).length;if(!n)return;S.bag=S.bag.filter(x=>x!==t);const g=EGG_SELL[t]*n;S.etk=(S.etk|0)+g;save();snd(1300,.08,'triangle',.06,1.2);toast(`💰 ขายไข่${TIERS[t].n} ${n} ฟอง ได้ 🥚${fmt(g)}`);openEggBox();}
 function openEggBox(pad){
  const freeN=S.slots.filter((x,i)=>i<S.pads&&!x).length;const L=S.bag.map((t,k)=>({t,k})).sort((a,b)=>b.t-a.t);
  let h=`<div class="em">🧺</div><h2>กล่องไข่ ${S.bag.length}/${eggCap(S.lvl)}</h2><div class="sub">แท่นว่าง ${freeN}/${S.pads} • เลือกฟองที่จะวางฟักได้เลย</div>
@@ -1298,10 +1303,14 @@ function openEggBox(pad){
  const inc=S.slots.map((sl,i)=>({sl,i})).filter(x=>x.sl);
  if(inc.length){h+=`<h4 style="margin:10px 0 4px">🪺 กำลังฟักอยู่บนแท่น</h4>`;inc.forEach(x=>h+=`<div class="card" style="margin-bottom:6px"><div class="ic">${eggH(x.sl.tier)}</div><div class="mid"><div class="nm">ไข่${TIERS[x.sl.tier|0].n} • แท่น ${x.i+1}</div><div class="sub">${x.sl.p>=1?'✅ พร้อมฟักแล้ว! ไปแตะที่แท่นเลย':'⏳ เหลือ '+fmtDur((1-x.sl.p)*x.sl.dur)}</div></div></div>`);}
  h+='</div>';
+ if(S.tut<0&&S.bag.length){const cnt=[0,0,0,0,0];S.bag.forEach(t=>cnt[t]++);
+  h+=`<div class="rcy"><b>♻️ รีไซเคิลไข่</b><div class="sub">ไข่ระดับเดียวกัน ${RCY_N} ฟอง → ไข่ระดับสูงขึ้น 1 ฟอง • หรือขายคืนเป็น 🥚</div>${[0,1,2].filter(t=>cnt[t]).map(t=>`<div class="rcr"><span>${eggH(t)} ${TIERS[t].n} ×${cnt[t]}</span><button class="btn ${cnt[t]>=RCY_N?'r':''}" data-rc="${t}" ${cnt[t]>=RCY_N?'':'disabled'}>♻️ ${RCY_N}→${EGG_DOT[t+1]}${TIERS[t+1].n}</button><button class="btn" data-rs="${t}">💰 ขาย 🥚${EGG_SELL[t]*cnt[t]}</button></div>`).join('')}</div>`;}
  const btns=[];if(S.tut<0&&S.slots.some(x=>x&&x.p<1&&(x.tier|0)<3))btns.push({t:'⚡ เร่งฟัก',c:'b',f:openRush});
  const qn=S.bag.filter(t=>t<3).length;if(S.tut<0&&qn)btns.push({t:`🐣 ฟักด่วนทั้งกล่อง (${qn})`,c:'r',f:quickHatch});
  if(S.bag.length&&freeN>1)btns.push({t:'🪺 วางทั้งหมด',c:'g',f:placeAll});btns.push({t:'ปิด'});
  modal(h,btns);
+ document.querySelectorAll('[data-rc]').forEach(b=>b.onclick=()=>{$('#modal').classList.add('hide');eggRecycle(+b.dataset.rc);});
+ document.querySelectorAll('[data-rs]').forEach(b=>b.onclick=()=>{$('#modal').classList.add('hide');eggSellAll(+b.dataset.rs);});
  document.querySelectorAll('[data-pe]').forEach(b=>b.onclick=()=>{const k=+b.dataset.pe;let i=(pad!=null&&pad<S.pads&&!S.slots[pad])?pad:S.slots.findIndex((x,j)=>j<S.pads&&!x);
   if(i<0)return;placeEgg(i,k);const cl=$('#mbox .row button:last-child');if(cl)cl.click();toast(`🪺 วางไข่${TIERS[S.slots[i].tier].n}บนแท่น ${i+1} แล้ว`);if(S.bag.length&&S.slots.some((x,j)=>j<S.pads&&!x))openEggBox();});
 }
