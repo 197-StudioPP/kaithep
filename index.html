@@ -436,7 +436,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.7.4-a';
+window.__BUILD='1.7.5-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -1208,14 +1208,17 @@ function openRush(){const L=S.slots.map((sl,i)=>({sl,i})).filter(x=>x.sl&&x.sl.p
 /* ---------- สุ่มไข่ (gacha egg) ---------- */
 let SP=null;
 const stockLeft=()=>{const dk=new Date().toDateString();return DAILY_SPIN-(S.stock&&S.stock.d===dk?S.stock.n:0);};
-function spinEgg(){
+var GOLD_SPIN=3;
+function gachaTap(){if(S.tut<0&&(S.gold|0)>=GOLD_SPIN){showModal(`<div class="em">🎰</div><h2>ตู้สุ่มไข่</h2><div class="sub">มี 🥚${fmt(S.etk|0)} • 🥇${S.gold|0}</div>`,[{t:`🎰 สุ่มปกติ 🥚${fmt(GACHA_ETK)}`,c:'g',f:()=>spinEgg()},{t:`🌟 สุ่มทอง 🥇${GOLD_SPIN} • ได้ ★3 ขึ้นไปแน่นอน`,c:'r',f:()=>spinEgg(1)},{t:'ปิด'}]);return;}spinEgg();}
+function spinEgg(gold){
  if(SP||G)return;const free=S.tut===2,price=free?0:EGG_PRICE(S.lvl);
  if(S.tut>=0&&!free){toast('ทำตามขั้นตอนฝึกก่อนนะ 👆');return;}
  if(S.bag.length>=eggCap(S.lvl)){toast('🧺 กล่องไข่เต็ม! วางไข่บนแท่นก่อน');return;}
- if(!free&&(S.etk|0)<GACHA_ETK){toast(`🥚 เบี้ยไข่ไม่พอ (ต้องใช้ ${fmt(GACHA_ETK)}) — ปลูกพืชที่ 🌱 ไร่ หรือไต่ 🗼 ทาวเวอร์`);return;}
+ if(gold&&(S.gold|0)<GOLD_SPIN){toast(`🥇 เดือยทองไม่พอ (ต้องใช้ ${GOLD_SPIN})`);return;}
+ if(!gold&&!free&&(S.etk|0)<GACHA_ETK){toast(`🥚 เบี้ยไข่ไม่พอ (ต้องใช้ ${fmt(GACHA_ETK)}) — ปลูกพืชที่ 🌱 ไร่ หรือไต่ 🗼 ทาวเวอร์`);return;}
  const dk=new Date().toDateString();if(!S.stock||S.stock.d!==dk)S.stock={d:dk,n:0};
  if(!free)S.stock.n++;
- if(!free)S.etk-=GACHA_ETK;const t=free?Math.max(1,Math.min(2,roll(rates(S.lvl)))):rollStar();
+ let t;if(gold){S.gold-=GOLD_SPIN;S.p4=(S.p4|0)+1;S.p5=(S.p5|0)+1;t=2+roll([75,20,5]);if(S.p5>=120)t=4;if(t>=3)S.p4=0;if(t>=4)S.p5=0;}else{if(!free)S.etk-=GACHA_ETK;t=free?Math.max(1,Math.min(2,roll(rates(S.lvl)))):rollStar();}
  S.bag.push(t);if(free)S.tut=3;save();SP={t,stage:-1};if(view==='farm'&&!openSheet)playMachine(()=>showSpin(t));else showSpin(t);
 }
 function showSpin(t){
@@ -1545,9 +1548,9 @@ function chickEnchant(id,sel){const it=S.items.find(i=>i.id===id);if(!it)return;
  showModal(`<div class="em">🔮</div><h2>ตีบวก ${esc(it.name)} +${n} → +${n+1}</h2><div class="sub">❤️${a.max}→<b>${b.max}</b> • ⚔️${a.atk}→<b>${b.atk}</b> • 🎯 สำเร็จ <b>${Math.round(rate*100)}%</b> • 🪙${fmt(cost)}${S.coins<cost?' <b style="color:#c0392b">(ไม่พอ)</b>':''}</div>
   <h4 style="margin:8px 0 4px;text-align:left">เลือกตัวที่จะใช้เป็นวัตถุดิบ (${M.length} ตัว)</h4>
   <div class="ckg" style="max-height:34vh;overflow:auto">${M.map(x=>{const r=chRole(x);return `<button class="ckt ${x.id===m.id?'sel':''}" data-em="${x.id}">${r==='team'?'<i class="ckb tm">⚔️</i>':r==='job'?'<i class="ckb jb">👷</i>':''}${chickSVG(x.ch,48,x.sh)}<b>${esc(x.name)}</b><small>Lv.${x.lv||1}${x.en?' +'+x.en:''}${x.sh?' ✨':''}</small></button>`;}).join('')}</div>
-  ${risky?`<div class="note" style="text-align:left">⚠️ <b>ขั้นเสี่ยง</b> ถ้าพลาด: ${Math.round(EN_BREAK*100)}% ไก่แตก • ${Math.round(EN_DOWN*100)}% ลดขั้น</div>`:''}
+  ${risky?`<div class="note" style="text-align:left">⚠️ <b>ขั้นเสี่ยง</b> ถ้าพลาด: ${Math.round(EN_BREAK*100)}% ไก่แตก • ${Math.round(EN_DOWN*100)}% ลดขั้น<br>🛡️ ใช้ 🥇1 กันแตก = พลาดแค่ไม่ขึ้น ไม่แตก ไม่ลดขั้น${(S.gold|0)<1?' (ไม่มี 🥇)':''}</div>`:''}
   <div class="sub">ตัวที่เลือกจะหายไปหลังตีบวก${chRole(m)?' • <b style="color:#c0392b">ตัวนี้อยู่ในทีม/ทำงานอยู่</b>':''}</div>`,
-  [{t:`🔮 ตีบวก (ใช้ ${m.name})`,c:'r',f:()=>{if(S.coins<cost){toast(`เดือยเงินไม่พอ (ต้องใช้ 🪙${fmt(cost)})`);chickAct(id);return;}S.t4=(S.t4||[]).map(x=>x===m.id?null:x);S.job=(S.job||[]).map(j=>j&&j.id===m.id?null:j);doEnchant(it,m);}},{t:'← กลับ',c:'g',f:()=>chickAct(id)}]);
+  [risky&&(S.gold|0)>=1?{t:`🛡️ ตีบวก + กันแตก (🥇1)`,c:'b',f:()=>{if(S.coins<cost){toast(`เดือยเงินไม่พอ (ต้องใช้ 🪙${fmt(cost)})`);return;}S.t4=(S.t4||[]).map(x=>x===m.id?null:x);S.job=(S.job||[]).map(j=>j&&j.id===m.id?null:j);doEnchant(it,m,1);}}:null,{t:`🔮 ตีบวก (ใช้ ${m.name})`,c:'r',f:()=>{if(S.coins<cost){toast(`เดือยเงินไม่พอ (ต้องใช้ 🪙${fmt(cost)})`);chickAct(id);return;}S.t4=(S.t4||[]).map(x=>x===m.id?null:x);S.job=(S.job||[]).map(j=>j&&j.id===m.id?null:j);doEnchant(it,m);}},{t:'← กลับ',c:'g',f:()=>chickAct(id)}].filter(Boolean));
  document.querySelectorAll('[data-em]').forEach(e=>e.onclick=()=>chickEnchant(id,+e.dataset.em));}
 function chickToTeam(id){const tm=t4Ids();if(isWorker(id)){toast('ตัวนี้ทำงานอยู่ — เลิกทำงานก่อน');return;}const e=tm.findIndex(x=>x==null);
  if(e>=0){S.t4[e]=id;save();toast(`⚔️ ใส่ทีมช่อง${SLOT_N[e]}แล้ว`);qEv('team');chickAct(id);return;}
@@ -2635,10 +2638,10 @@ function openEnchant(it){
   const cl=$('#mbox .row button:last-child');if(cl)cl.click();
   if(warn||risky)modal(`<div class="em">${risky?'⚠️':'🔮'}</div><h2>ยืนยันการเสริมพลัง?</h2><p>ใช้ <b>${esc(m.name)}${enT(m)}</b> (Lv.${m.lv||1}${m.sh?' ✨ร่างประกาย':''}) เป็นวัตถุดิบ<br>โอกาสสำเร็จ <b>${Math.round(rate*100)}%</b>${risky?`<br><b style="color:#c0392b">มีโอกาส ${Math.round(EN_BREAK*100)}% ที่ ${esc(it.name)} จะแตกหายไป!</b>`:''}</p>`,
    [{t:'ยกเลิก'},{t:'🔮 เสริมเลย!',c:'r',f:()=>doEnchant(it,m)}]);else doEnchant(it,m);});}
-async function doEnchant(it,m){
+async function doEnchant(it,m,ins){
  const n=it.en|0,cost=EN_COST(it);if(n>=EN_MAX||S.coins<cost||!S.items.includes(it)||!S.items.includes(m))return;
- S.coins-=cost;S.items=S.items.filter(i=>i.id!==m.id);if(S.rep===m.id)S.rep=null;
- let res;if(R()<EN_RATE[n]){it.en=n+1;res='ok';}else if(n>=3){const x=R();if(x<EN_BREAK){S.items=S.items.filter(i=>i.id!==it.id);if(S.rep===it.id)S.rep=null;res='break';}else if(x<EN_BREAK+EN_DOWN){it.en=n-1;res='down';}else res='fail';}else res='fail';
+ S.coins-=cost;if(ins)S.gold=Math.max(0,(S.gold|0)-1);S.items=S.items.filter(i=>i.id!==m.id);if(S.rep===m.id)S.rep=null;
+ let res;if(R()<EN_RATE[n]){it.en=n+1;res='ok';}else if(n>=3&&ins)res='fail';else if(n>=3){const x=R();if(x<EN_BREAK){S.items=S.items.filter(i=>i.id!==it.id);if(S.rep===it.id)S.rep=null;res='break';}else if(x<EN_BREAK+EN_DOWN){it.en=n-1;res='down';}else res='fail';}else res='fail';
  save();syncMeshes();await enchFx(it,m,n,res);}
 async function enchFx(it,m,n,res){
  const el=$('#ench'),pic=$('#enPic'),mt=$('#enMat'),tx=$('#enTxt'),bt=$('#enBtns');el.className='';bt.innerHTML='';
@@ -3492,7 +3495,7 @@ function farmPick(e){
  for(const h of hits){let o=h.object;while(o&&!o.userData.pick)o=o.parent;if(!o)continue;
   if(o.userData.pick==='item'){const it=S.items.find(i=>i.id===o.userData.id),r=recs.get(o.userData.id);if(it&&r)tapItem(it,r);return;}
   if(o.userData.pick==='incub'){tapMachine();return;}
-  if(o.userData.pick==='gacha'){spinEgg();return;}
+  if(o.userData.pick==='gacha'){gachaTap();return;}
   if(o.userData.pick==='box'){openEggBox();return;}
   if(o.userData.pick==='sign'){if(!unl('sign'))continue;openOrders();return;}
   if(o.userData.pick==='plot'){if(!o.visible||!unl('field'))continue;tapField(o.userData.i);return;}
@@ -3565,7 +3568,7 @@ function loop(now){
  gmBump=Math.max(0,gmBump-dt);gmShake=Math.max(0,gmShake-dt);gm.scale.setScalar(1+(gmBump>0?Math.sin(gmBump*30)*.05:0));
  gmBalls.forEach((b,i)=>{b.position.y=b.userData.y+(gmShake>0?Math.abs(Math.sin(T*28+i*1.7))*.22:Math.sin(T*1.5+i)*.015);});
  {const nShow=Math.max(0,S.bag.length-(SP&&SP.stage<2?1:0));eboxEggs.forEach((e,i)=>{const t=S.bag[i];e.visible=i<nShow;if(i<nShow){e.material=M(EGG_COL[t|0]);e.position.y=.47+(t>=3?Math.abs(Math.sin(T*3+i))*.08:0);e.rotation.z=t>=3?Math.sin(T*4+i)*.15:0;}});}
- {const [x,y,ok]=scr(gm.position,3.4);const show=ok&&view==='farm';gmLabel.style.display=show?'':'none';if(show){gmLabel.style.left=x+'px';gmLabel.style.top=y+'px';gmLabel.innerHTML=`🎰 ตู้สุ่มไข่ ${S.tut===2?'<b style="color:#c0392b">ฟรี!</b>':'🥚'+fmt(GACHA_ETK)}`;}}
+ {const [x,y,ok]=scr(gm.position,3.4);const show=ok&&view==='farm';gmLabel.style.display=show?'':'none';if(show){gmLabel.style.left=x+'px';gmLabel.style.top=y+'px';gmLabel.innerHTML=`🎰 ตู้สุ่มไข่ ${S.tut===2?'<b style="color:#c0392b">ฟรี!</b>':'🥚'+fmt(GACHA_ETK)}${S.tut<0&&(S.gold|0)>=GOLD_SPIN?' • 🌟🥇'+GOLD_SPIN:''}`;}}
  {const [x,y,ok]=scr(sign.position,2.6);const show=ok&&view==='farm';signLabel.style.display=show?'':'none';if(show){signLabel.style.left=x+'px';signLabel.style.top=y+'px';{const f=S.fm;if(f&&!unl('sign')){signLabel.style.display='none';}else if(f){genOrders();const act=f.ord.done.filter(x=>!x).length,can=f.ord.l.some((o,i)=>!f.ord.done[i]&&Object.entries(o.its).every(([k,n])=>has(k,n)));const h=act?`📋 ใบสั่งซื้อ ×${act}${can?' <b style="color:#2f7d22">ส่งได้!</b>':''}`:`📋 🚚 ${tLeft(Math.min(...f.ord.done))}`;if(signLabel._h!==h){signLabel._h=h;signLabel.innerHTML=h;}}}}}
  {const [x,y,ok]=scr(ebox.position,1.1);const show=false;boxLabel.style.display='none';if(show){boxLabel.style.left=x+'px';boxLabel.style.top=y+'px';boxLabel.innerHTML=`🧺 กล่องไข่ ${S.bag.length}/${eggCap(S.lvl)}`;}}
  // incubator
@@ -3737,7 +3740,7 @@ function helpOpen(welcome){const q=qCur(),n=q&&!qDone(q)?{i:'📜',t:q.t,s:qStep
 {const o=sellGood;sellGood=function(){const a=S.coins;o.apply(this,arguments);if(S.coins>a)qEv('sell');};}
 {const o=sellSpare;sellSpare=function(){const a=S.coins;o.apply(this,arguments);if(S.coins>a)qEv('sell');};}
 {const o=fillOrder;fillOrder=function(i){const a=S.fm.ord.done[i];o.apply(this,arguments);if(!a&&S.fm.ord.done[i])qEv('order');};}
-{const o=spinEgg;spinEgg=function(){const a=S.coins,b=S.bag.length;const r=o.apply(this,arguments);if(S.coins<a||S.bag.length>b)qEv('spin');return r;};}
+{const o=spinEgg;spinEgg=function(){const a=S.coins,b=S.bag.length+S.slots.filter(Boolean).length;const r=o.apply(this,arguments);if(S.coins<a||S.bag.length+S.slots.filter(Boolean).length>b)qEv('spin');return r;};}
 {const o=placeEgg;placeEgg=function(i){const a=!!S.slots[i];const r=o.apply(this,arguments);if(!a&&S.slots[i])qEv('place');return r;};}
 {const o=openGacha;openGacha=function(){qEv('hatch');return o.apply(this,arguments);};}
 {const o=openDex;openDex=function(){qEv('dex');return o.apply(this,arguments);};}
