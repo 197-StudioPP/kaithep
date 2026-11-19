@@ -423,6 +423,8 @@ body.shake{animation:bsh .5s}
 .ckt b{font-size:12.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ckt small{font-size:11px;color:#8a7a5a}.ckt.t2{border-color:#5aa0e0}.ckt.t3{border-color:#9b59b6}.ckt.t4{border-color:#e0a020;box-shadow:0 0 0 2px #ffe58a}
 .ckb{position:absolute;top:3px;right:3px;font-style:normal;font-size:13px;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border:2px solid}.ckb.tm{background:#ffe0d6;border-color:#b23a2a}.ckb.jb{background:#e8f6d8;border-color:#4c8a2a}
 .ckt.sel{border-color:#a36bff!important;box-shadow:0 0 0 3px #d9c2ff;background:#f6f0ff}
+.ckau{font:inherit;font-size:12.5px;font-weight:800;border:2px solid #3b2a1a;background:#ffd54f;border-radius:12px;padding:5px 8px;white-space:nowrap;box-shadow:0 2px 0 #3b2a1a}
+.cks{flex-wrap:wrap;max-width:46%}
 </style>
 </head>
 <body>
@@ -434,7 +436,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.7.0-a';
+window.__BUILD='1.7.1-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -1517,11 +1519,12 @@ function renderList(){
  const role=it=>{const r=chRole(it);if(r==='team')return '<i class="ckb tm">⚔️</i>';if(r==='job'){const j=S.job.find(j=>j&&j.id===it.id);return `<i class="ckb jb">${JOBS[j.r].i}</i>`;}return '';};
  const show=its.filter(it=>listF==='all'||(listF==='free'&&it.st===2&&!chRole(it))||(listF==='team'&&chRole(it)==='team')||(listF==='job'&&chRole(it)==='job'));
  const nFree=its.filter(it=>it.st===2&&!chRole(it)).length;
- $('#listB').innerHTML=`<div class="ckrow" data-ck="team"><div class="ckh">⚔️ ทีมสู้ <small>${sd?`❤️${sd.max} ⚔️${sd.atk}`:'ยังว่าง'}</small></div><div class="cks">${T.map(it=>mini(it)).join('')}</div><b class="cka">จัด ›</b></div>
- <div class="ckrow" data-ck="job"><div class="ckh">👷 ทำงานในเล้า <small>${jl.some(Boolean)?jobSum():'ยังว่าง'}</small></div><div class="cks">${jl.map(j=>mini(j&&S.items.find(i=>i.id===j.id))).join('')}</div><b class="cka">จัด ›</b></div>
+ $('#listB').innerHTML=`<div class="ckrow" data-ck="team"><div class="ckh">⚔️ ทีมสู้ <small>${sd?`❤️${sd.max} ⚔️${sd.atk}`:'ยังว่าง'}<br>👆 แตะแถวเพื่อจัดเอง</small></div><div class="cks">${T.map(it=>mini(it)).join('')}</div><button class="ckau" data-au="team">✨ ออโต้</button></div>
+ <div class="ckrow" data-ck="job"><div class="ckh">👷 งานในเล้า <small>${jl.some(Boolean)?jobSum():'ยังว่าง'}<br>👆 แตะแถวเพื่อจัดเอง</small></div><div class="cks">${jl.map(j=>mini(j&&S.items.find(i=>i.id===j.id))).join('')}</div><button class="ckau" data-au="job">✨ ออโต้</button></div>
  <div class="ckf">${[['all','ทั้งหมด '+its.length],['free','ว่าง '+nFree],['team','⚔️ ทีม'],['job','👷 ทำงาน']].map(([k,t])=>`<button class="${listF===k?'on':''}" data-lf="${k}">${t}</button>`).join('')}</div>
  <div class="ckg">${show.map(it=>`<button class="ckt t${it.st===2?it.tier:0}" data-ckt="${it.id}">${role(it)}${it.st===2?chickSVG(it.ch,58,it.sh):`<span style="font-size:40px">${['🥚','🐣'][it.st]}</span>`}<b>${esc(it.name)}</b><small>${it.st===2?`${'★'.repeat(it.tier+1)} Lv.${it.lv||1}${it.en?` +${it.en}`:''}`:'กำลังโต'}</small></button>`).join('')||'<div class="sub">ไม่มีไก่ในหมวดนี้</div>'}</div>
  <div class="sub" style="margin-top:8px">👆 แตะไก่ = ใส่ทีม / ส่งทำงาน / 🔮 ตีบวก / ขาย</div>`;
+ $('#listB').querySelectorAll('[data-au]').forEach(b=>b.onclick=e=>{e.stopPropagation();if(b.dataset.au==='team'){t4Auto();qEv('team');toast('⚔️ จัดทีมอัตโนมัติแล้ว (ตัวแรงสุด 4 ตัว)');}else{jobAuto();qEv('job');toast('👷 จัดงานอัตโนมัติแล้ว (ใช้ไก่ที่ไม่อยู่ในทีม)');}save();renderList();});
  $('#listB').querySelectorAll('[data-lf]').forEach(b=>b.onclick=()=>{listF=b.dataset.lf;renderList();});
  $('#listB').querySelector('[data-ck="team"]').onclick=()=>t4Editor();
  $('#listB').querySelector('[data-ck="job"]').onclick=()=>jobEditor();
@@ -1532,8 +1535,8 @@ function chickAct(id){const it=S.items.find(i=>i.id===id);if(!it)return;if(it.st
  showModal(`<div style="display:flex;gap:10px;align-items:center;text-align:left"><div style="flex:none">${chickSVG(it.ch,86,it.sh)}</div><div><h2 style="margin:0">${esc(it.name)}</h2>${tagH(it.tier)} <b>Lv.${it.lv||1}</b>${it.en?` <b class="enb">+${it.en}</b>`:''}<div class="sub" style="margin:2px 0">❤️${one.max} 🛡️${one.ar} ⚔️${one.atk}</div>
   <div class="sub" style="margin:0">${r==='team'?'<b style="color:#b23a2a">⚔️ อยู่ในทีมสู้</b>':r==='job'?`<b style="color:#3d7a1f">👷 ทำงาน: ${JOBS[S.job.find(j=>j&&j.id===id).r].n}</b>`:'💤 ว่างอยู่'}</div></div></div>
   <div style="text-align:left;font-size:13px">${ckInfoH(it.ch)}</div>`,
-  [r==='team'?{t:'↩️ เอาออกจากทีม',f:()=>{S.t4=S.t4.map(x=>x===id?null:x);save();chickAct(id);}}:{t:'⚔️ ใส่ทีมสู้',c:'r',f:()=>chickToTeam(id)},
-   r==='job'?{t:'↩️ เลิกทำงาน',f:()=>{S.job=S.job.map(j=>j&&j.id===id?null:j);save();chickAct(id);}}:{t:'👷 ส่งทำงานในเล้า',c:'g',f:()=>chickToJob(id)},
+  [r==='team'?{t:'↩️ เอาออกจากทีม',f:()=>{S.t4=S.t4.map(x=>x===id?null:x);save();chickAct(id);}}:r==='job'?null:{t:'⚔️ ใส่ทีมสู้',c:'r',f:()=>chickToTeam(id)},
+   r==='job'?{t:'↩️ เลิกทำงาน',f:()=>{S.job=S.job.map(j=>j&&j.id===id?null:j);save();chickAct(id);}}:r==='team'?null:{t:'👷 ส่งทำงานในเล้า',c:'g',f:()=>chickToJob(id)},
    en<EN_MAX?{t:mats.length?`🔮 ตีบวก +${en}→+${en+1} (มีตัวซ้ำ ${mats.length})`:`🔮 ตีบวก (ต้องมีตัวซ้ำ)`,c:mats.length?'b':'',f:()=>chickEnchant(id)}:null,it.beta?null:{t:`💰 ขาย 🪙${sellPrice(it)}`,f:()=>chickSell(id)},{t:'ปิด'}].filter(Boolean));}
 function enMats(it){const bad=new Set([...t4Ids(),...(S.job||[]).filter(Boolean).map(j=>j.id)]);return S.items.filter(i=>i.st===2&&i.id!==it.id&&i.ch===it.ch).sort((a,b)=>bad.has(a.id)-bad.has(b.id)||(a.sh|0)-(b.sh|0)||(a.en|0)-(b.en|0)||(a.lv||1)-(b.lv||1));}
 function chickEnchant(id,sel){const it=S.items.find(i=>i.id===id);if(!it)return;const n=it.en|0,M=enMats(it);
@@ -1546,12 +1549,12 @@ function chickEnchant(id,sel){const it=S.items.find(i=>i.id===id);if(!it)return;
   <div class="sub">ตัวที่เลือกจะหายไปหลังตีบวก${chRole(m)?' • <b style="color:#c0392b">ตัวนี้อยู่ในทีม/ทำงานอยู่</b>':''}</div>`,
   [{t:`🔮 ตีบวก (ใช้ ${m.name})`,c:'r',f:()=>{if(S.coins<cost){toast(`เดือยเงินไม่พอ (ต้องใช้ 🪙${fmt(cost)})`);chickAct(id);return;}S.t4=(S.t4||[]).map(x=>x===m.id?null:x);S.job=(S.job||[]).map(j=>j&&j.id===m.id?null:j);doEnchant(it,m);}},{t:'← กลับ',c:'g',f:()=>chickAct(id)}]);
  document.querySelectorAll('[data-em]').forEach(e=>e.onclick=()=>chickEnchant(id,+e.dataset.em));}
-function chickToTeam(id){const tm=t4Ids();S.job=(S.job||[]).map(j=>j&&j.id===id?null:j);const e=tm.findIndex(x=>x==null);
+function chickToTeam(id){const tm=t4Ids();if(isWorker(id)){toast('ตัวนี้ทำงานอยู่ — เลิกทำงานก่อน');return;}const e=tm.findIndex(x=>x==null);
  if(e>=0){S.t4[e]=id;save();toast(`⚔️ ใส่ทีมช่อง${SLOT_N[e]}แล้ว`);qEv('team');chickAct(id);return;}
  const its=t4Items();showModal(`<div class="em">⚔️</div><h2>ทีมเต็มแล้ว — แทนตัวไหน?</h2>`,its.map((x,k)=>({t:`${SLOT_I[k]} ${SLOT_N[k]}: ${x?x.name:'-'}`,f:()=>{S.t4[k]=id;save();qEv('team');toast('⚔️ เปลี่ยนตัวแล้ว');chickAct(id);}})).concat([{t:'← กลับ',c:'g',f:()=>chickAct(id)}]));}
 function chickToJob(id){const jl=jobList(),it=S.items.find(i=>i.id===id),k=jl.findIndex(x=>!x);
  if(k<0){showModal(`<div class="em">👷</div><h2>ช่องงานเต็มแล้ว</h2><div class="sub">เอาตัวอื่นออกก่อน หรืออัปเกรดเล้าที่ 🏗️ โรงช่าง เพื่อเพิ่มช่อง</div>`,[{t:'👷 ดูงานในเล้า',c:'g',f:jobEditor},{t:'← กลับ',f:()=>chickAct(id)}]);return;}
- const a=JOB_AFF[it.ch];showModal(`<div class="em">👷</div><h2>ให้ ${esc(it.name)} ทำงานอะไร?</h2><div class="sub">⭐ = ถนัดงานนี้ (×1.5)</div>`,Object.keys(JOBS).map(r=>({t:`${JOBS[r].i} ${JOBS[r].n} ${JOBS[r].u}${pct(jobPow(it,r))}${a===r||a==='*'?' ⭐':''}`,c:a===r||a==='*'?'g':'',f:()=>{S.t4=(S.t4||[]).map(x=>x===id?null:x);S.job[k]={id,r};qEv('job');save();toast(`👷 ${it.name} เริ่มงาน${JOBS[r].n}แล้ว`);chickAct(id);}})).concat([{t:'← กลับ',f:()=>chickAct(id)}]));}
+ const a=JOB_AFF[it.ch];showModal(`<div class="em">👷</div><h2>ให้ ${esc(it.name)} ทำงานอะไร?</h2><div class="sub">⭐ = ถนัดงานนี้ (×1.5)</div>`,Object.keys(JOBS).map(r=>({t:`${JOBS[r].i} ${JOBS[r].n} ${JOBS[r].u}${pct(jobPow(it,r))}${a===r||a==='*'?' ⭐':''}`,c:a===r||a==='*'?'g':'',f:()=>{if((S.t4||[]).includes(id)){toast('ตัวนี้อยู่ในทีม — เอาออกจากทีมก่อน');return;}S.job[k]={id,r};qEv('job');save();toast(`👷 ${it.name} เริ่มงาน${JOBS[r].n}แล้ว`);chickAct(id);}})).concat([{t:'← กลับ',f:()=>chickAct(id)}]));}
 function chickSell(id){const it=S.items.find(i=>i.id===id);if(!it)return;showModal(`<div class="em">💰</div><h2>ขาย ${esc(it.name)}?</h2><div class="sub">ได้ 🪙${sellPrice(it)} • ขายแล้วเอาคืนไม่ได้</div>`,[{t:`💰 ขายเลย`,c:'r',f:()=>{const pr=sellGain(it);S.items=S.items.filter(i=>i.id!==id);S.t4=(S.t4||[]).map(x=>x===id?null:x);S.job=(S.job||[]).map(j=>j&&j.id===id?null:j);snd(1200,.12,'triangle',.06,1.2);toast(`💰 ขาย ${it.name} ได้ 🪙${pr}`);syncMeshes();save();if(openSheet==='list')renderList();}},{t:'ไม่ขาย',c:'g',f:()=>chickAct(id)}]);}
 let F={step:'mode'};
 function renderFightOld(){
@@ -3100,7 +3103,11 @@ const cbRng=seed=>{let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.im
 const cbHash=s=>{let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;};
 /* ---------- ทีม 4 ช่อง ---------- */
 const adults=()=>S.items.filter(i=>i.st===2);
-function t4Auto(){S.t4=adults().filter(i=>!isWorker(i.id)).sort((a,b)=>b.tier-a.tier||(b.lv||1)-(a.lv||1)).slice(0,4).map(i=>i.id);while(S.t4.length<4)S.t4.push(null);}
+function t4Auto(){const pw=i=>{const s=cbSide([{ch:i.ch,lv:i.lv,en:i.en}],'');return s.max+s.atk*2+s.ar;};S.t4=adults().filter(i=>!isWorker(i.id)).sort((a,b)=>pw(b)-pw(a)).slice(0,4).map(i=>i.id);while(S.t4.length<4)S.t4.push(null);}
+function jobAuto(){const n=jobSlots(),tm=new Set(t4Ids().filter(x=>x!=null)),C=adults().filter(i=>!tm.has(i.id)),cap={tend:.5,reap:.5,save:.5,guard:.75},cur={tend:0,reap:0,save:0,guard:0},out=[],used=new Set();
+ for(let k=0;k<n;k++){let best=null;for(const c of C){if(used.has(c.id))continue;for(const r of Object.keys(JOBS)){const g=Math.min(cap[r]-cur[r],jobPow(c,r))*(r==='guard'?.5:1);if(g>0&&(!best||g>best.g))best={c,r,g};}}
+  if(!best)break;used.add(best.c.id);cur[best.r]+=jobPow(best.c,best.r);out.push({id:best.c.id,r:best.r});}
+ while(out.length<n)out.push(null);S.job=out;}
 function t4Ids(){const ok=new Set(adults().filter(i=>!isWorker(i.id)).map(i=>i.id));if(!Array.isArray(S.t4))t4Auto();const seen=new Set();S.t4=S.t4.slice(0,4).map(id=>id!=null&&ok.has(id)&&!seen.has(id)?(seen.add(id),id):null);while(S.t4.length<4)S.t4.push(null);if(!S.t4.some(x=>x!=null)&&ok.size)t4Auto();return S.t4;}
 const t4Items=()=>t4Ids().map(id=>id==null?null:S.items.find(i=>i.id===id));
 const tbMine=()=>t4Items().filter(Boolean).map(it=>({it}));
@@ -3410,10 +3417,10 @@ function jobBlock(){const L=jobList(),n=L.filter(Boolean).length;
 function jobEditor(){const L=jobList(),b=jobBuff();
  showModal(`<div class="em">👷</div><h2>งานในเล้า (${L.filter(Boolean).length}/${L.length})</h2><div class="sub">ไก่ดาวต่ำทำงานเก่งกว่า! • ไก่บางตัวถนัดงาน ได้ ×1.5 ⭐<br>ไก่ที่ทำงานอยู่จะลงทีมสู้ไม่ได้ • เพิ่มช่องได้ด้วยการอัปเกรดเล้า</div>
  <div style="text-align:left;margin-top:8px">${L.map((j,k)=>{const it=j&&S.items.find(i=>i.id===j.id);return `<div class="card" data-js="${k}" style="margin-bottom:6px;cursor:pointer"><div class="ic" style="width:44px;height:44px">${it?chickSVG(it.ch,44,it.sh):'<span style="font-size:24px;opacity:.5">＋</span>'}</div><div class="mid">${it?`<div class="nm">${esc(it.name)} ${tagH(it.tier)} <small>Lv.${it.lv||1}</small></div><div class="sub">${JOBS[j.r].i} ${JOBS[j.r].n} ${JOBS[j.r].u}${pct(jobPow(it,j.r))}${(JOB_AFF[it.ch]===j.r||JOB_AFF[it.ch]==='*')?' ⭐':''}</div>`:`<div class="nm">ช่องว่าง</div><div class="sub">แตะเพื่อส่งไก่เข้าทำงาน</div>`}</div></div>`;}).join('')}</div>
- <div class="t4sum">${jobSum()}</div>`,[{t:'✅ เสร็จ',c:'g',f:()=>{if(openSheet==='prod')renderProd();}}]);
+ <div class="t4sum">${jobSum()}</div>`,[{t:'✨ จัดอัตโนมัติ',f:()=>{jobAuto();save();jobEditor();}},{t:'✅ เสร็จ',c:'g',f:()=>{if(openSheet==='prod')renderProd();}}]);
  document.querySelectorAll('[data-js]').forEach(e=>e.onclick=()=>jobPick(+e.dataset.js));}
-function jobPick(k){const L=jobList(),cur=L[k],tm=t4Ids(),C=adults().filter(i=>!isWorker(i.id)||(cur&&cur.id===i.id)).sort((a,b)=>a.tier-b.tier||(b.lv||1)-(a.lv||1));
- showModal(`<div class="em">👷</div><h2>ช่องงานที่ ${k+1}</h2><div class="sub">แตะปุ่มงานของไก่ที่ต้องการ • ⭐ = ถนัดงานนี้${C.some(i=>tm.includes(i.id))?'<br>🛡️ = อยู่ในทีม (จะถูกเอาออกจากทีม)':''}</div><div style="max-height:55vh;overflow:auto;text-align:left;margin-top:6px">${C.length?C.map(i=>`<div class="card" style="margin-bottom:6px"><div class="ic" style="width:40px;height:40px">${chickSVG(i.ch,40,i.sh)}</div><div class="mid"><div class="nm">${tm.includes(i.id)?'🛡️ ':''}${esc(i.name)} ${tagH(i.tier)} <small>Lv.${i.lv||1}</small></div><div style="display:flex;gap:4px;margin-top:4px">${Object.keys(JOBS).map(r=>{const a=JOB_AFF[i.ch];return `<button class="btn ${cur&&cur.id===i.id&&cur.r===r?'r':''}" data-jp="${i.id}" data-jr="${r}" style="flex:1;padding:6px 2px;font-size:13px">${JOBS[r].i}${JOBS[r].u}${pct(jobPow(i,r))}${a===r||a==='*'?'⭐':''}</button>`;}).join('')}</div></div></div>`).join(''):'<div class="sub">ยังไม่มีไก่โตว่าง — สุ่มไก่เพิ่มที่ 🎰</div>'}</div>
+function jobPick(k){const L=jobList(),cur=L[k],tm=t4Ids(),C=adults().filter(i=>(!isWorker(i.id)||(cur&&cur.id===i.id))&&!tm.includes(i.id)).sort((a,b)=>a.tier-b.tier||(b.lv||1)-(a.lv||1));
+ showModal(`<div class="em">👷</div><h2>ช่องงานที่ ${k+1}</h2><div class="sub">แตะปุ่มงานของไก่ที่ต้องการ • ⭐ = ถนัดงานนี้<br>ไก่ที่อยู่ในทีมสู้จะไม่ขึ้นในรายการนี้</div><div style="max-height:55vh;overflow:auto;text-align:left;margin-top:6px">${C.length?C.map(i=>`<div class="card" style="margin-bottom:6px"><div class="ic" style="width:40px;height:40px">${chickSVG(i.ch,40,i.sh)}</div><div class="mid"><div class="nm">${tm.includes(i.id)?'🛡️ ':''}${esc(i.name)} ${tagH(i.tier)} <small>Lv.${i.lv||1}</small></div><div style="display:flex;gap:4px;margin-top:4px">${Object.keys(JOBS).map(r=>{const a=JOB_AFF[i.ch];return `<button class="btn ${cur&&cur.id===i.id&&cur.r===r?'r':''}" data-jp="${i.id}" data-jr="${r}" style="flex:1;padding:6px 2px;font-size:13px">${JOBS[r].i}${JOBS[r].u}${pct(jobPow(i,r))}${a===r||a==='*'?'⭐':''}</button>`;}).join('')}</div></div></div>`).join(''):'<div class="sub">ยังไม่มีไก่โตว่าง — สุ่มไก่เพิ่มที่ 🎰</div>'}</div>
  <div class="sub">${Object.keys(JOBS).map(r=>`${JOBS[r].i} ${JOBS[r].n} = ${JOBS[r].d}`).join('<br>')}</div>`,
   [cur?{t:'เอาออก',f:()=>{S.job[k]=null;save();jobEditor();}}:null,{t:'← กลับ',c:'g',f:jobEditor}].filter(Boolean));
  document.querySelectorAll('[data-jp]').forEach(e=>e.onclick=()=>{const id=+e.dataset.jp,ti=tm.indexOf(id);if(ti>=0){S.t4[ti]=null;toast('🛡️ เอาออกจากทีมสู้แล้ว');}S.job[k]={id,r:e.dataset.jr};qEv('job');save();jobEditor();});}
