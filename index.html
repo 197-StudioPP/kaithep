@@ -418,7 +418,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.5.1-a';
+window.__BUILD='1.5.2-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -2463,12 +2463,12 @@ function renderProd(full){const el=$('#prodB');if(!el||!S.fm)return;farmTick();c
  const bl=[['plot','🌱 แปลงปลูก +1',f.plots.length>=PLOT_MAX?null:plotCost(f.plots.length),`${f.plots.length}/${PLOT_MAX}`],
 ];
  h+=`<div class="pq"><div class="pqh">🏗️ สิ่งก่อสร้าง</div>${bl.map(([k,n,c,d])=>`<div class="bld"><div class="mid"><b>${n}</b><div class="sub">${d}</div></div>${c==null?'<b>✅</b>':`<button class="btn ${S.coins>=c?'r':''}" data-bld="${k}">🪙${fmt(c)}</button>`}</div>`).join('')}
-  <div class="bld"><div class="mid"><b>🏠 เล้าไก่ Lv.${cl}/4</b><div class="sub">${nx?`Lv.${cl+1} ปลด ${CROPS.filter(c=>c.cl===cl+1).map(c=>c.e+' '+c.n).join(', ')}`:'สูงสุดแล้ว — ปลูกได้ทุกพืช'}</div></div>${nx?`<button class="btn ${(S.etk|0)>=nx?'r':''}" data-coop="1">🥚${fmt(nx)}</button>`:'<b>✅</b>'}</div>
+  <div class="bld"><div class="mid"><b>🏠 เล้าไก่ Lv.${cl}/4</b><div class="sub">${nx?`Lv.${cl+1} ปลด ${CROPS.filter(c=>c.cl===cl+1).map(c=>c.e+' '+c.n).join(', ')}`:'สูงสุดแล้ว — ปลูกได้ทุกพืช'}<br>👷 ช่องงาน ${jobSlots()}${nx?` → ${JOB_SLOTS[cl+1]}`:''} ตัว</div></div>${nx?`<button class="btn ${(S.etk|0)>=nx?'r':''}" data-coop="1">🥚${fmt(nx)}</button>`:'<b>✅</b>'}</div>
   <button class="btn" data-p="up" style="width:100%;margin-top:6px">⬆️ อัพเกรดเครื่องฟัก & ที่อยู่ไก่ (Lv.${S.lvl})</button></div>`;
- h=fbBlock()+h;const sc=el.scrollTop;el.innerHTML=h;el.scrollTop=sc;}
+ h=jobBlock()+h;const sc=el.scrollTop;el.innerHTML=h;el.scrollTop=sc;}
 function prodClick(e){const b=e.target.closest('button,input');if(!b)return;const d=b.dataset;
  if(d.p==='mkt')openMarket();else if(d.p==='ord')openOrders();else if(d.p==='col')collectRd();else if(d.p==='up')showSheet('up');else if(d.p==='fert'){S.fm.fert=b.checked?1:0;save();}
- else if(d.plant!=null)plant(+d.plant);else if(d.harv!=null)harvest(+d.harv);else if(d.cook)cook(d.cook);else if(d.kd!=null)cookDone(+d.kd);else if(d.bld)buyB(d.bld);else if(d.coop)coopUp();}
+ else if(d.plant!=null)plant(+d.plant);else if(d.harv!=null)harvest(+d.harv);else if(d.cook)cook(d.cook);else if(d.kd!=null)cookDone(+d.kd);else if(d.bld)buyB(d.bld);else if(d.coop)coopUp();else if(d.job)jobEditor();}
 setInterval(()=>{if(openSheet==='prod')renderProd();},1000);
 /* ----- 🏘️ village ----- */
 function vilFarms(){bdMine();const AL={...BD};Object.values(CG).forEach(c=>{AL[c.id]=c;});const now=Date.now();
@@ -2550,8 +2550,8 @@ function srcHint(miss){const k=miss[0];if(!k)return;const s=SRC[k];toast(`ขา
 
 try{fmInit();farmTick();genOrders();}catch(e){console.error('farm data repaired',e);S.fm=null;fmInit();try{genOrders();}catch(_){}}
 try{migrate130();}catch(e){console.error(e);}
-try{migrate150();}catch(e){console.error(e);}try{fixGrow151();}catch(e){}try{migrate151();qMig151();}catch(e){console.error(e);}
-setInterval(()=>{try{if(S&&!S.v130)migrate130();if(S&&S.fm&&!S.v150)migrate150();if(S&&S.fm)fixGrow151();if(S&&!S.v151tw)migrate151();if(S&&!S.v151q)qMig151();if(S&&S.fm&&S.fm.plots.length<6&&S.v150){while(S.fm.plots.length<6)S.fm.plots.push({s:'e'});save();}}catch(e){}},4000);
+try{migrate150();}catch(e){console.error(e);}try{fixGrow151();}catch(e){}try{migrate151();qMig151();qMig152();}catch(e){console.error(e);}
+setInterval(()=>{try{if(S&&!S.v130)migrate130();if(S&&S.fm&&!S.v150)migrate150();if(S&&S.fm)fixGrow151();if(S&&!S.v151tw)migrate151();if(S&&!S.v151q)qMig151();if(S&&!S.v152q)qMig152();if(S&&S.fm&&S.fm.plots.length<6&&S.v150){while(S.fm.plots.length<6)S.fm.plots.push({s:'e'});save();}}catch(e){}},4000);
 try{if(!S.v131){S.v131=1;t4Ids();save();if(S.tut<0)setTimeout(()=>modal(`<div class="em">⚔️</div><h2>ระบบสู้ใหม่ 1.3.1</h2><div style="text-align:left;line-height:1.6">
 🎯 <b>กดจังหวะ:</b> ลูกศรแดงวิ่งบนแท่ง กด <b>ชน</b> ตอนอยู่ช่องเขียว • กลางช่องเขียว = <b>PERFECT</b> แรง ×1.6<br>
 🛡️ <b>ทีม 4 ช่อง</b> เอก/โท/ตรี/จัตวา ลงสนามพร้อมกัน เลือด/เกราะ/โจมตีรวมกัน (จัดให้อัตโนมัติแล้ว)<br>
@@ -2923,7 +2923,7 @@ function worldTick(dt){if(!S.fm)return;qHand();gpTick();nest.visible=unl('nest')
  wlT-=dt;if(wlT>0&&view==='farm'){return;}wlT=.12;
  // field
  let rdy=0,emp=0,minT=Infinity;fieldC.set(0,0,0);f.plots.forEach((p,i)=>{const [x,z]=plotXZ(i);fieldC.x+=x;fieldC.z+=z;if(p.s==='e')emp++;else if(now>=p.t)rdy++;else minT=Math.min(minT,p.t);});fieldC.multiplyScalar(1/Math.max(1,f.plots.length));
- if(!unl('field'))fieldLb.style.display='none';else putLb(fieldLb,fieldC,2.9,rdy?`🌽 เก็บเกี่ยว! ×${rdy}`:emp?`🌱 แตะปลูก ×${emp} <small>${cropOf(S.fm.crop).e}🪙${cropOf(S.fm.crop).cost}</small>`:`🌱 ${tLeft(minT)}`,rdy||emp?'go':'');
+ if(!unl('field'))fieldLb.style.display='none';else putLb(fieldLb,fieldC,2.9,rdy?`🌽 เก็บเกี่ยว! ×${rdy}`:emp?`🌱 แตะปลูก ×${emp} <small>${cropOf(S.fm.crop).e}🪙${seedCost(cropOf(S.fm.crop))}</small>`:`🌱 ${tLeft(minT)}`,rdy||emp?'go':'');
  plotLb.forEach((d,i)=>{const p=f.plots[i];if(!p||!unl('field')){d.style.display='none';return;}const [x,z]=plotXZ(i);tmpV.set(x,0,z+.55);const c=cropOf(p.c);
   if(p.s==='e')putLb(d,tmpV,.3,'🌱 ว่าง','sm');else if(now>=p.t)putLb(d,tmpV,.3,`${c.e} ✅ เก็บ!`,'go sm');else putLb(d,tmpV,.3,`${c.e} ⏳${tLeft(p.t)}`,'sm');});
  if(f.plots.length<PLOT_MAX&&unl('sale')){const [x,z]=plotXZ(f.plots.length);tmpV.set(x,0,z);putLb(saleLb,tmpV,.6,`＋🪙${fmt(plotCost(f.plots.length))}`,'sm');}else saleLb.style.display='none';
@@ -3038,8 +3038,8 @@ const cbRng=seed=>{let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.im
 const cbHash=s=>{let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;};
 /* ---------- ทีม 4 ช่อง ---------- */
 const adults=()=>S.items.filter(i=>i.st===2);
-function t4Auto(){S.t4=adults().slice().sort((a,b)=>b.tier-a.tier||(b.lv||1)-(a.lv||1)).slice(0,4).map(i=>i.id);while(S.t4.length<4)S.t4.push(null);}
-function t4Ids(){const ok=new Set(adults().map(i=>i.id));if(!Array.isArray(S.t4))t4Auto();const seen=new Set();S.t4=S.t4.slice(0,4).map(id=>id!=null&&ok.has(id)&&!seen.has(id)?(seen.add(id),id):null);while(S.t4.length<4)S.t4.push(null);if(!S.t4.some(x=>x!=null)&&ok.size)t4Auto();return S.t4;}
+function t4Auto(){S.t4=adults().filter(i=>!isWorker(i.id)).sort((a,b)=>b.tier-a.tier||(b.lv||1)-(a.lv||1)).slice(0,4).map(i=>i.id);while(S.t4.length<4)S.t4.push(null);}
+function t4Ids(){const ok=new Set(adults().filter(i=>!isWorker(i.id)).map(i=>i.id));if(!Array.isArray(S.t4))t4Auto();const seen=new Set();S.t4=S.t4.slice(0,4).map(id=>id!=null&&ok.has(id)&&!seen.has(id)?(seen.add(id),id):null);while(S.t4.length<4)S.t4.push(null);if(!S.t4.some(x=>x!=null)&&ok.size)t4Auto();return S.t4;}
 const t4Items=()=>t4Ids().map(id=>id==null?null:S.items.find(i=>i.id===id));
 const tbMine=()=>t4Items().filter(Boolean).map(it=>({it}));
 const t4Spec=()=>t4Items().map(it=>it?{ch:it.ch,tier:it.tier|0,lv:it.lv||1,en:it.en|0,name:it.name,sh:it.sh?1:0}:null).filter(Boolean);
@@ -3162,7 +3162,7 @@ function t4Editor(){const its=t4Items(),sp=its.filter(Boolean).map(i=>({ch:i.ch,
  ${s?`<div class="t4sum">❤️ ${s.max} • 🛡️ ${s.ar} • ⚔️ ${s.atk}</div>`:''}<div class="t4tr">${trs||'<div>ใส่ไก่เผ่าเดียวกัน 2 ตัวขึ้นไปได้โบนัสเผ่า</div>'}</div>${pas?`<div class="t4tr t4pa">${pas}</div>`:''}`,
  [{t:'✨ จัดอัตโนมัติ',f:()=>{t4Auto();save();t4Editor();}},{t:'✅ เสร็จ',c:'g',f:()=>{qEv('team');save();if(openSheet==='fight')renderFight();}}]);
  document.querySelectorAll('[data-t4]').forEach(e=>e.onclick=()=>t4Pick(+e.dataset.t4));}
-function t4Pick(slot){const ids=t4Ids(),L=adults().filter(i=>!ids.includes(i.id)||ids[slot]===i.id).sort((a,b)=>b.tier-a.tier||(b.lv||1)-(a.lv||1));
+function t4Pick(slot){const ids=t4Ids(),L=adults().filter(i=>!isWorker(i.id)&&(!ids.includes(i.id)||ids[slot]===i.id)).sort((a,b)=>b.tier-a.tier||(b.lv||1)-(a.lv||1));
  showModal(`<div class="em">${SLOT_I[slot]}</div><h2>ช่อง${SLOT_N[slot]} • ${SLOT_D[slot]}</h2><div class="sub">เลือกไก่ที่สกิล${SLOT_N[slot]}ถูกใจ</div><div style="max-height:52vh;overflow:auto;text-align:left;margin-top:6px">${L.map(i=>{const c=chOf(i.ch);return `<div class="card" data-pk="${i.id}" style="margin-bottom:6px;cursor:pointer"><div class="ic" style="width:44px;height:44px">${chickSVG(i.ch,44,i.sh)}</div><div class="mid"><div class="nm">${chE(i)}${esc(i.name)}${enT(i)} ${tagH(i.tier)} <small>Lv.${i.lv||1}</small></div><div class="sub">${SLOT_I[slot]} <b>${CK[i.ch].s[slot][0]}</b>: ${CK[i.ch].s[slot][1]}<br>❤️${c.hp} 🛡️${c.ar} ⚔️${c.atk} • ${CTRIBE_N[CTRIBE[i.ch]]||''}</div></div></div>`;}).join('')||'<p>ไม่มีไก่ว่าง</p>'}</div>`,
  [{t:'เอาออก',f:()=>{S.t4[slot]=null;save();t4Editor();}},{t:'← กลับ',c:'g',f:t4Editor}]);
  document.querySelectorAll('[data-pk]').forEach(e=>e.onclick=()=>{S.t4[slot]=+e.dataset.pk;save();t4Editor();});}
@@ -3283,8 +3283,8 @@ const coopLv=()=>S.cl||1,COOP_UP=[0,3000,8000,14000];
 const GACHA_ETK=1000,GRATE=[50,30,14,5,1];
 function rollStar(){S.p4=(S.p4|0)+1;S.p5=(S.p5|0)+1;let t=roll(GRATE);if(S.p5>=120)t=4;else if(S.p4>=30&&t<3)t=R()<1/6?4:3;if(t>=3)S.p4=0;if(t>=4)S.p5=0;return t;}
 function plant(i,quiet,cid){const f=S.fm,p=f.plots[i];if(!p||p.s!=='e')return false;const c=cropOf(cid||f.crop);if(c.cl>coopLv()){if(!quiet)toast(`🔒 ปลดที่เล้า Lv.${c.cl}`);return false;}
- if((S.coins|0)>=c.cost)S.coins-=c.cost;else if(c.id==='grass'&&!f.plots.some(q=>q.s==='g')){if(!quiet)toast('🎁 เดือยเงินหมด — แจกเมล็ด 🌱 หญ้าฟรี!');}else{if(!quiet)toast(`🪙 เดือยเงินไม่พอ (ต้องใช้ ${c.cost})`);return false;}const fb=farmBuff(),d=c.sec*1000*Math.max(.4,1-fb.plant-fb.all);f.plots[i]={s:'g',t:Date.now()+d,d,c:c.id};if(!quiet)save();return true;}
-function harvest(i,quiet){const f=S.fm,p=f.plots[i];if(!p||p.s!=='g'||Date.now()<p.t)return 0;const c=cropOf(p.c),y=Math.round(c.y*(1+Math.min(.3,farmBuff().all)));
+ const sc=seedCost(c);if((S.coins|0)>=sc)S.coins-=sc;else if(c.id==='grass'&&!f.plots.some(q=>q.s==='g')){if(!quiet)toast('🎁 เดือยเงินหมด — แจกเมล็ด 🌱 หญ้าฟรี!');}else{if(!quiet)toast(`🪙 เดือยเงินไม่พอ (ต้องใช้ ${sc})`);return false;}const d=c.sec*1000*(1-jobBuff().tend);f.plots[i]={s:'g',t:Date.now()+d,d,c:c.id};if(!quiet)save();return true;}
+function harvest(i,quiet){const f=S.fm,p=f.plots[i];if(!p||p.s!=='g'||Date.now()<p.t)return 0;const c=cropOf(p.c),y=Math.round(c.y*(1+jobBuff().reap));
  S.etk=(S.etk|0)+y;f.plots[i]={s:'e'};addXP(c.cl*2);if(!quiet){snd(900,.08,'triangle',.05,1.3);toast(`${c.e} +🥚${y}`);save();}return y;}
 function tapField(i){const f=S.fm,now=Date.now();if(i>=f.plots.length){toast('🌱 ซื้อแปลงเพิ่มที่แท็บ 🏗️ ก่อสร้าง');return;}
  const reap=j=>{const p=f.plots[j],e=cropOf(p.c).e,y=harvest(j,true);if(y){const [x,z]=plotXZ(j);floatText(`${e} +🥚${y}`,new THREE.Vector3(x,0,z),1);feathers(x,.2,z,0xffd23f,5);}return y;};
@@ -3297,11 +3297,11 @@ function tapField(i){const f=S.fm,now=Date.now();if(i>=f.plots.length){toast('�
  if(p.s==='e'){cropPick(i);return;}
  if(!skipAsk('field',i)){const [x,z]=plotXZ(i);floatText(`${cropOf(p.c).e} ⏳ ${tLeft(p.t)}`,new THREE.Vector3(x,0,z),1.2);}}
 function cropPick(i){const f=S.fm,e=f.plots.filter(p=>p.s==='e').length,cl=coopLv(),one=i>=0;
- showModal(`<div class="em">🌱</div><h2>${one?`ปลูกแปลงที่ ${i+1}`:`ปลูกทุกแปลงว่าง (${e} แปลง)`}</h2><div class="sub">ค่าเมล็ดจ่ายด้วย 🪙 เดือยเงิน • มี 🪙${fmt(S.coins|0)}</div><div class="crl">${CROPS.map(c=>{const lk=c.cl>cl;return `<button class="crp ${lk?'lk':''}" data-crop="${c.id}"><span class="ce">${c.e}</span><span class="crm"><b>${c.n}</b><small>${lk?`🔒 ปลดที่เล้า Lv.${c.cl}`:`⏱️ ${fmtDur(c.sec)} • ได้ 🥚${c.y}/แปลง`}</small></span><b class="cc">🪙${c.cost}${one?'':'×'+e}</b></button>`;}).join('')}</div>`,
+ showModal(`<div class="em">🌱</div><h2>${one?`ปลูกแปลงที่ ${i+1}`:`ปลูกทุกแปลงว่าง (${e} แปลง)`}</h2><div class="sub">ค่าเมล็ดจ่ายด้วย 🪙 เดือยเงิน • มี 🪙${fmt(S.coins|0)}${jobList().some(Boolean)?'<br>👷 '+jobSum():''}</div><div class="crl">${CROPS.map(c=>{const lk=c.cl>cl;return `<button class="crp ${lk?'lk':''}" data-crop="${c.id}"><span class="ce">${c.e}</span><span class="crm"><b>${c.n}</b><small>${lk?`🔒 ปลดที่เล้า Lv.${c.cl}`:`⏱️ ${fmtDur(Math.round(c.sec*(1-jobBuff().tend)))} • ได้ 🥚${Math.round(c.y*(1+jobBuff().reap))}/แปลง`}</small></span><b class="cc">🪙${seedCost(c)}${one?'':'×'+e}</b></button>`;}).join('')}</div>`,
   one&&e>1?[{t:`🌱 ปลูกทุกแปลงว่าง (${e})`,f:()=>setTimeout(()=>cropPick(-1),50)},{t:'ปิด',c:'g'}]:[{t:'ปิด',c:'g'}]);
  document.querySelectorAll('[data-crop]').forEach(b=>b.onclick=()=>{const c=cropOf(b.dataset.crop);if(c.cl>coopLv()){toast(`🔒 ปลดที่เล้า Lv.${c.cl} (อัปเกรดที่ 🏗️ ก่อสร้าง)`);return;}f.crop=c.id;let n=0;
   (one?[i]:f.plots.map((_,j)=>j)).forEach(j=>{if(f.plots[j].s==='e'&&plant(j,true,c.id)){n++;const [x,z]=plotXZ(j);floatText(c.e,new THREE.Vector3(x,0,z),.8);}});
-  if(!n){toast(`🪙 เดือยเงินไม่พอ (ต้องใช้ ${c.cost}/แปลง)`);return;}
+  if(!n){toast(`🪙 เดือยเงินไม่พอ (ต้องใช้ ${seedCost(c)}/แปลง)`);return;}
   const cb=[...document.querySelectorAll('#mbox .row button')].pop();if(cb)cb.click();snd(700,.06,'triangle',.05,1.3);save();});}
 function coopUp(){const cl=coopLv(),c=COOP_UP[cl];if(!c)return;if((S.etk|0)<c){toast(`🥚 เบี้ยไข่ไม่พอ (ต้องใช้ ${fmt(c)})`);return;}
  modal(`<div class="em">🏠</div><h2>อัปเกรดเล้า Lv.${cl+1}?</h2><p>ปลดพืช ${CROPS.filter(x=>x.cl===cl+1).map(x=>x.e+' '+x.n).join(', ')}<br>ใช้ 🥚${fmt(c)}</p>`,[{t:`อัปเกรด 🥚${fmt(c)}`,c:'r',f:()=>{if((S.etk|0)<c)return;S.etk-=c;S.cl=cl+1;fanfare();toast(`🏠 เล้า Lv.${S.cl}!`);save();renderProd();}},{t:'ไว้ก่อน',c:'g'}]);}
@@ -3318,6 +3318,31 @@ function migrate150(){if(S.v150||!S.fm)return;S.v150=1;const f=S.fm;let goods=0,
  if(S.tut<0)setTimeout(()=>modal(`<div class="em">🌱</div><h2>ฟาร์มใหม่ 1.5.0</h2><div style="text-align:left;line-height:1.6">ซื้อเมล็ดด้วย 🪙 เดือยเงิน → ปลูกพืชได้ <b>🥚 เบี้ยไข่</b> → สุ่มไก่ที่ 🎰 ตู้ (🥚1,000/ครั้ง)<br>
  <b>คืนของเก่าเป็นเดือยเงินให้แล้ว:</b><br>• ของในคลัง/รังไข่/ครัว 🪙${fmt(goods)}<br>• คืนเงินที่ลงทุน (ครัว/โกดัง/เครื่องอัตโนมัติ) 🪙${fmt(ref)}<br>• เดือยเงินในเครื่องปั๊ม 🪙${fmt(bank)}${grow?`<br>• ข้าวโพดที่กำลังโต ${grow} แปลง → 🥚${grow*30}`:''}<br>
  🏠 เล้าของคุณ Lv.${S.cl} • แปลงปลูก ${f.plots.length} แปลง<br><small>ไก่ทุกตัวอยู่ครบ</small></div>`,[{t:'ไปปลูกกัน! 🌱',c:'g'}]),5200);}
+
+/* ================= 👷 งานในเล้า 1.5.2 ================= */
+var JOB_SLOTS=[0,2,3,4,6],JOBS={tend:{i:'🌿',n:'ดูแลแปลง',d:'พืชโตไวขึ้น',u:'-'},reap:{i:'🧺',n:'เก็บเกี่ยว',d:'ได้ 🥚 ต่อแปลงมากขึ้น',u:'+'},save:{i:'🪙',n:'จัดซื้อเมล็ด',d:'ค่าเมล็ดถูกลง',u:'-'}};
+var JOB_AFF={kaprao:'tend',sleepy:'tend',hothead:'tend',mystic:'reap',skyking:'reap',goldleaf:'reap',fluffy:'reap',uncle:'save',hero:'save',boss:'save',lost:'save',rainbow:'*'};
+function jobSlots(){return JOB_SLOTS[coopLv()]||2;}
+function jobList(){const n=jobSlots(),ok=new Map(adults().map(i=>[i.id,i]));if(!Array.isArray(S.job))S.job=[];const seen=new Set();
+ S.job=S.job.slice(0,n).map(j=>j&&ok.has(j.id)&&!seen.has(j.id)&&JOBS[j.r]?(seen.add(j.id),j):null);while(S.job.length<n)S.job.push(null);return S.job;}
+function isWorker(id){return Array.isArray(S.job)&&S.job.some(j=>j&&j.id===id);}
+function jobPow(it,r){const a=JOB_AFF[it.ch],m=(a===r||a==='*')?1.5:1;return Math.round(([.12,.10,.08,.07,.06][it.tier|0]+.01*((it.lv||1)-1))*m*100)/100;}
+function jobBuff(){const b={tend:0,reap:0,save:0};jobList().forEach(j=>{if(!j)return;const it=S.items.find(i=>i.id===j.id);if(it)b[j.r]+=jobPow(it,j.r);});for(const k in b)b[k]=Math.min(.5,b[k]);return b;}
+function seedCost(c){return Math.max(1,Math.ceil(c.cost*(1-jobBuff().save)));}
+function pct(v){return Math.round(v*100)+'%';}
+function jobSum(){const b=jobBuff();return Object.keys(JOBS).map(k=>`${JOBS[k].i}${JOBS[k].u}${pct(b[k])}`).join(' • ');}
+function jobBlock(){const L=jobList(),n=L.filter(Boolean).length;
+ return `<div class="pq"><div class="pqh">👷 ไก่ทำงานในเล้า ${n}/${L.length}</div><div class="sub">${n?jobSum():'ส่งไก่เข้าเล้า ช่วยให้ไร่ดีขึ้น (ไก่ที่ทำงานจะลงทีมสู้ไม่ได้)'}</div><button class="btn ${n<L.length&&adults().length>t4Ids().filter(x=>x!=null).length?'r':''}" data-job="1" style="width:100%;margin-top:6px">👷 จัดงานในเล้า</button></div>`;}
+function jobEditor(){const L=jobList(),b=jobBuff();
+ showModal(`<div class="em">👷</div><h2>งานในเล้า (${L.filter(Boolean).length}/${L.length})</h2><div class="sub">ไก่ดาวต่ำทำงานเก่งกว่า! • ไก่บางตัวถนัดงาน ได้ ×1.5 ⭐<br>ไก่ที่ทำงานอยู่จะลงทีมสู้ไม่ได้ • เพิ่มช่องได้ด้วยการอัปเกรดเล้า</div>
+ <div style="text-align:left;margin-top:8px">${L.map((j,k)=>{const it=j&&S.items.find(i=>i.id===j.id);return `<div class="card" data-js="${k}" style="margin-bottom:6px;cursor:pointer"><div class="ic" style="width:44px;height:44px">${it?chickSVG(it.ch,44,it.sh):'<span style="font-size:24px;opacity:.5">＋</span>'}</div><div class="mid">${it?`<div class="nm">${esc(it.name)} ${tagH(it.tier)} <small>Lv.${it.lv||1}</small></div><div class="sub">${JOBS[j.r].i} ${JOBS[j.r].n} ${JOBS[j.r].u}${pct(jobPow(it,j.r))}${(JOB_AFF[it.ch]===j.r||JOB_AFF[it.ch]==='*')?' ⭐':''}</div>`:`<div class="nm">ช่องว่าง</div><div class="sub">แตะเพื่อส่งไก่เข้าทำงาน</div>`}</div></div>`;}).join('')}</div>
+ <div class="t4sum">${jobSum()}</div>`,[{t:'✅ เสร็จ',c:'g',f:()=>{if(openSheet==='prod')renderProd();}}]);
+ document.querySelectorAll('[data-js]').forEach(e=>e.onclick=()=>jobPick(+e.dataset.js));}
+function jobPick(k){const L=jobList(),cur=L[k],tm=t4Ids(),C=adults().filter(i=>!isWorker(i.id)||(cur&&cur.id===i.id)).sort((a,b)=>a.tier-b.tier||(b.lv||1)-(a.lv||1));
+ showModal(`<div class="em">👷</div><h2>ช่องงานที่ ${k+1}</h2><div class="sub">แตะปุ่มงานของไก่ที่ต้องการ • ⭐ = ถนัดงานนี้${C.some(i=>tm.includes(i.id))?'<br>🛡️ = อยู่ในทีม (จะถูกเอาออกจากทีม)':''}</div><div style="max-height:55vh;overflow:auto;text-align:left;margin-top:6px">${C.length?C.map(i=>`<div class="card" style="margin-bottom:6px"><div class="ic" style="width:40px;height:40px">${chickSVG(i.ch,40,i.sh)}</div><div class="mid"><div class="nm">${tm.includes(i.id)?'🛡️ ':''}${esc(i.name)} ${tagH(i.tier)} <small>Lv.${i.lv||1}</small></div><div style="display:flex;gap:4px;margin-top:4px">${Object.keys(JOBS).map(r=>{const a=JOB_AFF[i.ch];return `<button class="btn ${cur&&cur.id===i.id&&cur.r===r?'r':''}" data-jp="${i.id}" data-jr="${r}" style="flex:1;padding:6px 2px;font-size:13px">${JOBS[r].i}${JOBS[r].u}${pct(jobPow(i,r))}${a===r||a==='*'?'⭐':''}</button>`;}).join('')}</div></div></div>`).join(''):'<div class="sub">ยังไม่มีไก่โตว่าง — สุ่มไก่เพิ่มที่ 🎰</div>'}</div>
+ <div class="sub">${Object.keys(JOBS).map(r=>`${JOBS[r].i} ${JOBS[r].n} = ${JOBS[r].d}`).join('<br>')}</div>`,
+  [cur?{t:'เอาออก',f:()=>{S.job[k]=null;save();jobEditor();}}:null,{t:'← กลับ',c:'g',f:jobEditor}].filter(Boolean));
+ document.querySelectorAll('[data-jp]').forEach(e=>e.onclick=()=>{const id=+e.dataset.jp,ti=tm.indexOf(id);if(ti>=0){S.t4[ti]=null;toast('🛡️ เอาออกจากทีมสู้แล้ว');}S.job[k]={id,r:e.dataset.jr};qEv('job');save();jobEditor();});}
 /* ================= INPUT ================= */
 const ray=new THREE.Raycaster(),mv=new THREE.Vector2();
 renderer.domElement.addEventListener('pointerdown',e=>{
@@ -3454,10 +3479,10 @@ function checkDaily(){
 setTimeout(checkDaily,1200);
 syncPads();
 if(S.gacha&&S.tut>=0){setTimeout(reopenHeld,700);}
-if(S.tut===0){S.tut=-1;S.auto=true;S.qall=0;S.v151tw=1;S.v151q=1;save();setTimeout(()=>helpOpen(1),400);}
+if(S.tut===0){S.tut=-1;S.auto=true;S.qall=0;S.v151tw=1;S.v151q=1;S.v152q=1;save();setTimeout(()=>helpOpen(1),400);}
 
 /* ================= 📜 ภารกิจสอนเล่น ================= */
-var UNL={field:0,list:5,vil:5,chat:11,prod:8,nest:9999,trough:9999,kitchen:9999,market:9999,sign:9999,sale:9999};
+var UNL={field:0,list:5,vil:5,chat:12,prod:8,nest:9999,trough:9999,kitchen:9999,market:9999,sign:9999,sale:9999};
 var UNL_NAME={nest:'🧺 รังไข่หน้าเล้า',trough:'🥣 รางอาหาร',field:'🌽 ไร่ข้าวโพด',list:'🐔 แท็บไก่ฉัน',kitchen:'🍳 โรงครัว',market:'🏪 แผงตลาด',sign:'📋 ป้ายใบสั่งซื้อ',vil:'🏘️ หมู่บ้าน + ลานประลอง',chat:'💬 แชท',sale:'🌱 ซื้อแปลงปลูก',prod:'🏗️ ก่อสร้าง'};
 function unl(k){if(OFF[k])return false;if(S.qall)return true;if(S.qi==null)return false;return S.qi>=(UNL[k]|0);}
 var QUESTS=[
@@ -3469,6 +3494,7 @@ var QUESTS=[
  {ev:'team',t:'จัดทีม 4 ช่อง',d:'🏘️ หมู่บ้าน → 🏟️ ลานประลอง → แตะการ์ด 🛡️ ทีม 4 ช่อง',s:'ลานประลอง → แตะการ์ดทีม',hl:['[data-tb="team"]','[data-vp="arena"]'],at:'nav:vil',r:{c:100}},
  {stat:()=>S.w|0,hl:['[data-tbpit="0"]','[data-vp="arena"]'],s:'ลานประลอง → 🪣 บ่อเล็ก → กด ชน ตอนลูกศรอยู่ช่องเขียว',t:'ชนะชนไก่ 1 ครั้ง',d:'กด <b>ชน</b> ตอนลูกศรแดงอยู่ในช่องเขียว • กลางช่องเขียว = PERFECT',at:'nav:vil',r:{c:150,etk:100}},
  {ev:'info',t:'ดูสกิลไก่ของคุณ',d:'แท็บ 🐔 ไก่ฉัน → แตะไก่ ดูค่าพลังและสกิล 5 อย่าง',at:'nav:list',r:{c:50}},
+ {chk:()=>jobList().some(Boolean),hl:['[data-job="1"]'],s:'แท็บ 🏗️ ก่อสร้าง → 👷 จัดงานในเล้า',t:'ส่งไก่ทำงานในเล้า',d:'ไก่ในเล้าช่วยไร่: 🌿 พืชโตไว • 🧺 ได้ 🥚 เพิ่ม • 🪙 ค่าเมล็ดถูก<br>ไก่ดาวต่ำทำงานเก่งกว่า! (ไก่ที่ทำงานลงทีมไม่ได้)',at:'nav:prod',r:{c:200,etk:100}},
  {chk:()=>coopLv()>=2,hl:['[data-coop="1"]'],s:'แท็บ 🏗️ ก่อสร้าง → 🏠 เล้าไก่',t:'อัปเกรดเล้าเป็น Lv.2',d:'ปลด 🌼 ดอกไข่ดาว (30 นาที ได้ 🥚175/แปลง)',at:'nav:prod',r:{c:300}},
  {chk:()=>(S.towerBest|0)>=2,pg:()=>[Math.min(2,S.towerBest|0),2,'ชั้น'],hl:['[data-tb="tower"]','[data-vp="arena"]'],s:'ลานประลอง → 🗼 ทาวเวอร์เล้า',t:'ผ่านทาวเวอร์ชั้น 2',d:'ไต่ทาวเวอร์ได้ 🥚 เบี้ยไข่ทุกชั้น • ทุก 5 ชั้นมีบอสดรอป 🥇+ไข่',at:'nav:vil',r:{c:150,etk:150}},
  {ev:'visit',t:'เยี่ยมฟาร์มเพื่อน',at:'nav:vil',r:{c:100}},
@@ -3487,7 +3513,8 @@ function qStep(q){if(q.s)return q.s;const t=String(q.d).split('<br>')[0].replace
 const qRw=r=>`🪙${fmt(r.c)}${r.etk?' + 🥚'+r.etk:''}${r.e?' + ไข่'+['','สุ่ม','ดี','หายาก'][r.e]:''}`;
 let qHintUntil=0,qSig='';
 const Q_OLDT=['ปลูกพืชในไร่','ดูสกิลไก่ของคุณ','ไปเที่ยวหมู่บ้าน','จัดทีม 4 ช่อง','ชนะชนไก่ 1 ครั้ง','เก็บเกี่ยวได้เบี้ยไข่','สุ่มไก่ด้วยเบี้ยไข่','วางไข่บนแท่นฟัก','ฟักไข่ลุ้นไก่ใหม่','ผ่านทาวเวอร์ชั้น 2','เยี่ยมฟาร์มเพื่อน','ทักทายในแชท','อัปเกรดเล้าเป็น Lv.2','ล้มบอสทาวเวอร์ชั้น 5','อัพเกรดเครื่องฟัก 1 ครั้ง','ท้าชิงไก่เพื่อน','อัปเกรดเล้าเป็น Lv.3'];
-function qMig151(){if(S.v151q)return;S.v151q=1;if(S.qi!=null&&S.qi<Q_OLDT.length&&!S.qall){const t=Q_OLDT[S.qi],j=QUESTS.findIndex(q=>q.t===t);if(j>=0&&j!==S.qi){S.qi=j;S.qe={};S.qb=null;}}save();}
+function qMig152(){if(S.v152q)return;S.v152q=1;if(S.qi!=null&&S.qi>=8&&S.qi<QUESTS.length-1){S.qi++;S.qe={};S.qb=null;}save();}
+function qMig151(){if(S.v151q)return;S.v151q=1;S.v152q=1;if(S.qi!=null&&S.qi<Q_OLDT.length&&!S.qall){const t=Q_OLDT[S.qi],j=QUESTS.findIndex(q=>q.t===t);if(j>=0&&j!==S.qi){S.qi=j;S.qe={};S.qb=null;}}save();}
 function qStart(){if(S.qi!=null)return;S.qi=0;S.qe={};S.qb=null;if(S.fm&&S.fm.rd.egg<3)S.fm.rd.egg=3;save();}
 function qTick(){const el=$('#quest');if(!el)return;if(S.qall==null&&S.tut<0){S.qall=(S.items.length>=4||(S.w|0)>=3||(S.towerBest|0)>=3||(S.fm&&S.fm.lv>=3))?1:0;save();}['vil','chat','prod','list'].forEach(k=>{const b=document.querySelector(`#nav [data-t="${k}"]`);if(b)b.classList.toggle('hide',S.tut>=0||!unl(k));});if(S.tut>=0||!S.fm){el.classList.add('hide');return;}if(S.qi==null)qStart();
  const q=qCur();document.querySelectorAll('.qpulse').forEach(e=>e.classList.remove('qpulse'));
@@ -3524,6 +3551,7 @@ function nextAct(){const f=S.fm,now=Date.now(),go=fn=>()=>{showSheet(null);setVi
  const fp=[...Array(S.pads).keys()].find(i=>!S.slots[i]);if(S.bag.length&&fp!=null)return {i:'🪺',t:'วางไข่บนแท่นฟัก',s:'แตะ 🪺 แท่นที่ว่าง',go:go(()=>placeAll())};
  if((S.etk|0)>=GACHA_ETK&&S.bag.length<eggCap(S.lvl))return {i:'🎰',t:'สุ่มไก่ได้แล้ว!',s:`มี 🥚${fmt(S.etk|0)} • แตะ 🎰 ตู้สุ่มไข่`,go:go(()=>spinEgg())};
  const ad=adults().length,tf=t4Ids().filter(x=>x!=null).length;if(tf<Math.min(4,ad))return {i:'🛡️',t:'ใส่ไก่ลงทีมให้ครบ',s:`ทีม ${tf}/4 • ลานประลอง → 🛡️ ทีม`,go:()=>{showSheet('fight');setTimeout(t4Editor,80);}};
+ const jl=jobList(),fr=adults().filter(i=>!isWorker(i.id)&&!t4Ids().includes(i.id)).length;if(fr&&jl.some(x=>!x))return {i:'👷',t:'ส่งไก่ว่างไปทำงานในเล้า',s:'🏗️ ก่อสร้าง → 👷 จัดงานในเล้า',go:()=>{showSheet('prod');setTimeout(jobEditor,80);}};
  if(ad)return {i:'⚔️',t:'ไปสู้หา 🪙 เดือยเงิน',s:'หมู่บ้าน → ลานประลอง → เลือกบ่อ/หอคอย',go:()=>showSheet('fight')};
  const g=f.plots.filter(p=>p.s==='g');if(g.length){const m=Math.min(...g.map(p=>p.t));return {i:'⏳',t:`รอพืชโต (${tLeft(m)})`,s:'หรือแตะแปลงเพื่อ ⏩ เร่งด้วย 🪙',go:go(()=>tapField(-1))};}
  return {i:'🌱',t:'ปลูกพืช',s:'แตะแปลงว่าง',go:go(()=>tapField(-1))};}
@@ -3533,7 +3561,7 @@ function helpOpen(welcome){const q=qCur(),n=q&&!qDone(q)?{i:'📜',t:q.t,s:qStep
  <div class="sub">เกมวนแค่ 4 อย่างนี้ 👇</div>
  ${st('🌱','1. ปลูกพืชที่ไร่','ซื้อเมล็ดด้วย 🪙 เดือยเงิน → รอโต → เก็บได้ 🥚 เบี้ยไข่')}
  ${st('🎰','2. สุ่มไก่','🥚1,000 = ไข่ 1 ฟอง → วางบน 🪺 แท่นฟัก → ได้ไก่ 🐔')}
- ${st('🛡️','3. จัดทีม 4 ตัว','พลังไก่ 4 ตัวรวมกัน • ไก่เผ่าเดียวกันได้โบนัส')}
+ ${st('🛡️','3. จัดทีม 4 ตัว','พลังไก่ 4 ตัวรวมกัน • ไก่เผ่าเดียวกันได้โบนัส<br>ไก่ที่เหลือส่ง 👷 ทำงานในเล้า ช่วยไร่')}
  ${st('⚔️','4. สู้ได้ 🪙','กด <b>ชน</b> ตอนลูกศรอยู่ช่องเขียว → ชนะได้เดือยเงิน → กลับไปปลูกต่อ')}
  <div class="sub" style="margin-top:8px">💡 รอนานไป? แตะของที่กำลังรอ → ⏩ จ่าย 🪙 ให้เสร็จทันที</div>
  ${n?`<div style="margin-top:10px;padding:10px;border:3px solid #3a2a16;border-radius:14px;background:#ffd54f"><b>👉 ตอนนี้ทำ: ${n.i} ${esc(n.t)}</b><div class="sub" style="margin:2px 0 0">${n.s}</div></div>`:''}`,
