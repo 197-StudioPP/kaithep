@@ -510,7 +510,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.9.2-a';
+window.__BUILD='1.9.2-b';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -3653,7 +3653,7 @@ function autoFarm(){const f=S.fm;if(!f||!(hasDef('col')||hasDef('smart')))return
 setInterval(()=>{try{if(S&&S.tut<0&&!B&&!TBV){const now=Date.now(),grow=S.fm&&S.fm.plots.some(p=>p.s==='g');
   if((S.coins|0)<30&&!grow&&now-(S.aidT||0)>3600e3){S.coins=(S.coins|0)+100;S.aidT=now;save();toast('🆘 เงินช่วยเหลือ +🪙100 — ปลูกพืชต่อได้เลย!');}
   if(!S.freeEgg&&!adults().length&&!(S.bag||[]).length&&!(S.slots||[]).some(Boolean)&&!(S.hold&&S.hold.length)&&!S.gacha){S.freeEgg=1;giveEgg(1);save();toast('🎁 ไข่ฟรี 1 ฟอง! ฟักแล้วได้ไก่ตัวแรก ไปสู้หาเงินได้');}}}catch(e){}},3000);
-setInterval(()=>{try{autoFarm();}catch(e){}try{if(S.tut<0&&S.bag.length&&!B&&!G&&!SP){let n=0;for(let i=0;i<S.pads;i++)if(!S.slots[i]&&S.bag.length){placeEgg(i);n++;}if(n&&view==='farm')toast(`🪺 วางไข่บนแท่นฟักให้แล้ว ${n} ฟอง`);}}catch(e){}},2000);
+setInterval(()=>{try{autoFarm();}catch(e){}try{if(false&&S.tut<0&&S.bag.length&&!B&&!G&&!SP){let n=0;for(let i=0;i<S.pads;i++)if(!S.slots[i]&&S.bag.length){placeEgg(i);n++;}if(n&&view==='farm')toast(`🪺 วางไข่บนแท่นฟักให้แล้ว ${n} ฟอง`);}}catch(e){}},2000);
 
 /* ================= 👹 บอสประจำสัปดาห์ 1.7.6 ================= */
 var WB_LIST=[{n:'ไก่ยักษ์หงอนเหล็ก',e:'👹',ch:'scar'},{n:'ราชาไก่ป่า',e:'🦖',ch:'skyking'},{n:'นางพญาไก่ฟ้า',e:'🦚',ch:'rainbow'},{n:'เจ้าพ่อไก่ดำ',e:'🐉',ch:'boss'}],
