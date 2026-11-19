@@ -463,7 +463,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.8.1-a';
+window.__BUILD='1.8.2-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -3042,6 +3042,28 @@ const fieldLb=wLabel(()=>tapField(-1)),saleLb=wLabel(()=>tapField(S.fm.plots.len
 const placeLb={};for(const k in PLACE_INFO)placeLb[k]=wLabel(()=>placeGo(k));
 const chLb=new Map();
 const plotLb=Array.from({length:PLOT_MAX},(_,i)=>wLabel(()=>tapField(i)));
+/* จัดป้ายไม่ให้ทับกัน + ไม่ล้นขอบจอ/ไม่ซ้อนแถบบน-ล่าง */
+function declut(){
+ const hb=$('#hud').getBoundingClientRect().bottom+4;let bb=H-6;
+ ['#quest','#ticker','#actbar'].forEach(q=>{const e=$(q);if(e&&!e.classList.contains('hide')){const r=e.getBoundingClientRect();if(r.height&&r.top>H*.5)bb=Math.min(bb,r.top-4);}});
+ const big=[...Object.values(placeLb),coopLb,mktLb,saleLb,fieldLb,troughLb,kitLb,incLabel,gmLabel,signLabel,...pads.map(p=>p.lb)],L=[];
+ for(const d of big){if(!d||d.style.display==='none')continue;
+  if(d.style.left!==d._wl||d.style.top!==d._wt){d._ax=parseFloat(d.style.left);d._ay=parseFloat(d.style.top);}
+  const w=d.offsetWidth,h=d.offsetHeight;if(!w||!isFinite(d._ax))continue;L.push({d,x:d._ax,y:d._ay,w,h});}
+ const F=[];plotLb.forEach(d=>{if(d.style.display!=='none'&&d.offsetWidth)F.push({x:parseFloat(d.style.left),y:parseFloat(d.style.top),w:d.offsetWidth,h:d.offsetHeight,fx:1});});
+ const cl=o=>{const hw=o.w/2;o.x=Math.max(5+hw,Math.min(W-5-hw,o.x));o.y=Math.max(hb+o.h,Math.min(bb,o.y));};
+ const ov=(a,b)=>{const dx=(a.w+b.w)/2+3-Math.abs(a.x-b.x),dy=(a.h+b.h)/2+2-Math.abs(a.y-a.h/2-(b.y-b.h/2));return dx>0&&dy>0?[dx,dy]:null;};
+ L.forEach(cl);const A=L.concat(F);
+ for(let n=0;n<10;n++){let mv=0;
+  for(let i=0;i<L.length;i++)for(let j=i+1;j<A.length;j++){const a=L[i],b=A[j],o=ov(a,b);if(!o)continue;mv=1;const k=b.fx?1:.5;
+   if(o[0]<o[1]){const sg=a.x<b.x?-1:1;a.x+=sg*o[0]*k;if(!b.fx)b.x-=sg*o[0]*k;}
+   else{const sg=a.y<b.y?-1:1;a.y+=sg*o[1]*k;if(!b.fx)b.y-=sg*o[1]*k;}
+   cl(a);if(!b.fx)cl(b);}
+  if(!mv)break;}
+ for(const o of L){o.d.style.left=o.x.toFixed(1)+'px';o.d.style.top=o.y.toFixed(1)+'px';o.d._wl=o.d.style.left;o.d._wt=o.d.style.top;}
+ for(const [,d] of chLb){if(d.style.display==='none')continue;const c={x:parseFloat(d.style.left),y:parseFloat(d.style.top),w:d.offsetWidth,h:d.offsetHeight};
+  if(c.y-c.h<hb||c.y>bb||A.some(o=>ov(c,o)))d.style.display='none';}
+}
 function putLb(d,pos,yo,html,cls){const [x,y,ok]=scr(pos,yo);const show=ok&&view==='farm'&&!B;d.style.display=show?'':'none';if(!show)return;d.style.left=x+'px';d.style.top=y+'px';if(d._h!==html){d._h=html;d.innerHTML=html;}d.className='wl'+(cls?' '+cls:'');}
 const fieldC=new THREE.Vector3(),tmpV=new THREE.Vector3();let wlT=0;
 function worldTick(dt){if(!S.fm)return;qHand();gpTick();nest.visible=unl('nest');trough.visible=unl('trough');fieldG.visible=unl('field');kitchen.visible=unl('kitchen');market.visible=unl('market')||pvpUnl();sign.visible=S.tut>=0||unl('sign');const f=S.fm,now=Date.now();
@@ -3672,7 +3694,7 @@ function loop(now){
  gmBump=Math.max(0,gmBump-dt);gmShake=Math.max(0,gmShake-dt);gm.scale.setScalar(1+(gmBump>0?Math.sin(gmBump*30)*.05:0));
  gmBalls.forEach((b,i)=>{b.position.y=b.userData.y+(gmShake>0?Math.abs(Math.sin(T*28+i*1.7))*.22:Math.sin(T*1.5+i)*.015);});
  {const nShow=Math.max(0,S.bag.length-(SP&&SP.stage<2?1:0));eboxEggs.forEach((e,i)=>{const t=S.bag[i];e.visible=i<nShow;if(i<nShow){e.material=M(EGG_COL[t|0]);e.position.y=.47+(t>=3?Math.abs(Math.sin(T*3+i))*.08:0);e.rotation.z=t>=3?Math.sin(T*4+i)*.15:0;}});}
- {const [x,y,ok]=scr(gm.position,3.4);const show=ok&&view==='farm';gmLabel.style.display=show?'':'none';if(show){gmLabel.style.left=x+'px';gmLabel.style.top=y+'px';gmLabel.innerHTML=`🎰 ตู้สุ่มไข่ ${S.tut===2?'<b style="color:#c0392b">ฟรี!</b>':'🥚'+fmt(GACHA_ETK)}${S.tut<0&&(S.gold|0)>=GOLD_SPIN?' • 🌟🥇'+GOLD_SPIN:''}`;}}
+ {const [x,y,ok]=scr(gm.position,3.4);const show=ok&&view==='farm';gmLabel.style.display=show?'':'none';if(show){gmLabel.style.left=x+'px';gmLabel.style.top=y+'px';gmLabel.innerHTML=`🎰 ตู้สุ่มไข่ ${S.tut===2?'<b style="color:#c0392b">ฟรี!</b>':'🥚'+fmt(GACHA_ETK)}`;}}
  {const [x,y,ok]=scr(sign.position,2.6);const show=ok&&view==='farm';signLabel.style.display=show?'':'none';if(show){signLabel.style.left=x+'px';signLabel.style.top=y+'px';{const f=S.fm;if(f&&!unl('sign')){signLabel.style.display='none';}else if(f){genOrders();const act=f.ord.done.filter(x=>!x).length,can=f.ord.l.some((o,i)=>!f.ord.done[i]&&Object.entries(o.its).every(([k,n])=>has(k,n)));const h=act?`📋 ใบสั่งซื้อ ×${act}${can?' <b style="color:#2f7d22">ส่งได้!</b>':''}`:`📋 🚚 ${tLeft(Math.min(...f.ord.done))}`;if(signLabel._h!==h){signLabel._h=h;signLabel.innerHTML=h;}}}}}
  {const [x,y,ok]=scr(ebox.position,1.1);const show=false;boxLabel.style.display='none';if(show){boxLabel.style.left=x+'px';boxLabel.style.top=y+'px';boxLabel.innerHTML=`🧺 กล่องไข่ ${S.bag.length}/${eggCap(S.lvl)}`;}}
  // incubator
@@ -3711,6 +3733,7 @@ function loop(now){
   if(openSheet==='list'){const sig=[...S.items].sort((a,b)=>b.st-a.st||b.tier-a.tier||(b.lv||1)-(a.lv||1)).map(i=>i.id+':'+i.st+':'+(i.lv||1)+':'+(i.en|0)).join(',')+'|'+JSON.stringify(S.t4||[])+JSON.stringify(S.job||[])+'|'+listF;if(sig!==listSig)renderList();else S.items.forEach(it=>{const e=document.getElementById('pb'+it.id);if(e)e.style.width=(it.p*100)+'%';});}
   if(openSheet==='up'){const b=$('#doUp');if(b)b.disabled=S.coins<upCost(S.lvl);}
  }
+ if(view==='farm'&&!B)declut();
  renderer.render(scene,camera);
 }
 syncMeshes();
