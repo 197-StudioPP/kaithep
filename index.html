@@ -444,7 +444,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.7.7-a';
+window.__BUILD='1.7.8-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -1146,14 +1146,15 @@ function syncPads(){
  while(S.slots.length<S.pads)S.slots.push(null);
 }
 function eggPop(){if(hatchQuiet){hatchQuiet.n=(hatchQuiet.n||0)+1;return;}incBump=.5;snd(1320,.06,'triangle',.04,1.1);
- if(S.auto&&view==='farm')floatText('+🪙'+coinPer(S.lvl),incub.position,2.6);}
+ if(S.auto&&view==='farm')floatText('+🪙'+pumpPer(),incub.position,2.6);}
+function pumpPer(){return coinPer(S.lvl)*((S.coins|0)<300?2:1);}
 function collectBank(){const v=Math.floor(S.bank);if(v<=0)return;S.coins+=v;S.bank-=v;incBump=.6;
  feathers(incub.position.x,1.2,incub.position.z,0xffd23f,10);snd(1200,.1,'triangle',.06,1.2);setTimeout(()=>snd(1600,.1,'triangle',.05,1.2),90);
  floatText('💰 +'+fmt(v),incub.position,3);if(S.tut===1)S.tut=2;save();}
 let tapB=TAP_BUDGET;
 function tick(dt){mktTick(dt);if(S.fm&&FMD)farmTick();
  if(S.auto)S.mach+=dt/coinCycle(S.lvl);
- while(S.mach>=1){const cap=S.tut>=0?bankCap(S.lvl):0;if(S.bank<cap){S.bank=Math.min(cap,S.bank+coinPer(S.lvl));S.mach-=1;eggPop();}else{S.mach=Math.min(S.mach,1);break;}}
+ while(S.mach>=1){const cap=S.tut>=0?bankCap(S.lvl):0;if(S.bank<cap){S.bank=Math.min(cap,S.bank+pumpPer());S.mach-=1;eggPop();}else{S.mach=Math.min(S.mach,1);break;}}
  if(S.tut<0&&S.bank>=1){const v=Math.floor(S.bank);S.coins+=v;S.bank-=v;}
  for(const sl of S.slots)if(sl&&sl.p<1)sl.p=Math.min(1,sl.p+dt/sl.dur);
  tapB=Math.min(tapMax(),tapB+dt*tapMax()/60);
@@ -1162,7 +1163,7 @@ let incBump=0;
 let lastTap=0;
 function tapMachine(){
  if(S.bank>=1){collectBank();return;}
- if(S.tut<0){floatText(`🏭 ทำงานเอง +🪙${coinPer(S.lvl)} ทุก ${fmtDur(Math.round(coinCycle(S.lvl)))}`,incub.position,2.8);return;}
+ if(S.tut<0){floatText(`🏭 ทำงานเอง +🪙${pumpPer()} ทุก ${fmtDur(Math.round(coinCycle(S.lvl)))}`,incub.position,2.8);return;}
  pumpTap();}
 function pumpTap(){
  if(Date.now()-lastTap<60)return;lastTap=Date.now();
@@ -3413,7 +3414,7 @@ var coopLv=()=>S.cl||1,COOP_UP=[0,3000,8000,14000];
 var GACHA_ETK=1000,GRATE=[50,30,14,5,1];
 function rollStar(){S.p4=(S.p4|0)+1;S.p5=(S.p5|0)+1;let t=roll(GRATE);if(S.p5>=120)t=4;else if(S.p4>=30&&t<3)t=R()<1/6?4:3;if(t>=3)S.p4=0;if(t>=4)S.p5=0;return t;}
 function plant(i,quiet,cid){const f=S.fm,p=f.plots[i];if(!p||p.s!=='e')return false;const c=cropOf(cid||f.crop);if(c.cl>coopLv()){if(!quiet)toast(`🔒 ปลดที่เล้า Lv.${c.cl}`);return false;}
- const sc=seedCost(c);if((S.coins|0)>=sc)S.coins-=sc;else if(c.id==='grass'&&!f.plots.some(q=>q.s==='g')){if(!quiet)toast('🎁 เดือยเงินหมด — แจกเมล็ด 🌱 หญ้าฟรี!');}else{if(!quiet)toast(`🪙 เดือยเงินไม่พอ (ต้องใช้ ${sc})`);return false;}const d=c.sec*1000*(1-jobBuff().tend);f.plots[i]={s:'g',t:Date.now()+d,d,c:c.id};if(!quiet)save();return true;}
+ const sc=seedCost(c);if((S.coins|0)>=sc)S.coins-=sc;else if(c.id==='grass'&&(S.coins|0)<10){if(!quiet)toast('🎁 เดือยเงินหมด — หญ้าปลูกฟรี!');}else{if(!quiet)toast(`🪙 เดือยเงินไม่พอ (ต้องใช้ ${sc})`);return false;}const d=c.sec*1000*(1-jobBuff().tend);f.plots[i]={s:'g',t:Date.now()+d,d,c:c.id};if(!quiet)save();return true;}
 function harvest(i,quiet){const f=S.fm,p=f.plots[i];if(!p||p.s!=='g'||Date.now()<p.t)return 0;const c=cropOf(p.c),full=Math.round(c.y*(1+jobBuff().reap)),lost=Math.min(full,p.lo|0),y=full-lost;
  S.etk=(S.etk|0)+y;f.plots[i]={s:'e'};addXP(c.cl*2);if(lost){S.stolen=(S.stolen|0)+lost;const [x,z]=plotXZ(i);try{floatText(`🥷 -${lost}`,new THREE.Vector3(x,0,z-.6),1.5);}catch(e){}}
  if(!quiet){snd(900,.08,'triangle',.05,1.3);toast(`${c.e} +🥚${y}${lost?` (🥷 เพื่อนขโมยไป ${lost})`:''}`);save();}return y;}
@@ -3488,6 +3489,9 @@ function defBlock(){const cl=coopLv(),pr=thiefProt();
 function autoFarm(){const f=S.fm;if(!f||!(hasDef('col')||hasDef('smart')))return;const now=Date.now();let got=0,n=0;
  f.plots.forEach((p,j)=>{if(p.s==='g'&&now>=p.t){const cid=p.c;const y=harvest(j,true);if(y){got+=y;n++;if(hasDef('smart'))plant(j,true,cid);}}});
  if(got){if(view==='farm'&&!document.hidden){floatText(`🤖 +🥚${fmt(got)}`,fieldC,1.6);}save();}}
+setInterval(()=>{try{if(S&&S.tut<0&&!B&&!TBV){const now=Date.now(),grow=S.fm&&S.fm.plots.some(p=>p.s==='g');
+  if((S.coins|0)<30&&!grow&&now-(S.aidT||0)>3600e3){S.coins=(S.coins|0)+100;S.aidT=now;save();toast('🆘 เงินช่วยเหลือ +🪙100 — ปลูกพืชต่อได้เลย!');}
+  if(!S.freeEgg&&!adults().length&&!(S.bag||[]).length&&!(S.slots||[]).some(Boolean)&&!(S.hold&&S.hold.length)&&!S.gacha){S.freeEgg=1;giveEgg(1);save();toast('🎁 ไข่ฟรี 1 ฟอง! ฟักแล้วได้ไก่ตัวแรก ไปสู้หาเงินได้');}}}catch(e){}},3000);
 setInterval(()=>{try{autoFarm();}catch(e){}try{if(S.tut<0&&S.bag.length&&!B&&!G&&!SP){let n=0;for(let i=0;i<S.pads;i++)if(!S.slots[i]&&S.bag.length){placeEgg(i);n++;}if(n&&view==='farm')toast(`🪺 วางไข่บนแท่นฟักให้แล้ว ${n} ฟอง`);}}catch(e){}},2000);
 
 /* ================= 👹 บอสประจำสัปดาห์ 1.7.6 ================= */
@@ -3608,7 +3612,7 @@ function loop(now){
  {const [x,y,ok]=scr(ebox.position,1.1);const show=false;boxLabel.style.display='none';if(show){boxLabel.style.left=x+'px';boxLabel.style.top=y+'px';boxLabel.innerHTML=`🧺 กล่องไข่ ${S.bag.length}/${eggCap(S.lvl)}`;}}
  // incubator
  gear.rotation.x+=dt*(S.auto?2:0.4);lamp.material.color.setHSL(.08,1,.55+Math.sin(T*4)*.1);incEgg.rotation.z=Math.sin(T*5)*.15;
- {const [x,y,ok]=scr(incub.position,5.1);incLabel.style.display=ok&&view==='farm'?'':'none';incLabel.style.left=x+'px';incLabel.style.top=y+'px';if(S.tut<0){incLabel.innerHTML=`🏭 ปั๊มเดือยเงิน <small>+🪙${coinPer(S.lvl)}</small><span class="pb" style="display:block;height:5px;background:#eadbb8;border-radius:6px;overflow:hidden;margin-top:2px"><i style="display:block;height:100%;width:${Math.min(100,S.mach*100)}%;background:#ffd23f"></i></span>`;}else incLabel.innerHTML=`🏭 ${S.auto?'':'กดปุ่ม 👆 • '}${S.bank>=bankCap(S.lvl)?'<b style="color:#c0392b">ถังเต็ม! แตะเก็บ</b> ':''}💰 ${fmt(Math.floor(S.bank))}/${fmt(bankCap(S.lvl))}<span class="pb" style="display:block;height:6px;background:#eadbb8;border-radius:6px;overflow:hidden;margin-top:2px"><i style="display:block;height:100%;width:${Math.min(1,S.mach)*100}%;background:#ffd23f"></i></span>`;}
+ {const [x,y,ok]=scr(incub.position,5.1);incLabel.style.display=ok&&view==='farm'?'':'none';incLabel.style.left=x+'px';incLabel.style.top=y+'px';if(S.tut<0){incLabel.innerHTML=`🏭 ปั๊มเดือยเงิน <small>+🪙${pumpPer()}${(S.coins|0)<300?' ×2':''}</small><span class="pb" style="display:block;height:5px;background:#eadbb8;border-radius:6px;overflow:hidden;margin-top:2px"><i style="display:block;height:100%;width:${Math.min(100,S.mach*100)}%;background:#ffd23f"></i></span>`;}else incLabel.innerHTML=`🏭 ${S.auto?'':'กดปุ่ม 👆 • '}${S.bank>=bankCap(S.lvl)?'<b style="color:#c0392b">ถังเต็ม! แตะเก็บ</b> ':''}💰 ${fmt(Math.floor(S.bank))}/${fmt(bankCap(S.lvl))}<span class="pb" style="display:block;height:6px;background:#eadbb8;border-radius:6px;overflow:hidden;margin-top:2px"><i style="display:block;height:100%;width:${Math.min(1,S.mach)*100}%;background:#ffd23f"></i></span>`;}
  worldTick(dt);
  tutTick();
  crowd.forEach(c=>{c.position.y=Math.abs(Math.sin(T*(B?9:3)+c.userData.ph))*(B?.35:.08);});
@@ -3745,6 +3749,7 @@ function nextAct(){const f=S.fm,now=Date.now(),go=fn=>()=>{showSheet(null);setVi
  const rd=f.plots.filter(p=>p.s==='g'&&now>=p.t).length,em=f.plots.filter(p=>p.s==='e').length;
  if(rd)return {i:'🌽',t:`เก็บเกี่ยว ${rd} แปลง`,s:f.plots.some(p=>p.s==='g'&&now>=p.t+STEAL_GRACE*60000)?'🥷 เพื่อนแอบขโมยได้แล้ว! รีบเก็บ':'แตะแปลงที่ขึ้น ✅ เก็บ!',go:go(()=>tapField(-1))};
  const ri=S.slots.findIndex(x=>x&&x.p>=1);if(ri>=0)return {i:'🐣',t:'ไข่ฟักเสร็จแล้ว!',s:'แตะ 🪺 แท่นฟัก ลุ้นไก่ใหม่',go:go(()=>tapPad(ri))};
+ if(em&&(S.coins|0)<10){if(adults().length&&tbMine().length)return {i:'🪣',t:'เงินหมด? ไปสู้บ่อเล็ก (เข้าฟรี)',s:'แตะ ⚔️ ลานประลอง → 🪣 บ่อเล็ก • ชนะได้ 🪙',go:()=>showSheet('fight')};return {i:'🌱',t:'ปลูกหญ้าฟรี (เงินหมด)',s:'แตะแปลงว่าง → 🌱 หญ้า (ฟรีตอนเงินหมด)',go:go(()=>cropPick(-1))};}
  if(em&&(S.coins|0)>=10)return {i:'🌱',t:`ปลูกพืช (ว่าง ${em} แปลง)`,s:'แตะแปลงว่าง → เลือกพืช (จ่าย 🪙)',go:go(()=>cropPick(-1))};
  const fp=[...Array(S.pads).keys()].find(i=>!S.slots[i]);if(S.bag.length&&fp!=null)return {i:'🪺',t:'วางไข่บนแท่นฟัก',s:'แตะ 🪺 แท่นที่ว่าง',go:go(()=>placeAll())};
  if((S.etk|0)>=GACHA_ETK&&S.bag.length<eggCap(S.lvl))return {i:'🎰',t:'สุ่มไก่ได้แล้ว!',s:`มี 🥚${fmt(S.etk|0)} • แตะ 🎰 ตู้สุ่มไข่`,go:go(()=>spinEgg())};
