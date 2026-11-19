@@ -421,7 +421,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.5.4-a';
+window.__BUILD='1.5.4-b';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -3123,7 +3123,7 @@ function cbRun(ctx){if(TBV||B)return;const mine=ctx.mine||t4Spec();if(!mine.leng
  $('#cbspd').onclick=()=>{TBV.spd=TBV.spd>=4?1:TBV.spd*2;S.tbSpd=TBV.spd;$('#cbspd').textContent='⏩ x'+TBV.spd;};
  if($('#cbskip'))$('#cbskip').onclick=()=>{TBV.skip=true;};
   $('#cbult').onclick=()=>{const m=TBV.st.S[TBV.my];if(ultOk(m)&&TBV.tapRes&&!TBV.pend.ult){TBV.pend.ult=1;TBV.tapRes('re');}};
- {const h=$('#cbhit');h.style.touchAction='manipulation';h.addEventListener('pointerdown',e=>{e.preventDefault();if(TBV&&TBV.tapRes){const x=TBV.xNow?TBV.xNow():TBV.x;const ar=$('#cbar');if(ar)ar.style.left=x*100+'%';TBV.tapRes(x);}});}
+ {const h=$('#cbhit');h.style.touchAction='manipulation';h.addEventListener('pointerdown',e=>{e.preventDefault();if(TBV&&TBV.tapRes){const x=TBV.xNow?TBV.xNow(e.timeStamp):TBV.x;const ar=$('#cbar');if(ar)ar.style.left=x*100+'%';TBV.tapRes(x);}});}
  cbUI();cbLoop();}
 const cbW=ms=>TBV&&TBV.skip?Promise.resolve():new Promise(r=>setTimeout(r,ms/(TBV?TBV.spd:1)));
 function cbUI(){if(!TBV)return;const st=TBV.st;[0,1].forEach(vi=>{const s=st.S[vi===1?TBV.my:1-TBV.my],h=$('#cbh'+vi);if(!h)return;const p=s.hp/s.max*100;h.style.width=p+'%';h.className=p<30?'lo':p<60?'md':'';$('#cbht'+vi).textContent=`${s.hp}/${s.max}`;
@@ -3137,7 +3137,7 @@ function cbMsg(t){const m=$('#cbmsg');if(m&&!TBV.skip)m.innerHTML=t;}
 function cbBar(m){const w=Math.max(.06,Math.min(.55,.18*(1+m.gw)+m.acc*.3+(m.center?.04:0))),l=m.center?.5-w/2:.06+Math.random()*(.88-w),gz=$('#cbgz'),pz=$('#cbpz'),pw=Math.min(.45,(.025*(1+m.gw*.5)+m.acc*.05))/w;
  gz.style.left=l*100+'%';gz.style.width=w*100+'%';pz.style.width=m.perfAny?'100%':pw*200+'%';pz.style.marginLeft=m.perfAny?'-50%':-pw*100+'%';return {l,r:l+w,pw:pw*w,per:1500*(1+m.slow),all:m.perfAny};}
 function cbTap(z){return new Promise(res=>{TBV.tapRes=res;const t0=performance.now();const ar=$('#cbar'),hit=$('#cbhit');hit.disabled=false;hit.classList.add('go');
- TBV.xNow=()=>{const ph=((performance.now()-t0)%z.per)/z.per;return ph<.5?ph*2:2-ph*2;};const fr=()=>{if(!TBV||TBV.tapRes!==res)return;const x=TBV.xNow();TBV.x=x;ar.style.left=x*100+'%';requestAnimationFrame(fr);};requestAnimationFrame(fr);}).then(x=>{if(TBV)TBV.tapRes=null;const hit=$('#cbhit');if(hit){hit.disabled=true;hit.classList.remove('go');}
+ TBV.xNow=ts=>{const n=performance.now(),tt=ts&&ts>t0&&ts<=n+5?ts:n,ph=((tt-t0)%z.per)/z.per;return ph<.5?ph*2:2-ph*2;};const fr=()=>{if(!TBV||TBV.tapRes!==res)return;const x=TBV.xNow();TBV.x=x;ar.style.left=x*100+'%';requestAnimationFrame(fr);};requestAnimationFrame(fr);}).then(x=>{if(TBV)TBV.tapRes=null;const hit=$('#cbhit');if(hit){hit.disabled=true;hit.classList.remove('go');}
  if(x==null||x==='re')return x;const c=(z.l+z.r)/2,inG=x>=z.l&&x<=z.r;return inG&&(z.all||Math.abs(x-c)<=z.pw)?'p':inG?'g':'m';});}
 async function cbLoop(){const T=TBV;
  while(TBV===T&&T.st.win==null){const st=T.st,ai=st.turn%2,a=st.S[ai],isMe=ai===T.my,human=isMe&&!T.auto,tv=isMe?0:1,av=1-tv;cbUI();
@@ -3407,6 +3407,7 @@ function loop(now){
  requestAnimationFrame(loop);
  const gap=(now-last)/1000;if(gap>2&&last&&!hiddenAt)catchUp(gap,'ระหว่างพักจอ');const dt=Math.min(.05,gap);last=now;T+=dt;if(S&&!document.hidden)S.pt=(S.pt||0)+dt;
  tick(dt);
+ if(view==='tb')return;
  if(recs.size!==S.items.length||[...S.items].some(i=>!recs.has(i.id)||recs.get(i.id).st!==i.st))syncMeshes();
  // camera
  const [tgt,h]=camGoal();camT.lerp(tgt,1-Math.pow(.02,dt));
