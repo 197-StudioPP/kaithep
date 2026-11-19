@@ -416,6 +416,12 @@ body.shake{animation:bsh .5s}
 @media (max-width:440px){.hud .chip{font-size:14px;padding:4px 9px}.hud{gap:5px}}
 #quest{top:auto!important;bottom:calc(env(safe-area-inset-bottom) + 44px)!important;left:50%!important;transform:translateX(-50%);max-width:94vw!important;width:max-content}
 #ticker{top:auto!important;bottom:calc(env(safe-area-inset-bottom) + 8px)!important}
+.ckrow{display:flex;align-items:center;gap:8px;background:#fff;border:3px solid #e2cfa5;border-radius:14px;padding:6px 10px;margin-bottom:8px;cursor:pointer}.ckh{flex:1;font-weight:800;font-size:14px;line-height:1.2}.ckh small{display:block;font-weight:400;color:#8a7a5a;font-size:12px}
+.cks{display:flex;gap:3px}.ckm{width:36px;height:36px;border-radius:10px;background:#f6ecd4;display:flex;align-items:center;justify-content:center;overflow:hidden}.ckm.em0{color:#c9b48a;font-size:20px}.cka{color:#b23a2a;font-size:13px;white-space:nowrap}
+.ckf{display:flex;gap:6px;margin:4px 0 8px;overflow-x:auto}.ckf button{font:inherit;font-size:13px;font-weight:700;border:2px solid #c9b48a;background:#fff;border-radius:20px;padding:4px 11px;white-space:nowrap;color:#6a5a3a}.ckf button.on{background:#3b2a1a;color:#fff6e0;border-color:#3b2a1a}
+.ckg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.ckt{position:relative;font:inherit;background:#fff;border:3px solid #e2cfa5;border-radius:14px;padding:6px 2px 5px;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;min-width:0}
+.ckt b{font-size:12.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ckt small{font-size:11px;color:#8a7a5a}.ckt.t2{border-color:#5aa0e0}.ckt.t3{border-color:#9b59b6}.ckt.t4{border-color:#e0a020;box-shadow:0 0 0 2px #ffe58a}
+.ckb{position:absolute;top:3px;right:3px;font-style:normal;font-size:13px;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border:2px solid}.ckb.tm{background:#ffe0d6;border-color:#b23a2a}.ckb.jb{background:#e8f6d8;border-color:#4c8a2a}
 </style>
 </head>
 <body>
@@ -427,7 +433,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.6.5-a';
+window.__BUILD='1.6.6-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -474,7 +480,7 @@ window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
 
 <div class="sheet" id="sh-lobby" style="max-height:86vh"><div class="sh-h"><span>🌐 ล็อบบี้ <small id="lobbyCnt" style="font-weight:400;font-size:13px"></small></span><button class="x" data-close>✕</button></div><div class="sh-b" id="lobbyB"></div></div>
 <div class="sheet" id="sh-chat" style="height:82vh;max-height:82vh"><div class="sh-h"><span>💬 แชท <small id="chatRoom" style="font-weight:400;font-size:13px"></small></span><button class="x" data-close>✕</button></div><div id="chatLog" class="chat-log"></div><div class="chat-quick" id="chatQuick"></div><div class="chat-in"><input id="chatIn" maxlength="120" placeholder="พิมพ์อะไรฮาๆ..." autocomplete="off" enterkeyhint="send"><button class="btn g" id="chatSend">ส่ง</button></div></div>
-<div class="sheet" id="sh-list"><div class="sh-h"><span>🐔 ไก่ของฉัน <small id="capTxt" style="font-weight:400;font-size:13px"></small></span><button class="x" data-close>✕</button></div><div class="sh-b" id="listB"></div></div>
+<div class="sheet" id="sh-list"><div class="sh-h"><span>🏠 เล้าไก่ <small id="capTxt" style="font-weight:400;font-size:13px"></small></span><button class="x" data-close>✕</button></div><div class="sh-b" id="listB"></div></div>
 <div class="sheet" id="sh-fight"><div class="sh-h"><span>⚔️ ลานประลอง</span><button class="x" data-close>✕</button></div><div class="sh-b" id="fightB"></div></div>
 <div class="sheet" id="sh-vil" style="height:86vh;max-height:86vh"><div class="sh-h"><span>🏘️ หมู่บ้านไก่เทพ</span><button class="x" data-close>✕</button></div><div class="sh-b" id="vilB"></div></div>
 <div class="sheet" id="sh-prod" style="height:86vh;max-height:86vh"><div class="sh-h"><span>🏗️ โรงช่าง <small id="prodLv" style="font-weight:400;font-size:13px"></small></span><button class="x" data-close>✕</button></div><div class="sh-b" id="prodB"></div></div>
@@ -1502,29 +1508,42 @@ function showInfo(it){
  modal(h,btns);
 }
 let listSig='',sellArm=null;
+var listF='all';
 function renderList(){
- const its=[...S.items].sort((a,b)=>b.st-a.st||b.tier-a.tier);
- listSig=its.map(i=>i.id+':'+i.st+':'+(i.buff||'')+':'+(i.lv||1)+'.'+(i.xp|0)+':'+(i.sk||[]).join('')).join(',')+'|'+sellArm+'|'+mktSig();
- $('#capTxt').textContent=`(${S.items.length}/${capacity(S.lvl)} ช่อง)`;
- if(!its.length){$('#listB').innerHTML='<div class="note">ยังไม่มีไก่ในเล้าเลย 🥚 ผลิตไข่ วางบนแท่น แล้วฟักลุ้นไก่ได้เลย!</div>';return;}
- $('#listB').innerHTML=mktNote()+its.map(it=>{
-  const ic=['🥚','🐣','🐔'][it.st];
-  const bf=BUFFS.find(b=>b.id===it.buff);
-  const sub=(it.st===0?'ไข่ • แตะรัวๆ ให้ฟักไว':it.st===1?'ลูกเจี๊ยบ • กำลังโต':`ไก่โตเต็มวัย • Lv.${it.lv||1}${xpTag(it)} ❤️${statsOf(it).hp} ⚔️${statsOf(it).atk} ${skIcons(it.sk)} • ชนะ ${it.win||0}`+(it.og?` • <b style="color:#c0392b">ชิงมาจาก ${esc(it.og.n)}</b>`:''))+(it.st&&it.tier>=0?'<br>✨ '+TIERS[it.tier].sp:'')+(bf?'<br>'+bf.i+' '+bf.d:'');
-  const ro=chRole(it),jb=ro==='job'&&S.job.find(j=>j&&j.id===it.id),rb=ro==='job'?`<b style="color:#3d7a1f">👷 ทำงานในเล้า: ${JOBS[jb.r].i} ${JOBS[jb.r].n}</b><br>`:ro==='team'?`<b style="color:#b23a2a">⚔️ อยู่ในทีมสู้</b><br>`:'';
-  const acts=it.st<2?`<button class="btn" data-tap="${it.id}">👆 แตะเร่ง</button>`:
-   it.beta?`<button class="btn" disabled>🔒 ขายไม่ได้</button><button class="btn g" data-go="${it.id}">⚔️ ไปชน</button>`:`<button class="btn ${sellArm===it.id?'r':''}" data-sell="${it.id}">${sellArm===it.id?'แน่ใจ? แตะอีกที':'💰 ขาย '+sellPrice(it)}</button><button class="btn g" data-go="${it.id}">⚔️ ไปชน</button>`;
-  return `<div class="card"><div class="ic" data-info="${it.id}" style="cursor:pointer">${ic}<div style="font-size:11px">ℹ️ ดู</div></div><div class="mid"><div class="nm">${it.st===2?chE(it):''}${esc(it.name)}${enT(it)}</div><div>${tagH(it.st?it.tier:-1)}${buffH(it.buff)}${(it.sk||[]).map(id=>{const k=SKILLS.find(x=>x.id===id);return `<span class="buff">${k.i} ${k.n}</span>`;}).join('')}</div><div class="sub">${rb}${sub}</div>${it.st<2?`<div class="bar"><i id="pb${it.id}" style="width:${it.p*100}%"></i></div>`:''}</div><div class="acts">${acts}</div></div>`;}).join('');
- $('#listB').querySelectorAll('[data-info]').forEach(b=>b.onclick=()=>{const it=S.items.find(i=>i.id==b.dataset.info);if(it)showInfo(it);});
- $('#listB').querySelectorAll('.nm').forEach(n=>{n.style.cursor='pointer';n.onclick=()=>{const b=n.closest('.card').querySelector('[data-info]');b&&b.onclick();};});
- $('#listB').querySelectorAll('[data-tap]').forEach(b=>b.onclick=()=>{const it=S.items.find(i=>i.id==b.dataset.tap);const r=recs.get(it.id);if(it&&r)tapItem(it,r);});
- $('#listB').querySelectorAll('[data-sell]').forEach(b=>b.onclick=()=>{const id=+b.dataset.sell;
-  if(sellArm!==id){sellArm=id;renderList();setTimeout(()=>{if(sellArm===id){sellArm=null;if(openSheet==='list')renderList();}},3000);return;}
-  const it=S.items.find(i=>i.id===id);if(!it||it.beta)return;const pr=sellGain(it);S.items=S.items.filter(i=>i.id!==id);sellArm=null;
-  snd(1200,.12,'triangle',.06,1.2);toast(`💰 ขาย ${it.name} ได้ 🪙${pr} — เอาไปอัพเครื่องฟักกัน!`);syncMeshes();renderList();save();});
- $('#listB').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{showSheet('fight');F={step:'mode',pre:+b.dataset.go};renderFight();});
+ const its=[...S.items].sort((a,b)=>b.st-a.st||b.tier-a.tier||(b.lv||1)-(a.lv||1));
+ listSig=its.map(i=>i.id+':'+i.st+':'+(i.lv||1)+':'+(i.en|0)).join(',')+'|'+JSON.stringify(S.t4||[])+JSON.stringify(S.job||[])+'|'+listF;
+ $('#capTxt').textContent=`(${S.items.length}/${capacity(S.lvl)} ตัว)`;
+ if(!its.length){$('#listB').innerHTML='<div class="note">ยังไม่มีไก่เลย 🥚 ไปสุ่มไข่ที่ 🎰 ตู้สุ่มไข่ก่อน!</div>';return;}
+ const tm=t4Ids(),jl=jobList(),T=t4Items(),sp=T.filter(Boolean).map(i=>({ch:i.ch,lv:i.lv,en:i.en})),sd=sp.length?cbSide(sp,''):null;
+ const mini=(it,e)=>it?`<span class="ckm">${chickSVG(it.ch,34,it.sh)}</span>`:`<span class="ckm em0">${e||'＋'}</span>`;
+ const role=it=>{const r=chRole(it);if(r==='team')return '<i class="ckb tm">⚔️</i>';if(r==='job'){const j=S.job.find(j=>j&&j.id===it.id);return `<i class="ckb jb">${JOBS[j.r].i}</i>`;}return '';};
+ const show=its.filter(it=>listF==='all'||(listF==='free'&&it.st===2&&!chRole(it))||(listF==='team'&&chRole(it)==='team')||(listF==='job'&&chRole(it)==='job'));
+ const nFree=its.filter(it=>it.st===2&&!chRole(it)).length;
+ $('#listB').innerHTML=`<div class="ckrow" data-ck="team"><div class="ckh">⚔️ ทีมสู้ <small>${sd?`❤️${sd.max} ⚔️${sd.atk}`:'ยังว่าง'}</small></div><div class="cks">${T.map(it=>mini(it)).join('')}</div><b class="cka">จัด ›</b></div>
+ <div class="ckrow" data-ck="job"><div class="ckh">👷 ทำงานในเล้า <small>${jl.some(Boolean)?jobSum():'ยังว่าง'}</small></div><div class="cks">${jl.map(j=>mini(j&&S.items.find(i=>i.id===j.id))).join('')}</div><b class="cka">จัด ›</b></div>
+ <div class="ckf">${[['all','ทั้งหมด '+its.length],['free','ว่าง '+nFree],['team','⚔️ ทีม'],['job','👷 ทำงาน']].map(([k,t])=>`<button class="${listF===k?'on':''}" data-lf="${k}">${t}</button>`).join('')}</div>
+ <div class="ckg">${show.map(it=>`<button class="ckt t${it.st===2?it.tier:0}" data-ckt="${it.id}">${role(it)}${it.st===2?chickSVG(it.ch,58,it.sh):`<span style="font-size:40px">${['🥚','🐣'][it.st]}</span>`}<b>${esc(it.name)}</b><small>${it.st===2?`${'★'.repeat(it.tier+1)} Lv.${it.lv||1}${it.en?` +${it.en}`:''}`:'กำลังโต'}</small></button>`).join('')||'<div class="sub">ไม่มีไก่ในหมวดนี้</div>'}</div>
+ <div class="sub" style="margin-top:8px">👆 แตะไก่ = ใส่ทีม / ส่งทำงาน / ดูสกิล / ขาย</div>`;
+ $('#listB').querySelectorAll('[data-lf]').forEach(b=>b.onclick=()=>{listF=b.dataset.lf;renderList();});
+ $('#listB').querySelector('[data-ck="team"]').onclick=()=>t4Editor();
+ $('#listB').querySelector('[data-ck="job"]').onclick=()=>jobEditor();
+ $('#listB').querySelectorAll('[data-ckt]').forEach(b=>b.onclick=()=>chickAct(+b.dataset.ckt));
 }
-
+function chickAct(id){const it=S.items.find(i=>i.id===id);if(!it)return;if(it.st<2){showInfo(it);return;}
+ const r=chRole(it),one=cbSide([{ch:it.ch,lv:it.lv,en:it.en}],''),tm=t4Ids(),jl=jobList(),hasJ=jl.some(x=>!x),hasT=tm.some(x=>x==null);
+ showModal(`<div style="display:flex;gap:10px;align-items:center;text-align:left"><div style="flex:none">${chickSVG(it.ch,86,it.sh)}</div><div><h2 style="margin:0">${esc(it.name)}</h2>${tagH(it.tier)} <b>Lv.${it.lv||1}</b>${it.en?` <b class="enb">+${it.en}</b>`:''}<div class="sub" style="margin:2px 0">❤️${one.max} 🛡️${one.ar} ⚔️${one.atk}</div>
+  <div class="sub" style="margin:0">${r==='team'?'<b style="color:#b23a2a">⚔️ อยู่ในทีมสู้</b>':r==='job'?`<b style="color:#3d7a1f">👷 ทำงาน: ${JOBS[S.job.find(j=>j&&j.id===id).r].n}</b>`:'💤 ว่างอยู่'}</div></div></div>
+  <div style="text-align:left;font-size:13px">${ckInfoH(it.ch)}</div>`,
+  [r==='team'?{t:'↩️ เอาออกจากทีม',f:()=>{S.t4=S.t4.map(x=>x===id?null:x);save();chickAct(id);}}:{t:'⚔️ ใส่ทีมสู้',c:'r',f:()=>chickToTeam(id)},
+   r==='job'?{t:'↩️ เลิกทำงาน',f:()=>{S.job=S.job.map(j=>j&&j.id===id?null:j);save();chickAct(id);}}:{t:'👷 ส่งทำงานในเล้า',c:'g',f:()=>chickToJob(id)},
+   {t:'📋 ข้อมูลเต็ม',f:()=>showInfo(it)},it.beta?null:{t:`💰 ขาย 🪙${sellPrice(it)}`,f:()=>chickSell(id)},{t:'ปิด'}].filter(Boolean));}
+function chickToTeam(id){const tm=t4Ids();S.job=(S.job||[]).map(j=>j&&j.id===id?null:j);const e=tm.findIndex(x=>x==null);
+ if(e>=0){S.t4[e]=id;save();toast(`⚔️ ใส่ทีมช่อง${SLOT_N[e]}แล้ว`);qEv('team');chickAct(id);return;}
+ const its=t4Items();showModal(`<div class="em">⚔️</div><h2>ทีมเต็มแล้ว — แทนตัวไหน?</h2>`,its.map((x,k)=>({t:`${SLOT_I[k]} ${SLOT_N[k]}: ${x?x.name:'-'}`,f:()=>{S.t4[k]=id;save();qEv('team');toast('⚔️ เปลี่ยนตัวแล้ว');chickAct(id);}})).concat([{t:'← กลับ',c:'g',f:()=>chickAct(id)}]));}
+function chickToJob(id){const jl=jobList(),it=S.items.find(i=>i.id===id),k=jl.findIndex(x=>!x);
+ if(k<0){showModal(`<div class="em">👷</div><h2>ช่องงานเต็มแล้ว</h2><div class="sub">เอาตัวอื่นออกก่อน หรืออัปเกรดเล้าที่ 🏗️ โรงช่าง เพื่อเพิ่มช่อง</div>`,[{t:'👷 ดูงานในเล้า',c:'g',f:jobEditor},{t:'← กลับ',f:()=>chickAct(id)}]);return;}
+ const a=JOB_AFF[it.ch];showModal(`<div class="em">👷</div><h2>ให้ ${esc(it.name)} ทำงานอะไร?</h2><div class="sub">⭐ = ถนัดงานนี้ (×1.5)</div>`,Object.keys(JOBS).map(r=>({t:`${JOBS[r].i} ${JOBS[r].n} ${JOBS[r].u}${pct(jobPow(it,r))}${a===r||a==='*'?' ⭐':''}`,c:a===r||a==='*'?'g':'',f:()=>{S.t4=(S.t4||[]).map(x=>x===id?null:x);S.job[k]={id,r};qEv('job');save();toast(`👷 ${it.name} เริ่มงาน${JOBS[r].n}แล้ว`);chickAct(id);}})).concat([{t:'← กลับ',f:()=>chickAct(id)}]));}
+function chickSell(id){const it=S.items.find(i=>i.id===id);if(!it)return;showModal(`<div class="em">💰</div><h2>ขาย ${esc(it.name)}?</h2><div class="sub">ได้ 🪙${sellPrice(it)} • ขายแล้วเอาคืนไม่ได้</div>`,[{t:`💰 ขายเลย`,c:'r',f:()=>{const pr=sellGain(it);S.items=S.items.filter(i=>i.id!==id);S.t4=(S.t4||[]).map(x=>x===id?null:x);S.job=(S.job||[]).map(j=>j&&j.id===id?null:j);snd(1200,.12,'triangle',.06,1.2);toast(`💰 ขาย ${it.name} ได้ 🪙${pr}`);syncMeshes();save();if(openSheet==='list')renderList();}},{t:'ไม่ขาย',c:'g',f:()=>chickAct(id)}]);}
 let F={step:'mode'};
 function renderFightOld(){
  const st=['mode','pit','chick'],names=['1. โหมด','2. เลือกบ่อ','3. เลือกไก่'];
@@ -3540,7 +3559,7 @@ function loop(now){
    if(ab.dataset.h!==h){ab.dataset.h=h;ab.innerHTML=h;const g=$('#abG');if(g)g.onclick=()=>{const i=S.slots.findIndex(x=>x&&x.p>=1);if(i>=0)openGacha(i);};
     const pl=$('#abP');if(pl)pl.onclick=placeAll;const hb=$('#abH');if(hb)hb.onclick=reopenHeld;const m=$('#abM');if(m)m.onclick=tapMachine;const ac=$('#abC');if(ac)ac.onclick=collectBank;const ae=$('#abE');if(ae)ae.onclick=()=>collectRd();const as=$('#abS');if(as)as.onclick=spinEgg;const ar=$('#abR');if(ar)ar.onclick=openRush;}
    ab.classList.toggle('hide',!h);}
-  if(openSheet==='list'){const sig=[...S.items].sort((a,b)=>b.st-a.st||b.tier-a.tier).map(i=>i.id+':'+i.st+':'+(i.buff||'')+':'+(i.lv||1)+'.'+(i.xp|0)+':'+(i.sk||[]).join('')).join(',')+'|'+sellArm+'|'+mktSig();if(sig!==listSig)renderList();else S.items.forEach(it=>{const e=document.getElementById('pb'+it.id);if(e)e.style.width=(it.p*100)+'%';});}
+  if(openSheet==='list'){const sig=[...S.items].sort((a,b)=>b.st-a.st||b.tier-a.tier||(b.lv||1)-(a.lv||1)).map(i=>i.id+':'+i.st+':'+(i.lv||1)+':'+(i.en|0)).join(',')+'|'+JSON.stringify(S.t4||[])+JSON.stringify(S.job||[])+'|'+listF;if(sig!==listSig)renderList();else S.items.forEach(it=>{const e=document.getElementById('pb'+it.id);if(e)e.style.width=(it.p*100)+'%';});}
   if(openSheet==='up'){const b=$('#doUp');if(b)b.disabled=S.coins<upCost(S.lvl);}
  }
  renderer.render(scene,camera);
