@@ -517,7 +517,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.9.5-a';
+window.__BUILD='1.9.5-b';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -3147,6 +3147,7 @@ const fieldLb=wLabel(()=>tapField(-1)),saleLb=wLabel(()=>tapField(S.fm.plots.len
 const placeLb={};for(const k in PLACE_INFO)placeLb[k]=wLabel(()=>placeGo(k));
 const chLb=new Map();
 const plotLb=Array.from({length:PLOT_MAX},(_,i)=>wLabel(()=>tapField(i)));
+const padSum=wLabel(()=>{const i=S.slots.findIndex((x,j)=>x&&x.p>=1&&j<pads.length);if(i>=0)tapPad(i);else openEggBox();});
 var GF_SPOTS=[[1,-1.5],[2.5,.6],[6.6,-1.8],[.6,-4],[6.8,.8]];
 const giftM=new THREE.Group();mk(new THREE.BoxGeometry(.8,.7,.8),0xe5483b,0,.35,0,giftM);mk(new THREE.BoxGeometry(.84,.16,.84),0xffd23f,0,.72,0,giftM);mk(new THREE.BoxGeometry(.16,.74,.84),0xffd23f,0,.37,0,giftM);giftM.userData.pick='gift';giftM.visible=false;scene.add(giftM);
 const giftLb=wLabel(()=>openGiftBox());
@@ -3161,7 +3162,7 @@ function openGiftBox(){const sp=giftAt();if(!sp)return;S.gfP=-1;S.gfT=Date.now()
 function declut(){
  const hb=$('#hud').getBoundingClientRect().bottom+4;let bb=H-6;
  ['#quest','#ticker','#actbar'].forEach(q=>{const e=$(q);if(e&&!e.classList.contains('hide')){const r=e.getBoundingClientRect();if(r.height&&r.top>H*.5)bb=Math.min(bb,r.top-4);}});
- const big=[giftLb,...Object.values(placeLb),coopLb,mktLb,saleLb,fieldLb,troughLb,kitLb,incLabel,gmLabel,signLabel,...pads.map(p=>p.lb)],L=[];
+ const big=[giftLb,...Object.values(placeLb),coopLb,mktLb,saleLb,fieldLb,troughLb,kitLb,incLabel,gmLabel,signLabel,padSum],L=[];
  for(const d of big){if(!d||d.style.display==='none')continue;
   if(d.style.left!==d._wl||d.style.top!==d._wt){d._ax=parseFloat(d.style.left);d._ay=parseFloat(d.style.top);}
   const w=d.offsetWidth,h=d.offsetHeight;if(!w||!isFinite(d._ax))continue;L.push({d,x:d._ax,y:d._ay,w,h});}
@@ -3865,6 +3866,12 @@ function loop(now){
   if(!sl){const first=S.slots.findIndex((x,j)=>!x&&j<pads.length)===i;P.lb.className='padlb';P.lb.textContent=S.bag.length?'＋ วางไข่':'🪺 ว่าง';if(!first)P.lb.style.display='none';}
   else if(sl.p>=1){P.lb.className='padlb ready';P.lb.textContent='🎰 แตะลุ้น!';}
   else{P.lb.className='padlb';P.lb.innerHTML=`${EGG_DOT[sl.tier|0]} ⏳ ${fmtClock((1-sl.p)*sl.dur)}<span class="pb"><i style="width:${sl.p*100}%"></i></span>`;}}
+ /* ป้ายรวมแท่นฟัก: ป้ายเดียว ไม่บังกัน */
+ {pads.forEach(P=>P.lb.style.display='none');const used=S.slots.map((x,i)=>({x,i})).filter(o=>o.i<pads.length&&o.x),rdy=used.filter(o=>o.x.p>=1),free=S.slots.filter((x,i)=>i<S.pads&&!x).length;
+  const anc=pads[Math.min(pads.length-1,Math.floor((Math.min(S.pads,pads.length)-1)/2))];
+  if(!anc||view!=='farm'){padSum.style.display='none';}else{const nx=used.filter(o=>o.x.p<1).sort((a,b)=>(1-a.x.p)*a.x.dur-(1-b.x.p)*b.x.dur)[0];
+   const h=rdy.length?`🎰 แตะลุ้น! ×${rdy.length}`:used.length?`🪺 ${used.map(o=>EGG_DOT[o.x.tier|0]).join('')} ⏳${fmtClock((1-nx.x.p)*nx.x.dur)}`:S.bag.length&&free?'🪺 ＋ วางไข่':'';
+   if(!h)padSum.style.display='none';else putLb(padSum,anc.g.position,1.1,h,rdy.length?'go':'sm');}}
  incBump=Math.max(0,incBump-dt);incub.scale.setScalar(1+(incBump>0?Math.sin(incBump*30)*.06:0));
  gmBump=Math.max(0,gmBump-dt);gmShake=Math.max(0,gmShake-dt);gm.scale.setScalar(1+(gmBump>0?Math.sin(gmBump*30)*.05:0));
  gmBalls.forEach((b,i)=>{b.position.y=b.userData.y+(gmShake>0?Math.abs(Math.sin(T*28+i*1.7))*.22:Math.sin(T*1.5+i)*.015);});
