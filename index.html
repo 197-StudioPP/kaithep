@@ -512,7 +512,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.9.3-a';
+window.__BUILD='1.9.3-b';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -1495,13 +1495,13 @@ function openDex(){S.dex=S.dex||{};S.dexN=S.dexN||{};S.dexC=S.dexC||[];const got
   P.forEach(c=>{const ok=S.dex[c.id];
    h+=`<div class="acard ${ok?'':'lock'}" style="--tc:${T.c}" data-al="${c.id}"><div class="pic">${ok?chickSVG(c.id,104,(S.dexS||{})[c.id]&&!S.dexOff):'<div class="lk">❔</div><div class="lk2">🔒</div>'}${(S.dexS||{})[c.id]?'<span class="ash">✨</span>':''}${ok?`<span class="cnt">x${S.dexN[c.id]||1}</span>`:''}${c.nw?'<span class="anw">NEW</span>':''}</div><div class="an">${ok?c.e+' ':''}${c.n}</div></div>`;});
   h+='</div>';});
- modal(h+'</div>',[{t:'← กลับ',f:openMenu},{t:'ปิด',c:'g'}]);
+ showModal(h+'</div>',[{t:'← กลับ',f:openMenu},{t:'ปิด',c:'g'}]);
  document.querySelectorAll('[data-dc]').forEach(b=>b.onclick=()=>{const t=+b.dataset.dc;if(S.dexC[t])return;S.dexC[t]=1;S.coins+=DEX_REWARD[t];save();fanfare();
   toast(`🎁 สะสมไก่${TIERS[t].n}ครบ! +🪙${fmt(DEX_REWARD[t])}`);$('#modal').classList.add('hide');openDex();});
  document.querySelectorAll('[data-al]').forEach(e=>e.onclick=()=>{const c=chOf(e.dataset.al);if(!S.dex[c.id]){toast(`🔒 <b>${c.n}</b> — ยังไม่เคยได้ ฟักหรือชนะมาให้ได้!`);return;}
   $('#modal').classList.add('hide');
-  const shG=(S.dexS||{})[c.id];modal(`<div style="display:flex;gap:8px;justify-content:center"><div class="apic" style="--tc:${TIERS[c.t].c}${shG?';width:150px;height:150px':''}">${chickSVG(c.id,shG?130:170)}</div>${shG?`<div class="apic" style="--tc:#ff9bd8;width:150px;height:150px">${chickSVG(c.id,130,1)}</div>`:''}</div>${shG?'<div class="sub">ร่างปกติ • ✨ ร่างประกาย</div>':''}<h2 style="margin:6px 0 2px">${c.e} ${c.n}</h2><div>${tagH(c.t)}</div>
-   <p style="margin:8px 0">${c.d}</p><div class="note" style="text-align:left">⭐ <b>สกิลติดตัว: ${c.skl.i} ${c.skl.n}</b><br>⚔️ บ่อชน: ${c.skl.d}<br>🗼 หอคอย: ${c.skl.t}</div><div class="note" style="text-align:left">🔘 <b>สกิลกด: ${ACT[c.id].i} ${ACT[c.id].n}</b><br>${ACT[c.id].d}<br><small>บ่อชน: ชาร์จ ${ACT_FIRST} ยกแรก ใช้แล้วรีชาร์จ ${ACT_RE} ยก • หอคอย: เลือกใช้ได้ 1 ยก</small></div><div class="sub">💬 ${c.q.map(x=>'“'+esc(x)+'”').join(' • ')}</div>
+  const shG=(S.dexS||{})[c.id];showModal(`<div style="display:flex;gap:8px;justify-content:center"><div class="apic" style="--tc:${TIERS[c.t].c}${shG?';width:150px;height:150px':''}">${chickSVG(c.id,shG?130:170)}</div>${shG?`<div class="apic" style="--tc:#ff9bd8;width:150px;height:150px">${chickSVG(c.id,130,1)}</div>`:''}</div>${shG?'<div class="sub">ร่างปกติ • ✨ ร่างประกาย</div>':''}<h2 style="margin:6px 0 2px">${c.e} ${c.n}</h2><div>${tagH(c.t)}</div>
+   <p style="margin:8px 0">${c.d}</p><div style="text-align:left;font-size:13px">${CK[c.id]?ckInfoH(c.id,-1):''}</div><div class="sub">💬 ${c.q.map(x=>'“'+esc(x)+'”').join(' • ')}</div>
    <div class="sub" style="margin-top:6px">ได้มาแล้ว <b>${S.dexN[c.id]||1}</b> ครั้ง • ${TPERK[c.t]}</div>`,[{t:'← สมุดสะสม',c:'g',f:openDex}]);});
 }
 const PATCH='1.2.0';
@@ -1545,7 +1545,7 @@ function openMenu(){const on=v=>v?'on':'';const dexN=CHARS.filter(c=>(S.dex||{})
  <div class="cfn" style="text-align:center">🏆 ชนะ ${S.w|0} • 🗼 สูงสุดชั้น ${S.towerBest|0} • 📅 เข้าเกมติดกัน ${(S.daily&&S.daily.streak)|0} วัน</div></div>`,[{t:'✅ เสร็จ',c:'g'}]);
  const nk=$('#stNick');nk.onchange=()=>{const v=nk.value.trim().slice(0,16);if(v&&v!==S.nick){S.nick=v;save();try{toHost({t:'nick',n:v});window.__profiles.rename(window.__PID,v);}catch(e){}toast('✏️ เปลี่ยนชื่อเป็น '+esc(v));}};
  document.querySelectorAll('[data-cfg]').forEach(b=>b.onclick=()=>{const k=b.dataset.cfg;CFG[k]=!CFG[k];saveCfg();if(k==='lite'){save();location.reload();return;}b.classList.toggle('on',CFG[k]);});
- document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const g=b.dataset.go;if(g==='backup')openBackup();else if(g==='switch'){save();if(net)leaveRoom(true);window.__profiles.switchTo();}else if(g==='help')helpOpen();else if(g==='dex')openDex();});}
+ document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const g=b.dataset.go;$('#modal').classList.add('hide');if(g==='backup')openBackup();else if(g==='switch'){save();if(net)leaveRoom(true);window.__profiles.switchTo();}else if(g==='help')helpOpen();else if(g==='dex')openDex();});}
 function openSettings(){openMenu();}
 function openHelp(){modal(`<div class="em">🗺️</div><h2>แผนที่ฟาร์ม</h2><div style="text-align:left;font-size:14px;line-height:1.6">
  ทุกอย่างทำที่ "สถานที่" ของมัน<br>🏠 <b>แตะตัวอาคาร/ป้าย</b> = ใช้งาน (เก็บของ, เปิดเมนู)<br>👆 <b>ปุ่มกลมบนพื้น</b> = กดรัวๆ เร่งเวลา (ใช้ ⚡ แรง ฟื้นเองทุกนาที)<br><br>
@@ -3901,7 +3901,7 @@ var QUESTS=[
  {ev:'plant',t:'ปลูกพืชในไร่',d:'แตะ 🌱 ไร่ → เลือก <b>หญ้าไข่อ่อน</b> (🪙10 • 1 นาที ได้ 🥚17/แปลง)',s:'แตะ 🌱 ไร่ → เลือกพืช',at:'field',r:{c:50,etk:60}},
  {ev:'harvest',t:'เก็บเกี่ยวได้เบี้ยไข่',d:'พืชโตแล้ว แตะ 🌱 ไร่ เก็บ → ได้ 🥚 เบี้ยไข่',at:'field',r:{c:50,etk:80}},
  {ev:'spin',t:'สุ่มไก่ด้วยเบี้ยไข่',d:'แตะ 🎰 ตู้สุ่มไข่ (🥚100) ได้ไข่ 1 ฟอง • สุ่มครบ 30 ครั้งการันตี ★4 ขึ้นไป',s:'แตะ 🎰 ตู้สุ่มไข่ (🥚100)',at:'gacha',r:{c:100}},
- {ev:'place',t:'วางไข่บนแท่นฟัก',d:'ไข่จะถูกวางบน 🪺 แท่นฟักให้เอง',s:'รอแป๊บ ไข่จะวางบนแท่นให้เอง',at:'pad',r:{c:60}},
+ {ev:'place',t:'วางไข่บนแท่นฟัก',d:'แตะ 🪺 แท่นฟักที่ขึ้นป้าย ＋ วางไข่',s:'แตะ 🪺 แท่นฟักที่ว่าง',at:'pad',r:{c:60}},
  {ev:'hatch',t:'ฟักไข่ลุ้นไก่ใหม่',d:'รอไข่ฟัก (แตะแท่น ⏩ จ่าย 🪙 ให้เสร็จทันทีได้) เสร็จแล้วแตะลุ้นไก่ → กด 🏠 เก็บเข้าเล้า',s:'รอไข่ฟัก → เสร็จแล้วแตะ 🪺 ลุ้นไก่',at:'pad',r:{c:100}},
  {ev:'team',t:'จัดทีม 4 ช่อง',d:'แตะ 🏠 เล้าไก่ → แถว ⚔️ ทีมสู้ (หรือแตะไก่ → ใส่ทีม)',s:'แตะ 🏠 เล้าไก่ → ⚔️ ทีมสู้',hl:['[data-ck="team"]'],at:'nav:list',r:{c:100}},
  {stat:()=>S.w|0,hl:['[data-tbpit="0"]'],s:'แตะ ⚔️ ลานประลอง → 🪣 บ่อเล็ก → กด ชน ตอนลูกศรอยู่ช่องเขียว',t:'ชนะชนไก่ 1 ครั้ง',d:'กด <b>ชน</b> ตอนลูกศรแดงอยู่ในช่องเขียว • กลางช่องเขียว = PERFECT',at:'nav:fight',r:{c:150,etk:100}},
@@ -3925,14 +3925,14 @@ function dqCheck(){if(!S||S.tut>=0)return;const q=dqToday();q.p.win=Math.max(0,(
  q.ks.forEach(k=>{const d=DQ_POOL.find(x=>x.k===k);if(!q.done.includes(k)&&(q.p[k]|0)>=d.n){q.done.push(k);dqGive(d.r);ch=1;toast(`🎯 ภารกิจวันนี้สำเร็จ: ${d.i} ${d.t} → ได้ ${dqRw(d.r)}`);}});
  if(!q.all&&q.done.length>=q.ks.length){q.all=1;dqGive(DQ_BONUS);ch=1;fanfare();toast(`🎉 ครบ 3 ภารกิจวันนี้! โบนัส ${dqRw(DQ_BONUS)}`);}if(ch)save();}
 /* 🎖️ ยศไก่ชน — เป้าหมายระยะยาว */
-const rkMaxT=()=>Math.max(-1,...adults().map(i=>i.tier|0)),rkMaxLv=()=>Math.max(0,...adults().map(i=>i.lv||1)),rkMaxEn=()=>Math.max(0,...adults().map(i=>i.en|0)),rkDex=()=>Object.keys(S.dex||{}).length,rkW=()=>S.w|0,rkTw=()=>S.towerBest|0,rkN=()=>adults().length;
+const rkMaxT=()=>Math.max(-1,...adults().map(i=>i.tier|0)),rkMaxLv=()=>Math.max(0,...adults().map(i=>i.lv||1)),rkMaxEn=()=>Math.max(0,...adults().map(i=>i.en|0)),rkDex=()=>CHARS.filter(c=>(S.dex||{})[c.id]).length,rkW=()=>S.w|0,rkTw=()=>S.towerBest|0,rkN=()=>adults().length;
 var RANKS=[{e:'🐣',n:'ลูกไก่'},
  {e:'🐥',n:'ไก่รุ่น',g:[['🐔','มีไก่ 3 ตัว',rkN,3],['🏆','ชนะการต่อสู้ 3 ครั้ง',rkW,3],['🗼','ผ่านทาวเวอร์ชั้น 3',rkTw,3]],r:{c:300,etk:300}},
  {e:'🐓',n:'ไก่หนุ่ม',g:[['🐔','มีไก่ 6 ตัว',rkN,6],['⭐','มีไก่ ★3 ขึ้นไป',()=>rkMaxT()>=2?1:0,1],['🗼','ทาวเวอร์ชั้น 6',rkTw,6],['🏆','ชนะ 10 ครั้ง',rkW,10]],r:{gold:1,etk:500}},
  {e:'🥊',n:'ไก่ชนบ้าน',g:[['🛡️','จัดทีมครบ 4 ตัว',()=>t4Ids().filter(x=>x!=null).length,4],['🔮','ตีบวกไก่ได้ +1',rkMaxEn,1],['🗼','ทาวเวอร์ชั้น 10',rkTw,10],['🏆','ชนะ 25 ครั้ง',rkW,25]],r:{gold:2,egg:2}},
- {e:'⚔️',n:'ขาประจำบ่อ',g:[['💎','มีไก่ ★4',()=>rkMaxT()>=3?1:0,1],['📖','สะสมไก่ 10 สายพันธุ์',rkDex,10],['🗼','ทาวเวอร์ชั้น 15',rkTw,15],['🏆','ชนะ 50 ครั้ง',rkW,50]],r:{gold:3,egg:3}},
+ {e:'⚔️',n:'ขาประจำบ่อ',g:[['💎','มีไก่ ★4',()=>rkMaxT()>=3?1:0,1],['📖','สมุดสะสมเปิดครบ 8 พันธุ์',rkDex,8],['🗼','ทาวเวอร์ชั้น 15',rkTw,15],['🏆','ชนะ 50 ครั้ง',rkW,50]],r:{gold:3,egg:3}},
  {e:'🏅',n:'เซียนบ่อใหญ่',g:[['⬆️','ไก่ Lv.10 1 ตัว',rkMaxLv,10],['🔮','ไก่ตีบวก +3',rkMaxEn,3],['🗼','ทาวเวอร์ชั้น 20',rkTw,20],['🏆','ชนะ 100 ครั้ง',rkW,100]],r:{gold:5,egg:3}},
- {e:'👑',n:'เทพไก่ชน',g:[['🌈','มีไก่ ★5',()=>rkMaxT()>=4?1:0,1],['📖','สะสมไก่ 20 สายพันธุ์',rkDex,20],['🗼','ทาวเวอร์ชั้น 30',rkTw,30],['🏆','ชนะ 200 ครั้ง',rkW,200]],r:{gold:10,egg:4}}];
+ {e:'👑',n:'เทพไก่ชน',g:[['🌈','มีไก่ ★5',()=>rkMaxT()>=4?1:0,1],['📖','สมุดสะสมครบทุกพันธุ์',rkDex,CHARS.length],['🗼','ทาวเวอร์ชั้น 30',rkTw,30],['🏆','ชนะ 200 ครั้ง',rkW,200]],r:{gold:10,egg:4}}];
 function rkRw(r){return [r.c?'🪙'+fmt(r.c):'',r.etk?'🥚'+fmt(r.etk):'',r.gold?'🥇'+r.gold:'',r.egg!=null?`ไข่${TIERS[r.egg].n} 1 ฟอง`:''].filter(Boolean).join(' • ');}
 function rkCheck(){if(!S||S.tut>=0||TBV||B||!$('#modal').classList.contains('hide'))return;const k=(S.rk|0)+1,R2=RANKS[k];if(!R2)return;if(!R2.g.every(g=>g[2]()>=g[3]))return;
  S.rk=k;dqGive(R2.r);if(R2.r.egg!=null){if(S.bag.length<eggCap(S.lvl))giveEgg(R2.r.egg);else S.coins+=500;}save();fanfare();
