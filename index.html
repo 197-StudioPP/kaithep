@@ -427,7 +427,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.6.4-c';
+window.__BUILD='1.6.5-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -1137,6 +1137,7 @@ let tapB=TAP_BUDGET;
 function tick(dt){mktTick(dt);if(S.fm&&FMD)farmTick();
  if(S.auto)S.mach+=dt/coinCycle(S.lvl);
  while(S.mach>=1){const cap=S.tut>=0?bankCap(S.lvl):0;if(S.bank<cap){S.bank=Math.min(cap,S.bank+coinPer(S.lvl));S.mach-=1;eggPop();}else{S.mach=Math.min(S.mach,1);break;}}
+ if(S.tut<0&&S.bank>=1){const v=Math.floor(S.bank);S.coins+=v;S.bank-=v;}
  for(const sl of S.slots)if(sl&&sl.p<1)sl.p=Math.min(1,sl.p+dt/sl.dur);
  tapB=Math.min(tapMax(),tapB+dt*tapMax()/60);
 }
@@ -1144,7 +1145,7 @@ let incBump=0;
 let lastTap=0;
 function tapMachine(){
  if(S.bank>=1){collectBank();return;}
- if(S.tut<0){floatText('กดปุ่ม 👆 บนพื้นรัวๆ เพื่อเร่ง',incub.position,2.8);return;}
+ if(S.tut<0){floatText(`🏭 ทำงานเอง +🪙${coinPer(S.lvl)} ทุก ${fmtDur(Math.round(coinCycle(S.lvl)))}`,incub.position,2.8);return;}
  pumpTap();}
 function pumpTap(){
  if(Date.now()-lastTap<60)return;lastTap=Date.now();
@@ -1166,6 +1167,7 @@ function tapPad(i){
  const sl=S.slots[i];
  if(!sl){if(S.tut<0&&new Set(S.bag).size>1)openEggBox(i);else placeEgg(i);return;}
  if(sl.p>=1){openGacha(i);return;}
+ if(S.tut<0){if(!skipAsk('egg',i))floatText('⏳ '+fmtDur(Math.ceil((1-sl.p)*sl.dur)),padPos(i),1.3);return;}
  if(Date.now()-lastTap<110)return;lastTap=Date.now();
  if(S.tut>=0){sl.p=Math.min(1,sl.p+.15);}
  else{if(tapB<1){if(!skipAsk('egg',i))floatText('เหนื่อยแล้ว 😮‍💨',padPos(i),1.3);return;}tapB--;sl.p=Math.min(1,sl.p+TAP_PAD_S/sl.dur);}
@@ -3018,7 +3020,7 @@ mkGP('field',()=>{const f=S.fm,now=Date.now();const g=f.plots.filter(p=>p.s==='g
  g.forEach(p=>p.t-=GP_FIELD_S*1000);snd(600,.04,'triangle',.04,1.4);floatText(`-${GP_FIELD_S} วิ`,GP_POS.field,.9);return true;});
 mkGP('kitchen',()=>{const f=S.fm,now=Date.now();const g=f.kit.filter(k=>k&&k.t>now);if(!g.length)return false;if(!gpSpend(GP_POS.kitchen))return false;
  g.forEach(k=>k.t-=GP_KIT_S*1000);snd(520,.04,'square',.035,1.4);floatText(`-${GP_KIT_S} วิ`,GP_POS.kitchen,.9);return true;});
-function gpTick(){const f=S.fm,now=Date.now(),idle=!(view==='farm'&&!B&&!G&&!SP);const st=`⚡${Math.floor(tapB)}`;
+function gpTick(){for(const k in GP)GP[k].style.display='none';return;const f=S.fm,now=Date.now(),idle=!(view==='farm'&&!B&&!G&&!SP);const st=`⚡${Math.floor(tapB)}`;
  const want={pump:S.tut===1,
   coop:S.tut<0&&unl('nest')&&layers().length>0&&(f.st.feed|0)>0&&f.rd.egg<rdCap(layers().length),
   field:S.tut<0&&unl('field')&&f.plots.some(p=>p.s==='g'&&p.t>now),
@@ -3403,7 +3405,7 @@ function defBlock(){const cl=coopLv(),pr=thiefProt();
 function autoFarm(){const f=S.fm;if(!f||!(hasDef('col')||hasDef('smart')))return;const now=Date.now();let got=0,n=0;
  f.plots.forEach((p,j)=>{if(p.s==='g'&&now>=p.t){const cid=p.c;const y=harvest(j,true);if(y){got+=y;n++;if(hasDef('smart'))plant(j,true,cid);}}});
  if(got){if(view==='farm'&&!document.hidden){floatText(`🤖 +🥚${fmt(got)}`,fieldC,1.6);}save();}}
-setInterval(()=>{try{autoFarm();}catch(e){}},2000);
+setInterval(()=>{try{autoFarm();}catch(e){}try{if(S.tut<0&&S.bag.length&&!B&&!G&&!SP){let n=0;for(let i=0;i<S.pads;i++)if(!S.slots[i]&&S.bag.length){placeEgg(i);n++;}if(n&&view==='farm')toast(`🪺 วางไข่บนแท่นฟักให้แล้ว ${n} ฟอง`);}}catch(e){}},2000);
 /* ================= INPUT ================= */
 const ray=new THREE.Raycaster(),mv=new THREE.Vector2();
 /* 🗺️ ลากเลื่อนแผนที่ + หนีบซูม */
@@ -3573,8 +3575,8 @@ var QUESTS=[
  {ev:'plant',t:'ปลูกพืชในไร่',d:'แตะ 🌱 ไร่ → เลือก <b>หญ้าไข่อ่อน</b> (🪙10 • 1 นาที ได้ 🥚17/แปลง)',s:'แตะ 🌱 ไร่ → เลือกพืช',at:'field',r:{c:50,etk:60}},
  {ev:'harvest',t:'เก็บเกี่ยวได้เบี้ยไข่',d:'พืชโตแล้ว แตะ 🌱 ไร่ เก็บ → ได้ 🥚 เบี้ยไข่',at:'field',r:{c:50,etk:80}},
  {ev:'spin',t:'สุ่มไก่ด้วยเบี้ยไข่',d:'แตะ 🎰 ตู้สุ่มไข่ (🥚1,000) ได้ไข่ 1 ฟอง • สุ่มครบ 30 ครั้งการันตี ★4 ขึ้นไป',s:'แตะ 🎰 ตู้สุ่มไข่ (🥚1,000)',at:'gacha',r:{c:100}},
- {ev:'place',t:'วางไข่บนแท่นฟัก',d:'แตะ 🪺 แท่นฟัก เพื่อวางไข่',s:'แตะ 🪺 แท่นฟักที่ว่าง',at:'pad',r:{c:60}},
- {ev:'hatch',t:'ฟักไข่ลุ้นไก่ใหม่',d:'รอไข่ฟัก (แตะแท่นรัวๆ ให้ไวขึ้น) เสร็จแล้วแตะลุ้นไก่ → กด 🏠 เก็บเข้าเล้า',s:'แตะ 🪺 แท่นรัวๆ → เสร็จแล้วแตะลุ้นไก่',at:'pad',r:{c:100}},
+ {ev:'place',t:'วางไข่บนแท่นฟัก',d:'ไข่จะถูกวางบน 🪺 แท่นฟักให้เอง',s:'รอแป๊บ ไข่จะวางบนแท่นให้เอง',at:'pad',r:{c:60}},
+ {ev:'hatch',t:'ฟักไข่ลุ้นไก่ใหม่',d:'รอไข่ฟัก (แตะแท่น ⏩ จ่าย 🪙 ให้เสร็จทันทีได้) เสร็จแล้วแตะลุ้นไก่ → กด 🏠 เก็บเข้าเล้า',s:'รอไข่ฟัก → เสร็จแล้วแตะ 🪺 ลุ้นไก่',at:'pad',r:{c:100}},
  {ev:'team',t:'จัดทีม 4 ช่อง',d:'แตะ ⚔️ ลานประลอง ในฟาร์ม → แตะการ์ด 🛡️ ทีม 4 ช่อง',s:'แตะ ⚔️ ลานประลอง → การ์ดทีม',hl:['[data-tb="team"]'],at:'nav:fight',r:{c:100}},
  {stat:()=>S.w|0,hl:['[data-tbpit="0"]'],s:'แตะ ⚔️ ลานประลอง → 🪣 บ่อเล็ก → กด ชน ตอนลูกศรอยู่ช่องเขียว',t:'ชนะชนไก่ 1 ครั้ง',d:'กด <b>ชน</b> ตอนลูกศรแดงอยู่ในช่องเขียว • กลางช่องเขียว = PERFECT',at:'nav:fight',r:{c:150,etk:100}},
  {ev:'info',t:'ดูสกิลไก่ของคุณ',d:'แตะ 🏠 เล้าไก่ → แตะไก่ ดูค่าพลังและสกิล',at:'nav:list',r:{c:50}},
