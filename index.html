@@ -421,7 +421,7 @@ body.shake{animation:bsh .5s}
  window.addEventListener('error',e=>{if(!e.message){const u=e.target&&(e.target.src||e.target.href);if(u&&/\.js/.test(u))show('โหลดไฟล์ไม่ได้: '+u);return;}show((e.message||'error')+'\n@ '+String(e.filename||'').split('/').pop()+':'+e.lineno+':'+e.colno+(e.error&&e.error.stack?'\n'+String(e.error.stack).split('\n').slice(0,4).join('\n'):''));},true);
  window.addEventListener('unhandledrejection',e=>{const r=e.reason;const m=String(r&&(r.code||r.message)||r||'');if(/auth\/|permission|network|offline|Failed to fetch/i.test(m))return;show('Promise: '+m+(r&&r.stack?'\n'+String(r.stack).split('\n').slice(0,3).join('\n'):''));});
 })();
-window.__BUILD='1.5.3-d';
+window.__BUILD='1.5.4-a';
 window.__kaitepEnv=function(){try{const ua=navigator.userAgent||'';
  if(location.protocol!=='https:'&&location.protocol!=='http:')return '⚠️ ตอนนี้เปิดเกมจาก<b>ไฟล์ในเครื่อง</b> — ล็อกอิน Google ใช้ไม่ได้ ให้เปิดผ่านลิงก์เว็บ (https://…netlify.app) หรือใช้อีเมลด้านล่าง';
  if(/FBAN|FBAV|FB_IAB|Instagram|Line\/|LIFF|Messenger|TikTok|Twitter|MicroMessenger|KAKAOTALK/i.test(ua))return '⚠️ กำลังเปิดใน<b>เบราว์เซอร์ของแอป</b> (LINE/Facebook ฯลฯ) — Google ไม่ให้ล็อกอินในนี้ กด ⋮/⋯ → "เปิดในเบราว์เซอร์" (Chrome/Safari) หรือใช้อีเมลด้านล่าง';
@@ -3118,20 +3118,18 @@ function cbRun(ctx){if(TBV||B)return;const mine=ctx.mine||t4Spec();if(!mine.leng
  const v=$('#cbv');v.classList.remove('hide');
  v.innerHTML=`<div class="cbtop"><b>${ctx.title||'⚔️'}</b><span id="cbturn"></span><button class="btn" id="cbauto">${TBV.lock?'🤖 ออโต้':'🤖 ออโต้: '+(TBV.auto?'เปิด':'ปิด')}</button><button class="btn" id="cbspd">⏩ x${TBV.spd}</button>${TBV.lock?'<button class="btn" id="cbskip">⏭️</button>':''}</div>
  ${cbPanel(opS,0)}<div class="cbmid"><div class="cbmsg" id="cbmsg"></div><div class="cbbar" id="cbbar"><i class="gz" id="cbgz"><i class="pz" id="cbpz"></i></i><b class="ar" id="cbar">▲</b></div>
- <div class="cbbtns"><button class="cbsk" id="cbsk"><span>✨ สกิล</span><i id="cbskf"></i></button><button class="cbhit" id="cbhit">ชน</button><button class="cbult" id="cbult"><b id="cbultp">0%</b><small>อันติเมต</small></button></div></div>${cbPanel(meS,1)}`;
+ <div class="cbbtns"><button class="cbhit" id="cbhit">ชน</button><button class="cbult" id="cbult"><b id="cbultp">0%</b><small>อันติเมต</small></button></div></div>${cbPanel(meS,1)}`;
  $('#cbauto').onclick=()=>{if(TBV.lock)return;TBV.auto=!TBV.auto;S.cbAuto=TBV.auto;$('#cbauto').textContent='🤖 ออโต้: '+(TBV.auto?'เปิด':'ปิด');if(TBV.auto&&TBV.tapRes)TBV.tapRes(null);};
  $('#cbspd').onclick=()=>{TBV.spd=TBV.spd>=4?1:TBV.spd*2;S.tbSpd=TBV.spd;$('#cbspd').textContent='⏩ x'+TBV.spd;};
  if($('#cbskip'))$('#cbskip').onclick=()=>{TBV.skip=true;};
- $('#cbsk').onclick=()=>{const m=TBV.st.S[TBV.my];if(m.sk>=100&&TBV.tapRes&&!TBV.pend.sk){TBV.pend.sk=1;TBV.reaim=1;TBV.tapRes('re');}};
- $('#cbult').onclick=()=>{const m=TBV.st.S[TBV.my];if(ultOk(m)&&TBV.tapRes&&!TBV.pend.ult){TBV.pend.ult=1;TBV.tapRes('re');}};
- $('#cbhit').onclick=()=>{if(TBV&&TBV.tapRes)TBV.tapRes(TBV.x);};
+  $('#cbult').onclick=()=>{const m=TBV.st.S[TBV.my];if(ultOk(m)&&TBV.tapRes&&!TBV.pend.ult){TBV.pend.ult=1;TBV.tapRes('re');}};
+ {const h=$('#cbhit');h.style.touchAction='manipulation';h.addEventListener('pointerdown',e=>{e.preventDefault();if(TBV&&TBV.tapRes){const x=TBV.xNow?TBV.xNow():TBV.x;const ar=$('#cbar');if(ar)ar.style.left=x*100+'%';TBV.tapRes(x);}});}
  cbUI();cbLoop();}
 const cbW=ms=>TBV&&TBV.skip?Promise.resolve():new Promise(r=>setTimeout(r,ms/(TBV?TBV.spd:1)));
 function cbUI(){if(!TBV)return;const st=TBV.st;[0,1].forEach(vi=>{const s=st.S[vi===1?TBV.my:1-TBV.my],h=$('#cbh'+vi);if(!h)return;const p=s.hp/s.max*100;h.style.width=p+'%';h.className=p<30?'lo':p<60?'md':'';$('#cbht'+vi).textContent=`${s.hp}/${s.max}`;
   $('#cbsa'+vi).textContent=`🛡️${Math.round(aAr(s))} ⚔️${Math.round(aAtk(s))}`;const neg=s.tb.some(b=>Object.keys(b).some(k=>k!=='t'&&b[k]<0));
   $('#cbst'+vi).innerHTML=(sm(s,'atk')>0?'💪':'')+(sm(s,'ar')>0?'🛡️':'')+(neg?'🌀':'')+(s.dot.length?'🩸':'')+(s.stun?'💫':'')+(s.hot?`🔥${s.hot}`:'')+(s.nx.length?'✨':'')+(s.food&&!s.fed?'🍲':'');});
- const m=st.S[TBV.my],k=skSlot(m),id=k>=0?m.slots[k]:null;$('#cbskf').style.height=m.sk+'%';$('#cbsk').classList.toggle('rdy',m.sk>=100);$('#cbsk').classList.toggle('on',!!TBV.pend.sk);
- $('#cbsk span').innerHTML=TBV.pend.sk?'✅ ใช้แล้ว':id?`${SLOT_I[k]} ${CK[id].s[k][0]}`:'✨ สกิล';
+ const m=st.S[TBV.my];
  const u=$('#cbult');$('#cbultp').textContent=Math.round(m.ult)+'%';u.style.setProperty('--u',m.ult+'%');u.classList.toggle('rdy',ultOk(m));u.classList.toggle('on',!!TBV.pend.ult);
  $('#cbturn').textContent=`รอบ ${Math.floor(st.turn/2)+1}`;}
 function cbFloat(vi,txt,cls){const f=$('#cbf'+vi);if(!f||TBV.skip)return;const d=document.createElement('span');d.className='cbft '+(cls||'');d.innerHTML=txt;f.appendChild(d);setTimeout(()=>d.remove(),1200);}
@@ -3139,7 +3137,7 @@ function cbMsg(t){const m=$('#cbmsg');if(m&&!TBV.skip)m.innerHTML=t;}
 function cbBar(m){const w=Math.max(.06,Math.min(.55,.18*(1+m.gw)+m.acc*.3+(m.center?.04:0))),l=m.center?.5-w/2:.06+Math.random()*(.88-w),gz=$('#cbgz'),pz=$('#cbpz'),pw=Math.min(.45,(.025*(1+m.gw*.5)+m.acc*.05))/w;
  gz.style.left=l*100+'%';gz.style.width=w*100+'%';pz.style.width=m.perfAny?'100%':pw*200+'%';pz.style.marginLeft=m.perfAny?'-50%':-pw*100+'%';return {l,r:l+w,pw:pw*w,per:1500*(1+m.slow),all:m.perfAny};}
 function cbTap(z){return new Promise(res=>{TBV.tapRes=res;const t0=performance.now();const ar=$('#cbar'),hit=$('#cbhit');hit.disabled=false;hit.classList.add('go');
- const fr=()=>{if(!TBV||TBV.tapRes!==res)return;const ph=((performance.now()-t0)%z.per)/z.per,x=ph<.5?ph*2:2-ph*2;TBV.x=x;ar.style.left=x*100+'%';requestAnimationFrame(fr);};requestAnimationFrame(fr);}).then(x=>{if(TBV)TBV.tapRes=null;const hit=$('#cbhit');if(hit){hit.disabled=true;hit.classList.remove('go');}
+ TBV.xNow=()=>{const ph=((performance.now()-t0)%z.per)/z.per;return ph<.5?ph*2:2-ph*2;};const fr=()=>{if(!TBV||TBV.tapRes!==res)return;const x=TBV.xNow();TBV.x=x;ar.style.left=x*100+'%';requestAnimationFrame(fr);};requestAnimationFrame(fr);}).then(x=>{if(TBV)TBV.tapRes=null;const hit=$('#cbhit');if(hit){hit.disabled=true;hit.classList.remove('go');}
  if(x==null||x==='re')return x;const c=(z.l+z.r)/2,inG=x>=z.l&&x<=z.r;return inG&&(z.all||Math.abs(x-c)<=z.pw)?'p':inG?'g':'m';});}
 async function cbLoop(){const T=TBV;
  while(TBV===T&&T.st.win==null){const st=T.st,ai=st.turn%2,a=st.S[ai],isMe=ai===T.my,human=isMe&&!T.auto,tv=isMe?0:1,av=1-tv;cbUI();
@@ -3147,18 +3145,19 @@ async function cbLoop(){const T=TBV;
   if(st.win!=null)break;if(ev.stun){cbFloat(av,'💫 มึน! ข้ามตา','m');cbUI();await cbW(700);continue;}
   let kind;
   if(human){T.pend={sk:0,ult:0};cbMsg('👆 กด <b>ชน</b> ตอนลูกศรอยู่ในช่องเขียว!');
+   if(a.sk>=100&&ev.sk==null){const e1=cbPre(st,ai,{ai},true,false);if(e1.sk!=null){ev.sk=e1.sk;T.pend.sk=1;cbFloat(av,`${SLOT_I[e1.sk]} ${e1.skn}!`,'sk');snd(900,.08,'triangle',.05,1.5);}}
    for(;;){const z=cbBar(aimMods(a));cbUI();kind=await cbTap(z);if(!TBV)return;if(kind!=='re')break;
     const e2=cbPre(st,ai,{ai},T.pend.sk&&!ev.sk,T.pend.ult&&!ev.ult);if(e2.sk!=null){ev.sk=e2.sk;cbFloat(av,`${SLOT_I[e2.sk]} ${e2.skn}!`,'sk');snd(900,.08,'triangle',.05,1.5);}if(e2.ult){ev.ult=1;cbFloat(av,`🌟 ${e2.un||'อันติเมต'}!`,'ul');fanfare();}}
    if(kind==null){cbPre(st,ai,ev,a.sk>=100,ultOk(a));kind=rollKind(T.rng,ACC.auto,aimMods(a));}}
   else{cbPre(st,ai,ev,a.sk>=100,ultOk(a));if(ev.sk!=null)cbFloat(av,`${SLOT_I[ev.sk]} ${ev.skn}!`,'sk');if(ev.ult){cbFloat(av,`🌟 ${ev.un||'อันติเมต'}!`,'ul');if(!T.skip)fanfare();}
-   kind=rollKind(T.rng,isMe?ACC.auto:(T.ctx.acc||ACC.auto),aimMods(a));if(!T.skip){$('#cbgz').style.width='0';cbMsg(isMe?'🤖 ออโต้กำลังตี...':'😤 ศัตรูกำลังตี...');}await cbW(isMe?450:650);}
+   kind=rollKind(T.rng,isMe?ACC.auto:(T.ctx.acc||ACC.auto),aimMods(a));if(!T.skip){$('#cbgz').style.width='0';cbMsg(isMe?'🤖 ออโต้กำลังตี...':'😤 ศัตรูกำลังตี...');}await cbW(isMe?350:450);}
   cbRes(st,ai,kind,ev,T.rng);
   if(ev.ult&&!T.skip){const v=$('#cbv');v.classList.add('shk');setTimeout(()=>v.classList.remove('shk'),450);}
   cbFloat(av,ev.retry?'🪽 พลาด — ได้ตีใหม่!':kind==='p'?'💥 PERFECT!':kind==='g'?'👍 โดน!':'💨 พลาด!',ev.retry?'sk':kind);
   if(ev.dmg){cbFloat(tv,'-'+ev.dmg,'dm');const p=$('#cbp'+tv);if(p&&!T.skip){p.classList.remove('hit');void p.offsetWidth;p.classList.add('hit');snd(170+Math.random()*80,.07,'sawtooth',.05,.6);}}
   if(ev.drain)cbFloat(av,'🧛 +'+ev.drain,'hl');if(ev.stunned)cbFloat(tv,'💫 มึน!','sk');if(ev.extra)cbFloat(av,'✨ '+ev.extra,'sk');if(ev.bolt)cbFloat(tv,'⚡ ฟ้าผ่า -'+ev.bolt,'ul');
   (ev.heal||[]).forEach(([si,h])=>cbFloat(si===T.my?1:0,'🍲 +'+h,'hl'));
-  cbUI();await cbW(ev.ult?900:650);}
+  cbUI();await cbW(ev.ult?750:420);}
  if(TBV===T)cbFinish();}
 function cbFinish(){const T=TBV,ctx=T.ctx,win=T.st.win===T.my;T.skip=true;if(win)S.w=(S.w|0)+1;else S.l=(S.l|0)+1;save();
  Promise.resolve(ctx.onEnd?ctx.onEnd(win,T.st):null).then(extra=>{if(win){fanfare();bigText('ชนะ! 🏆');}else{sadT();bigText('แพ้... 😵');}
